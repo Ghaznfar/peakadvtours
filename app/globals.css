@@ -1,0 +1,147 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ *
+ * Design tokens (Tailwind v4 `@theme`)
+ * These generate utilities (e.g. `bg-brand-600`, `text-brand-700`).
+ * Brand palette + fonts are the client-swappable design surface.
+ * Neutral scale uses Tailwind's built-in `slate`.
+ * ------------------------------------------------------------------ */
+@theme {
+  /* Brand — primary (teal). Replace with client brand at handoff. */
+  --color-brand-50: #eefdfb;
+  --color-brand-100: #d3f8f2;
+  --color-brand-200: #abf0e7;
+  --color-brand-300: #72e3d6;
+  --color-brand-400: #38ccbe;
+  --color-brand-500: #17b0a3;
+  --color-brand-600: #0d8e85;
+  --color-brand-700: #10716b;
+  --color-brand-800: #135a57;
+  --color-brand-900: #144b48;
+  --color-brand-950: #052e2d;
+
+  /* Accent — used sparingly for highlights/promos (amber). */
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+
+  /* WhatsApp brand green (used only on the WhatsApp CTA). */
+  --color-whatsapp: #25d366;
+  --color-whatsapp-dark: #1da851;
+
+  /* Fonts — the CSS variables are provided by next/font on <html>. */
+  --font-sans:
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-display: var(--font-sora), var(--font-sans);
+
+  /* Radii */
+  --radius-card: 1rem;
+}
+
+/* ------------------------------------------------------------------ *
+ * Base layer
+ * ------------------------------------------------------------------ */
+@layer base {
+  :root {
+    --header-height: 4rem;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: var(--header-height);
+  }
+
+  body {
+    @apply bg-white font-sans text-slate-700 antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display font-semibold tracking-tight text-slate-900;
+    text-wrap: balance;
+  }
+
+  /* Consistent, visible focus ring for keyboard users (WCAG 2.2). */
+  :focus-visible {
+    @apply ring-brand-600 rounded-sm ring-2 ring-offset-2 ring-offset-white outline-none;
+  }
+
+  ::selection {
+    @apply bg-brand-600 text-white;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Typography system — fluid, semantic heading utilities.
+ * Use these on marketing headings; body text uses Tailwind sizes.
+ * ------------------------------------------------------------------ */
+@layer components {
+  .text-display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-size: clamp(2.25rem, 1.55rem + 3.4vw, 4rem);
+  }
+
+  .text-h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-size: clamp(1.875rem, 1.4rem + 2.2vw, 3rem);
+  }
+
+  .text-h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    font-size: clamp(1.5rem, 1.25rem + 1.2vw, 2.25rem);
+  }
+
+  .text-h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.25;
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  }
+
+  .text-lead {
+    font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
+    line-height: 1.6;
+    @apply text-slate-600;
+  }
+
+  /* Utility for visually-hidden-but-screen-reader-available content. */
+  .sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Motion — respect user preference (WCAG 2.3.3 / CLAUDE.md §9).
+ * ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
