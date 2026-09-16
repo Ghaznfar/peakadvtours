@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { CalendarDays, Gauge, Mountain } from 'lucide-react';
+import { CalendarDays, Gauge, Mountain, Sun } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
-import type { Trip, TripCategory, Difficulty } from '@/types/content';
+import type { Trip, TripCategory, Difficulty, Season } from '@/types/content';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { OptimizedImage } from '@/components/ui/OptimizedImage';
@@ -18,6 +18,13 @@ const DIFFICULTY_LABEL: Record<Difficulty, string> = {
   moderate: 'Moderate',
   strenuous: 'Strenuous',
   technical: 'Technical',
+};
+
+const SEASON_LABEL: Record<Season, string> = {
+  spring: 'Spring',
+  summer: 'Summer',
+  autumn: 'Autumn',
+  winter: 'Winter',
 };
 
 export interface TripCardProps {
@@ -37,6 +44,7 @@ export interface TripCardProps {
 export function TripCard({ trip, imageSizes, priority = false, className }: TripCardProps) {
   const href = `/trips/${trip.slug}`;
   const showAltitude = trip.category !== 'tour' && typeof trip.maxAltitudeM === 'number';
+  const seasonText = trip.seasonNote ?? trip.season.map((s) => SEASON_LABEL[s]).join(', ');
 
   return (
     <article
@@ -57,6 +65,7 @@ export function TripCard({ trip, imageSizes, priority = false, className }: Trip
         <div className="absolute top-3 left-3 flex flex-wrap gap-2">
           <Badge tone="brand">{CATEGORY_LABEL[trip.category]}</Badge>
           {trip.earlyBird && <Badge tone="accent">Early bird</Badge>}
+          {trip.badge && <Badge tone="outline">{trip.badge}</Badge>}
         </div>
         {showAltitude && (
           <Badge tone="outline" className="absolute top-3 right-3">
@@ -91,6 +100,13 @@ export function TripCard({ trip, imageSizes, priority = false, className }: Trip
               <dd>{trip.maxAltitudeM?.toLocaleString()} m</dd>
             </div>
           )}
+          {seasonText && (
+            <div className="flex items-center gap-1.5">
+              <Sun aria-hidden className="text-brand-600 size-4" />
+              <dt className="sr-only">Season</dt>
+              <dd>{seasonText}</dd>
+            </div>
+          )}
         </dl>
 
         <div className="mt-5 flex items-end justify-between gap-3 border-t border-slate-100 pt-4">
@@ -102,7 +118,7 @@ export function TripCard({ trip, imageSizes, priority = false, className }: Trip
           <div className="flex gap-2">
             {/* Enquire link carries the trip context to the enquiry funnel. */}
             <Button asChild variant="outline" size="sm">
-              <Link href={`/contact?trip=${trip.slug}`}>Enquire</Link>
+              <Link href={`/custom-trips?trip=${trip.slug}`}>Enquire</Link>
             </Button>
             <Button asChild variant="primary" size="sm">
               <Link href={href}>Itinerary</Link>

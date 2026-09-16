@@ -88,7 +88,7 @@ export default async function HomePage() {
         title="Small-group adventures, planned by people who walk the routes"
         subtitle={siteConfig.description}
         primary={{ label: 'Find your trip', href: '/trips' }}
-        secondary={{ label: 'Build a custom trip', href: '/customize' }}
+        secondary={{ label: 'Build a custom trip', href: '/custom-trips' }}
         chips={heroChips}
       />
 
@@ -103,7 +103,7 @@ export default async function HomePage() {
       <CtaBanner
         heading="Your dates, your route"
         body="Nothing here fits? Tell us where you want to go and we build a custom day-by-day itinerary within 24 hours — no deposit to see one."
-        primary={{ label: 'Start an itinerary', href: '/customize' }}
+        primary={{ label: 'Start an itinerary', href: '/custom-trips' }}
         whatsAppMessage={`Hi ${siteConfig.name}, I'd like to plan a custom trip.`}
       />
 

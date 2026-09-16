@@ -64,8 +64,12 @@ export interface Trip {
   category: TripCategory;
   tags: string[];
   destinationSlugs: string[];
+  /** Short card/meta description. */
   summary: string;
+  /** Long-form overview shown on the detail page. */
+  description?: string;
   heroImage: ImageRef;
+  gallery?: ImageRef[];
 
   durationDays: number;
   startCity: string;
@@ -82,6 +86,8 @@ export interface Trip {
   price: Price;
   earlyBird?: boolean;
   priceOnRequest?: boolean;
+  /** Optional custom promo label (e.g. "Best seller", "New"). */
+  badge?: string;
 
   highlights?: Array<{ icon?: string; title: string; body?: string }>;
   itinerary?: ItineraryDay[];

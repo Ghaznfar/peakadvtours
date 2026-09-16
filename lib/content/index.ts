@@ -42,6 +42,10 @@ export async function getTripsByCategory(category: TripCategory): Promise<Trip[]
   return trips.filter((t) => isPublished(t) && t.category === category);
 }
 
+export async function getTripsByTag(tag: string): Promise<Trip[]> {
+  return trips.filter((t) => isPublished(t) && t.tags.includes(tag));
+}
+
 export async function getTripBySlug(slug: string): Promise<Trip | undefined> {
   return trips.find((t) => t.slug === slug && isPublished(t));
 }

@@ -4,7 +4,7 @@ _Last updated: 2026-09-16_
 
 ## Current phase
 
-**Homepage complete.** A full, production-ready marketing homepage is built on top of the foundation and verified: `typecheck`, `lint`, and `build` all pass; homepage renders all 20 required sections; the enquiry API works end-to-end. Ready to proceed to the trip detail/listing templates.
+**Listing system complete.** Content-driven Tours / Treks / Expeditions / Festivals / all-trips listing pages plus a Custom Trips landing page are built and verified. Server-side URL-driven filtering, sorting, search and pagination all work and are shareable/SSR/crawlable. `typecheck`, `lint`, `build` green; 30 engine unit tests + full HTTP test matrix pass. Next: trip **detail** pages (`/trips/[slug]`).
 
 ## Completed work
 
@@ -33,15 +33,27 @@ _Last updated: 2026-09-16_
 - **API:** `POST /api/enquiry` stub — validates required fields + honeypot, returns `{ok:true}` / 422 (full Zod + email delivery deferred to forms phase).
 - **Verification:** typecheck ✅ · lint ✅ · build ✅. Structural QA via rendered HTML: single `<h1>`, all 11 section landmarks present, viewport meta + `lang` set, mobile-first grids (all `grid-cols-1` → scale up), no fixed-width overflow offenders, mobile menu present. API tested (valid → ok, missing → 422, honeypot → ignored); 404/robots/sitemap correct.
 
+### Listing system (this phase)
+
+- **Data model extended:** `Trip` gained `description`, `gallery`, `badge`; added 2 festival-tagged trips (10 total). New repo fn `getTripsByTag`.
+- **Filter engine** (`lib/trips/filters.ts`): pure, framework-free `parseTripQuery` (validates + drops invalid values), `filterTrips`, `sortTrips`, `filterAndSortTrips`, `parsePage`, `serializeTripQuery`, `activeFilterCount`, `durationBucket`. Filters: type, difficulty, season, destination, duration bucket, search (q). Sorts: recommended, price ±, altitude, duration ±. **30 unit tests pass** (`node --experimental-strip-types`).
+- **TourCard:** enhanced `TripCard` (now shows season + custom `badge`) and exported as `TourCard` alias — one reusable card for tours/treks/expeditions with image, category, title, description, duration, difficulty, season, altitude, from-price, badges, dual CTA.
+- **Listing UI:** `TripFilterControls` (client, props-driven — no `useSearchParams`, no Suspense needed) writes filter state to the URL; `TripListingPage` (server) reads `searchParams`, filters/sorts/paginates **server-side**, renders results as crawlable HTML. Load-more via `?page=` (cumulative, shareable). Active-filter chips, clear-all, empty state, "no match" → custom-trip CTA.
+- **Pages:** `/tours`, `/treks`, `/expeditions` (category-scoped), `/festivals` (tag-scoped, type filter on), `/trips` (all, type filter on), `/custom-trips` (landing page: how-it-works steps + reused enquiry form, reads `?trip=` for context). Each has SEO metadata + canonical (filtered variants canonicalize to base) + ItemList JSON-LD + breadcrumbs. Nav/footer/sitemap updated `/customize` → `/custom-trips`.
+- **Architecture decision:** filtering moved from client-only (Phase 3 homepage `TripFilter`) to **server-side over static in-memory content** for the listing routes — better SEO (cards in HTML, filtered URLs SSR) while still "no runtime DB". Listing routes are now dynamic (ƒ).
+- **Verification:** typecheck/lint/build ✅; HTTP matrix ✅ — base counts (tours 5, treks 3, expeditions 2, festivals 2, trips 10), server-side filtering by every facet, search, pagination (page1=6 + load-more → 10), empty state, invalid params → ignored (HTTP 200), controls present/locked per page, canonicals correct. Mobile controls are flex-wrap/stacked (mobile-first).
+
 ## Next task
 
-**Trip detail + listing templates** (`docs/IMPLEMENTATION_PHASES.md` Phase 3): trip-detail template (`/trips/[slug]`) with all sections + Trip/Offer/FAQ JSON-LD, and listing pages (`/tours`, `/treks`, `/expeditions`, `/trips`) with URL-synced filter/sort. Add Vitest + Playwright test setup (per CLAUDE.md §10) alongside.
+**Trip detail pages** (`/trips/[slug]`): hero/gallery, quick-facts, overview, highlights, itinerary, included/excluded, departures, FAQ, related trips + Trip/Offer/FAQ JSON-LD & `generateStaticParams`. (TourCard "Itinerary"/"Enquire" links already point at `/trips/[slug]` and `/custom-trips`.) Add Vitest + Playwright per CLAUDE.md §10.
 
 ## Known issues / follow-ups
 
-- **Visual responsive QA pending:** browser tooling was unavailable this session, so desktop/tablet/mobile were verified structurally (HTML/semantics/overflow scan) rather than by screenshot. Recommend a visual pass at 375 / 768 / 1440px before launch.
+- **Trip detail pages not built yet:** `TripCard` "Itinerary" links to `/trips/[slug]` which 404s until the next phase. (Listing → detail is the next step.)
+- **`/destinations`, `/about`, `/contact`, `/blog`, legal pages** referenced in nav/footer are not built yet → 404 until their phases.
+- **Visual responsive QA pending:** no browser tooling this session, so desktop/tablet/mobile were verified structurally (HTML/semantics/overflow scan + mobile-first classes) rather than by screenshot. Recommend a visual pass at 375 / 768 / 1440px before launch.
 - **Enquiry API is a stub:** no email/CRM delivery yet, no rate-limit/CAPTCHA — hardened in the forms phase.
-- **`react-hooks/static-components`:** dynamic content icons must go through `DynamicIcon` (`createElement`), never `const X = resolveIcon(...)` then `<X/>` in render.
+- **React lint gotchas:** dynamic content icons must go through `DynamicIcon` (`createElement`), never `const X = resolveIcon(...)` then `<X/>`; never call `setState` synchronously inside a `useEffect` (`react-hooks/set-state-in-effect`) — adjust state during render (guarded) instead.
 
 ## Known issues / open questions (for client)
 

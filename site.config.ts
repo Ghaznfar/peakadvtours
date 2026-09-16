@@ -74,7 +74,7 @@ export const siteConfig: SiteConfig = {
       ],
     },
     { label: 'Destinations', href: '/destinations' },
-    { label: 'Customize', href: '/customize' },
+    { label: 'Customize', href: '/custom-trips' },
     { label: 'Blog', href: '/blog' },
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
@@ -98,7 +98,7 @@ export const siteConfig: SiteConfig = {
         heading: 'Company',
         links: [
           { label: 'About us', href: '/about' },
-          { label: 'Customize your trip', href: '/customize' },
+          { label: 'Customize your trip', href: '/custom-trips' },
           { label: 'Blog & news', href: '/blog' },
           { label: 'Contact', href: '/contact' },
           { label: 'Booking info', href: '/booking-info' },
