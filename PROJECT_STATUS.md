@@ -4,7 +4,7 @@ _Last updated: 2026-09-16_
 
 ## Current phase
 
-**Foundation complete (plan Phases 0–2).** Production-quality app foundation is built and verified: `npm install`, `typecheck`, `lint`, and `build` all pass green. Ready to proceed to Phase 3 (trip system) on approval.
+**Homepage complete.** A full, production-ready marketing homepage is built on top of the foundation and verified: `typecheck`, `lint`, and `build` all pass; homepage renders all 20 required sections; the enquiry API works end-to-end. Ready to proceed to the trip detail/listing templates.
 
 ## Completed work
 
@@ -24,9 +24,24 @@ _Last updated: 2026-09-16_
 - **Routes/SEO:** placeholder home (`/`), `loading.tsx`, `error.tsx`, `not-found.tsx` (404), generated `sitemap.ts` + `robots.ts`, root metadata architecture.
 - **Verification:** typecheck ✅ · lint ✅ · build ✅ (static prerender OK).
 
+### Homepage (this phase)
+
+- **Content model extended:** added `Destination`, `Testimonial`, `TeamMember`, `Credential`, `ValueProp`, `Stat` types + placeholder seed data + repository functions (`getDestinations`, `getTestimonials`, `getTeam`, `getValueProps`, `getStats`, `getCredentials`). Expanded seed trips to 8 (varied category/effort/season/price). Testimonials are gated on `consentGiven`.
+- **Composites:** `DestinationCard`, `TestimonialCard`, `TeamCard` (initials-avatar fallback), `ValuePropCard`, `TripFilter` (interactive type/effort/season/sort client island), `EnquiryForm` (accessible client form: labels, `aria-invalid`, `aria-describedby`, error summary, honeypot, success/error states), shared `SectionHeading`, `DynamicIcon` registry.
+- **Sections** (`components/sections/`): `Hero` (cinematic full-bleed LCP image + dual CTA + chips + trust strip), `CategoryCards` (live counts + "from" price), `FeaturedTrips`, `FindYourTrip`, `DestinationShowcase`, `WhyChooseUs`, `Stats`, `Team`, `Testimonials`, `Credentials`, `Enquiry` (contact details + WhatsApp + form). Global `AnnouncementBar` added to layout.
+- **Homepage** (`app/page.tsx`): composes all 20 required sections, data fetched via the repository (`Promise.all`), category cards + form options derived from content. Static-prerendered.
+- **API:** `POST /api/enquiry` stub — validates required fields + honeypot, returns `{ok:true}` / 422 (full Zod + email delivery deferred to forms phase).
+- **Verification:** typecheck ✅ · lint ✅ · build ✅. Structural QA via rendered HTML: single `<h1>`, all 11 section landmarks present, viewport meta + `lang` set, mobile-first grids (all `grid-cols-1` → scale up), no fixed-width overflow offenders, mobile menu present. API tested (valid → ok, missing → 422, honeypot → ignored); 404/robots/sitemap correct.
+
 ## Next task
 
-**Phase 3 — Trip system** (`docs/IMPLEMENTATION_PHASES.md`): finalize `Trip` content in `content/trips/*`, build trip-detail template (`/trips/[slug]`) with all sections + Trip/Offer/FAQ JSON-LD, and listing pages (`/tours`, `/treks`, `/expeditions`, `/trips`) with URL-synced filter/sort. Add Vitest + Playwright test setup (per CLAUDE.md §10) alongside.
+**Trip detail + listing templates** (`docs/IMPLEMENTATION_PHASES.md` Phase 3): trip-detail template (`/trips/[slug]`) with all sections + Trip/Offer/FAQ JSON-LD, and listing pages (`/tours`, `/treks`, `/expeditions`, `/trips`) with URL-synced filter/sort. Add Vitest + Playwright test setup (per CLAUDE.md §10) alongside.
+
+## Known issues / follow-ups
+
+- **Visual responsive QA pending:** browser tooling was unavailable this session, so desktop/tablet/mobile were verified structurally (HTML/semantics/overflow scan) rather than by screenshot. Recommend a visual pass at 375 / 768 / 1440px before launch.
+- **Enquiry API is a stub:** no email/CRM delivery yet, no rate-limit/CAPTCHA — hardened in the forms phase.
+- **`react-hooks/static-components`:** dynamic content icons must go through `DynamicIcon` (`createElement`), never `const X = resolveIcon(...)` then `<X/>` in render.
 
 ## Known issues / open questions (for client)
 

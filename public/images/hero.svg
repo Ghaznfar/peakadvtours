@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-label="Placeholder mountain landscape">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b3b39"/>
+      <stop offset="0.55" stop-color="#0d8e85"/>
+      <stop offset="1" stop-color="#38ccbe"/>
+    </linearGradient>
+    <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.14"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <circle cx="1480" cy="250" r="120" fill="#ffffff" opacity="0.9"/>
+  <circle cx="1480" cy="250" r="180" fill="#ffffff" opacity="0.12"/>
+  <path d="M0 760 L360 420 L620 640 L900 360 L1180 660 L1460 400 L1720 620 L1920 500 L1920 1080 L0 1080 Z" fill="#062a29" opacity="0.5"/>
+  <path d="M0 860 L300 600 L560 780 L860 520 L1120 800 L1420 560 L1700 800 L1920 680 L1920 1080 L0 1080 Z" fill="#04211f" opacity="0.75"/>
+  <path d="M0 980 L260 800 L520 940 L820 720 L1100 960 L1400 760 L1720 980 L1920 860 L1920 1080 L0 1080 Z" fill="#021413"/>
+  <rect width="1920" height="1080" fill="url(#haze)"/>
+</svg>

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Inter, Sora } from 'next/font/google';
 import { defaultMetadata } from '@/lib/seo/metadata';
 import { JsonLd, organizationSchema, websiteSchema } from '@/lib/seo/JsonLd';
+import { AnnouncementBar } from '@/components/layout/AnnouncementBar';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { WhatsAppButton } from '@/components/layout/WhatsAppButton';
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Skip to main content
         </a>
 
+        <AnnouncementBar />
         <SiteHeader />
         <main id="main-content">{children}</main>
         <SiteFooter />
