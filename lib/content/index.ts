@@ -54,6 +54,26 @@ export async function getAllTripSlugs(): Promise<string[]> {
   return trips.filter(isPublished).map((t) => t.slug);
 }
 
+export async function getTripSlugsByCategory(category: TripCategory): Promise<string[]> {
+  return trips.filter((t) => isPublished(t) && t.category === category).map((t) => t.slug);
+}
+
+/**
+ * Related trips for a detail page: same category, excluding the current trip,
+ * preferring those that share a destination. Falls back to same-category fill.
+ */
+export async function getRelatedTrips(trip: Trip, limit = 3): Promise<Trip[]> {
+  const pool = trips.filter(
+    (t) => isPublished(t) && t.slug !== trip.slug && t.category === trip.category,
+  );
+  const sharesDestination = (t: Trip) =>
+    t.destinationSlugs.some((d) => trip.destinationSlugs.includes(d));
+  const ranked = [...pool].sort(
+    (a, b) => Number(sharesDestination(b)) - Number(sharesDestination(a)),
+  );
+  return ranked.slice(0, limit);
+}
+
 export async function getCategories(): Promise<Category[]> {
   return categories;
 }

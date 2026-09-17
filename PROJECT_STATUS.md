@@ -4,7 +4,7 @@ _Last updated: 2026-09-16_
 
 ## Current phase
 
-**Listing system complete.** Content-driven Tours / Treks / Expeditions / Festivals / all-trips listing pages plus a Custom Trips landing page are built and verified. Server-side URL-driven filtering, sorting, search and pagination all work and are shareable/SSR/crawlable. `typecheck`, `lint`, `build` green; 30 engine unit tests + full HTTP test matrix pass. Next: trip **detail** pages (`/trips/[slug]`).
+**Trip detail pages complete.** One reusable detail template serves tours, treks, expeditions and festivals via category-scoped routes `/tours/[slug]`, `/treks/[slug]`, `/expeditions/[slug]` (festivals resolve under `/tours/[slug]`). All 27 required sections, dynamic metadata/OG/canonical, TouristTrip+Offer + FAQPage + BreadcrumbList JSON-LD, sticky desktop booking panel + sticky mobile CTA. `typecheck`/`lint`/`build` green; HTTP matrix (4 content types, JSON-LD, category-guard 404s) passes. Next: `/destinations` + institutional pages (About/Contact/Blog/legal), then forms hardening.
 
 ## Completed work
 
@@ -43,13 +43,21 @@ _Last updated: 2026-09-16_
 - **Architecture decision:** filtering moved from client-only (Phase 3 homepage `TripFilter`) to **server-side over static in-memory content** for the listing routes — better SEO (cards in HTML, filtered URLs SSR) while still "no runtime DB". Listing routes are now dynamic (ƒ).
 - **Verification:** typecheck/lint/build ✅; HTTP matrix ✅ — base counts (tours 5, treks 3, expeditions 2, festivals 2, trips 10), server-side filtering by every facet, search, pagination (page1=6 + load-more → 10), empty state, invalid params → ignored (HTTP 200), controls present/locked per page, canonicals correct. Mobile controls are flex-wrap/stacked (mobile-first).
 
+### Trip detail pages (this phase)
+
+- **Route architecture:** one reusable template rendered through **category-scoped** dynamic routes `/tours/[slug]`, `/treks/[slug]`, `/expeditions/[slug]` (thin 12-line wrappers → shared `TripDetailPage`). Festivals are category `tour`, so they live under `/tours/[slug]`. `dynamicParams = false` + per-category `generateStaticParams` means unknown **and** cross-category slugs return real 404s. Detail links come from `tripPath(trip)` (`lib/trips/href.ts`) — card links + sitemap updated from `/trips/[slug]`.
+- **Data model:** `Trip` gained `depositPercent`, `goodToKnow`, plus `description`/`gallery`/`badge` (Phase 4). Three trips fully detailed (tour/trek/expedition) + a detailed festival tour; remaining trips minimal — the template renders each section conditionally. `getRelatedTrips`, `getTripSlugsByCategory` added.
+- **Components** (`components/detail/`): `TripDetail` (orchestrator) + `QuickFacts`, `BookingPanel` (sticky desktop aside), `Departures` (table), `Gallery`, `StickyMobileCta` (fixed bottom bar, `lg:hidden`), `TripDetailPage` (async loader). New `Disclosure` primitive (native `<details>` — accessible accordion, keyboard nav, zero JS) powers itinerary + FAQ. `Enquiry` section extended with prefill/context/heading props and reused on detail pages (DRY).
+- **All 27 sections:** breadcrumb, hero image, title, location, category, duration, difficulty, max altitude, season, price, enquiry + WhatsApp CTAs, overview, highlights, itinerary, included/excluded, accommodation, departures, pricing, gallery, location panel, important info, FAQs, related trips, enquiry form, final CTA.
+- **SEO:** dynamic `generateMetadata` (title/description/canonical/OG/Twitter, hero as social image); JSON-LD `TouristTrip` + `Offer` (omitted when price-on-request), `FAQPage`, `BreadcrumbList`. Single `<h1>` per page; `<h2>` per section.
+- **Verification:** typecheck/lint/build ✅; SSG prerender (tours 5, treks 3, expeditions 2). HTTP matrix ✅ — tour/trek/expedition/festival + minimal-content pages render; itinerary/FAQ `<details>` accordions, included/excluded, departures, gallery, sticky panel/CTA present; JSON-LD (TouristTrip/Offer/FAQPage/Breadcrumb) + canonical + og:image present; price-on-request omits Offer; **404 guard** returns 404 for unknown and cross-category slugs; card links + sitemap now category-scoped.
+
 ## Next task
 
-**Trip detail pages** (`/trips/[slug]`): hero/gallery, quick-facts, overview, highlights, itinerary, included/excluded, departures, FAQ, related trips + Trip/Offer/FAQ JSON-LD & `generateStaticParams`. (TourCard "Itinerary"/"Enquire" links already point at `/trips/[slug]` and `/custom-trips`.) Add Vitest + Playwright per CLAUDE.md §10.
+**Destinations + institutional pages:** `/destinations` (+ `/destinations/[slug]` hub pages), `/about`, `/contact`, `/blog` (+ posts), and legal pages (`/terms`, `/privacy`, `/booking-info`) — all currently linked in nav/footer but 404. Then forms hardening (Zod + Resend). Add Vitest + Playwright per CLAUDE.md §10.
 
 ## Known issues / follow-ups
 
-- **Trip detail pages not built yet:** `TripCard` "Itinerary" links to `/trips/[slug]` which 404s until the next phase. (Listing → detail is the next step.)
 - **`/destinations`, `/about`, `/contact`, `/blog`, legal pages** referenced in nav/footer are not built yet → 404 until their phases.
 - **Visual responsive QA pending:** no browser tooling this session, so desktop/tablet/mobile were verified structurally (HTML/semantics/overflow scan + mobile-first classes) rather than by screenshot. Recommend a visual pass at 375 / 768 / 1440px before launch.
 - **Enquiry API is a stub:** no email/CRM delivery yet, no rate-limit/CAPTCHA — hardened in the forms phase.

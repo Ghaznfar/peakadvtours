@@ -1,20 +1,48 @@
-import type { Category, Trip } from '@/types/content';
+import type { Category, ImageRef, Trip } from '@/types/content';
 
 /**
  * PLACEHOLDER SEED CONTENT — fictional trips used to build and demo the UI.
  * Replace with real client content (or a CMS source) at handoff. All prices,
- * names and images here are invented placeholders (see CLAUDE.md §2).
+ * names, itineraries and images here are invented placeholders (see CLAUDE.md §2).
  *
- * In Phase 3 this data moves to `content/trips/*` files behind these same
- * repository functions; UI never changes.
+ * A few trips are fully detailed (itinerary/included/faqs/departures/gallery) so
+ * every detail-page section can be demonstrated across categories; the rest are
+ * intentionally minimal — the detail template renders sections conditionally.
  */
 
-const PLACEHOLDER_IMAGE = {
+const img = (alt: string): ImageRef => ({
   src: '/images/placeholder-trip.svg',
-  alt: 'Placeholder scenery — replace with a licensed client photograph',
+  alt,
   width: 1200,
   height: 800,
-};
+});
+
+const PLACEHOLDER_IMAGE = img('Placeholder scenery — replace with a licensed client photograph');
+
+const sampleGallery: ImageRef[] = [
+  img('Placeholder gallery image 1 — replace with a client photograph'),
+  img('Placeholder gallery image 2 — replace with a client photograph'),
+  img('Placeholder gallery image 3 — replace with a client photograph'),
+  img('Placeholder gallery image 4 — replace with a client photograph'),
+];
+
+const genericIncluded = [
+  'All ground transport with a private driver',
+  'Accommodation as listed (twin/double share)',
+  'Daily breakfast and listed meals',
+  'A licensed English-speaking guide throughout',
+  'Permits and entrance fees on the itinerary',
+  'Airport transfers on arrival and departure days',
+];
+
+const genericExcluded = [
+  'International flights and visa fees',
+  'Travel, medical and evacuation insurance',
+  'Meals not listed in the itinerary',
+  'Personal expenses (laundry, drinks, souvenirs)',
+  'Optional activities and single-room supplement',
+  'Tips for your guide and driver',
+];
 
 export const categories: Category[] = [
   {
@@ -49,7 +77,10 @@ export const trips: Trip[] = [
     destinationSlugs: ['sample-region'],
     summary:
       'A placeholder tour showing how a comfortable, guided valley itinerary is presented on a card and detail page.',
+    description:
+      'This is placeholder overview copy. On a real trip this section sets the scene: what the journey is, who it suits, the pace, and what makes it special. Swap it for the client’s own words. The Sample Valley Tour is an easy, hotel-based journey through orchard valleys and old villages, designed for travellers who want the scenery and culture without any trekking.',
     heroImage: PLACEHOLDER_IMAGE,
+    gallery: sampleGallery,
     durationDays: 7,
     startCity: 'Gateway City',
     endCity: 'Gateway City',
@@ -59,9 +90,136 @@ export const trips: Trip[] = [
     groupSizeMax: 12,
     season: ['spring', 'autumn'],
     seasonNote: 'Spring blossom or autumn colour',
-    accommodationNote: 'Comfort hotels with valley views',
+    accommodationNote: 'Comfortable 3–4 star hotels with valley views, twin or double share.',
     price: { amount: 1800, currency: 'USD', unit: 'per_person' },
+    depositPercent: 30,
     featured: true,
+    highlights: [
+      {
+        icon: 'compass',
+        title: 'Orchard valleys',
+        body: 'Slow drives through blossom or autumn colour.',
+      },
+      {
+        icon: 'users',
+        title: 'Village hospitality',
+        body: 'Tea and conversation with local families.',
+      },
+      { icon: 'map', title: 'Old forts & bazaars', body: 'Historic towns at an unhurried pace.' },
+      { icon: 'shield', title: 'Fully guided', body: 'A local guide with you throughout.' },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'Arrival in Gateway City',
+        description: 'Placeholder day text: arrival, airport pickup and an evening welcome dinner.',
+        meals: ['D'],
+        accommodation: 'City hotel',
+      },
+      {
+        day: 2,
+        title: 'Into the valley',
+        description:
+          'Placeholder day text: a scenic drive up to the valley with photo stops along the way.',
+        hours: 5,
+        meals: ['B', 'D'],
+        accommodation: 'Valley hotel',
+      },
+      {
+        day: 3,
+        title: 'Villages & orchards',
+        description:
+          'Placeholder day text: a gentle day exploring villages, orchards and viewpoints.',
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Valley hotel',
+      },
+      {
+        day: 4,
+        title: 'Historic town & fort',
+        description: 'Placeholder day text: visit an old fort and wander the bazaar.',
+        meals: ['B', 'D'],
+        accommodation: 'Valley hotel',
+      },
+      {
+        day: 5,
+        title: 'Lakeside day',
+        description:
+          'Placeholder day text: a relaxed day by the water with an optional short walk.',
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Valley hotel',
+      },
+      {
+        day: 6,
+        title: 'Return drive',
+        description: 'Placeholder day text: drive back to the city with lunch en route.',
+        hours: 5,
+        meals: ['B', 'L'],
+        accommodation: 'City hotel',
+      },
+      {
+        day: 7,
+        title: 'Departure',
+        description: 'Placeholder day text: transfer to the airport for your onward flight.',
+        meals: ['B'],
+      },
+    ],
+    included: genericIncluded,
+    excluded: genericExcluded,
+    goodToKnow: [
+      {
+        title: 'Fitness',
+        body: 'Easy — short walks only. Suitable for most ages and first-time travellers.',
+      },
+      { title: 'Weather', body: 'Placeholder note about seasonal temperatures and what to pack.' },
+      {
+        title: 'Connectivity',
+        body: 'Placeholder note about mobile signal and Wi-Fi on the route.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Is this tour suitable for families?',
+        answer: 'Placeholder answer: yes — the pace is gentle and days are flexible.',
+      },
+      {
+        question: 'How much walking is involved?',
+        answer: 'Placeholder answer: only short walks; this is a hotel-based tour, not a trek.',
+      },
+      {
+        question: 'Can the itinerary be customised?',
+        answer: 'Placeholder answer: yes — we can adjust dates, pace and hotels.',
+      },
+      {
+        question: 'What is the group size?',
+        answer: 'Placeholder answer: small groups of 4–12 travellers.',
+      },
+    ],
+    departures: [
+      {
+        start: '2026-04-12',
+        end: '2026-04-18',
+        lengthDays: 7,
+        price: { amount: 1800, currency: 'USD', unit: 'per_person' },
+        status: 'available',
+        depositPercent: 30,
+      },
+      {
+        start: '2026-05-10',
+        end: '2026-05-16',
+        lengthDays: 7,
+        price: { amount: 1800, currency: 'USD', unit: 'per_person' },
+        status: 'limited',
+        depositPercent: 30,
+      },
+      {
+        start: '2026-09-20',
+        end: '2026-09-26',
+        lengthDays: 7,
+        price: { amount: 1800, currency: 'USD', unit: 'per_person' },
+        status: 'guaranteed',
+        depositPercent: 30,
+      },
+    ],
     updatedAt: '2026-01-01',
   },
   {
@@ -72,7 +230,10 @@ export const trips: Trip[] = [
     destinationSlugs: ['sample-region'],
     summary:
       'A placeholder trek demonstrating altitude, difficulty and departure data on the reusable trip card.',
+    description:
+      'Placeholder overview copy for a classic base-camp trek. This is a strenuous but non-technical route with full camp support: porters carry the loads, a cook prepares meals, and an experienced guide sets the pace for safe acclimatisation. Replace with the client’s own description of the trail, the scenery and who it suits.',
     heroImage: PLACEHOLDER_IMAGE,
+    gallery: sampleGallery,
     durationDays: 14,
     startCity: 'Gateway City',
     endCity: 'Gateway City',
@@ -82,10 +243,162 @@ export const trips: Trip[] = [
     groupSizeMax: 12,
     season: ['summer'],
     seasonNote: 'Summer departures',
-    accommodationNote: 'Hotels either end, tents between',
+    accommodationNote: 'Hotels either end; full-service tented camps on trekking days.',
     price: { amount: 2590, currency: 'USD', originalAmount: 2900, unit: 'per_person' },
     earlyBird: true,
+    depositPercent: 30,
     featured: true,
+    highlights: [
+      {
+        icon: 'mountain-snow',
+        title: 'Base camp at 5,150 m',
+        body: 'Stand beneath the big peaks.',
+      },
+      {
+        icon: 'footprints',
+        title: 'Classic trail',
+        body: 'A well-established route with steady acclimatisation.',
+      },
+      { icon: 'users', title: 'Full crew support', body: 'Guide, cook and porters throughout.' },
+      {
+        icon: 'shield',
+        title: 'Safety first',
+        body: 'Sat-phone, first-aid and pulse oximeter carried.',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'Arrival & briefing',
+        description: 'Placeholder day text: arrival, gear check and trek briefing.',
+        meals: ['D'],
+        accommodation: 'City hotel',
+      },
+      {
+        day: 2,
+        title: 'Drive to trailhead',
+        description: 'Placeholder day text: a long scenic drive to the roadhead.',
+        hours: 7,
+        altitudeM: 3000,
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Guesthouse',
+      },
+      {
+        day: 3,
+        title: 'Trek to first camp',
+        description: 'Placeholder day text: an easy first day on the trail to aid acclimatisation.',
+        hours: 5,
+        altitudeM: 3400,
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Tented camp',
+      },
+      {
+        day: 4,
+        title: 'Up the valley',
+        description: 'Placeholder day text: a steady climb alongside the river.',
+        hours: 6,
+        altitudeM: 3900,
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Tented camp',
+      },
+      {
+        day: 5,
+        title: 'Acclimatisation day',
+        description:
+          'Placeholder day text: an active rest day with a short climb-high, sleep-low walk.',
+        altitudeM: 3900,
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Tented camp',
+      },
+      {
+        day: 6,
+        title: 'To base camp',
+        description: 'Placeholder day text: the final push to base camp beneath the peaks.',
+        hours: 7,
+        altitudeM: 5150,
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Tented camp',
+      },
+      {
+        day: 7,
+        title: 'Return begins',
+        description: 'Placeholder day text: begin the descent, retracing the valley.',
+        hours: 6,
+        altitudeM: 3900,
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Tented camp',
+      },
+    ],
+    included: [
+      ...genericIncluded,
+      'All camping equipment (tents, mats, dining and toilet tents)',
+      'Porters for group and personal kit',
+    ],
+    excluded: [
+      ...genericExcluded,
+      'Personal trekking gear (boots, sleeping bag, down jacket)',
+      'Emergency helicopter evacuation',
+    ],
+    goodToKnow: [
+      {
+        title: 'Difficulty',
+        body: 'Strenuous but non-technical — no ropes or climbing skills required. Good fitness essential.',
+      },
+      {
+        title: 'Altitude',
+        body: 'Placeholder note about acclimatisation, symptoms and the guide’s authority on health calls.',
+      },
+      {
+        title: 'Kit',
+        body: 'Placeholder packing note. Porters carry up to a set weight; you carry a daypack.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'How hard is this trek?',
+        answer:
+          'Placeholder answer: strenuous but non-technical; you need to be fit and comfortable with long walking days.',
+      },
+      {
+        question: 'Do I need previous high-altitude experience?',
+        answer: 'Placeholder answer: no, but any prior multi-day trekking helps.',
+      },
+      {
+        question: 'What is the accommodation like?',
+        answer:
+          'Placeholder answer: hotels at either end and full-service tented camps on the trail.',
+      },
+      {
+        question: 'What happens if someone gets ill?',
+        answer: 'Placeholder answer: the guide monitors everyone daily and will descend if needed.',
+      },
+    ],
+    departures: [
+      {
+        start: '2026-06-20',
+        end: '2026-07-03',
+        lengthDays: 14,
+        price: { amount: 2590, currency: 'USD', unit: 'per_person' },
+        status: 'available',
+        depositPercent: 30,
+      },
+      {
+        start: '2026-07-11',
+        end: '2026-07-24',
+        lengthDays: 14,
+        price: { amount: 2590, currency: 'USD', unit: 'per_person' },
+        status: 'limited',
+        depositPercent: 30,
+      },
+      {
+        start: '2026-08-01',
+        end: '2026-08-14',
+        lengthDays: 14,
+        price: { amount: 2590, currency: 'USD', unit: 'per_person' },
+        status: 'available',
+        depositPercent: 30,
+      },
+    ],
     updatedAt: '2026-01-01',
   },
   {
@@ -96,7 +409,10 @@ export const trips: Trip[] = [
     destinationSlugs: ['sample-region'],
     summary:
       'A placeholder expedition showing how a technical, high-altitude climb is summarised for prospective clients.',
+    description:
+      'Placeholder overview copy for a supported peak expedition. This is a technical climb for experienced mountaineers, run with a full expedition structure: base camp, fixed lines on the technical sections, high-altitude support and a generous acclimatisation schedule. Replace with the client’s own route description and prerequisites.',
     heroImage: PLACEHOLDER_IMAGE,
+    gallery: sampleGallery,
     durationDays: 23,
     startCity: 'Gateway City',
     endCity: 'Gateway City',
@@ -106,9 +422,145 @@ export const trips: Trip[] = [
     groupSizeMax: 8,
     season: ['summer'],
     seasonNote: 'Late June to mid-August',
-    accommodationNote: 'Hotels either end, tents between',
+    accommodationNote: 'Hotels either end; base camp and high-altitude tents on the mountain.',
     price: { amount: 4200, currency: 'USD', unit: 'per_person' },
+    depositPercent: 30,
     featured: true,
+    highlights: [
+      { icon: 'mountain-snow', title: '6,096 m summit', body: 'A classic first alpine objective.' },
+      {
+        icon: 'shield',
+        title: 'Full expedition support',
+        body: 'Base camp, cook and climbing crew.',
+      },
+      { icon: 'route', title: 'Fixed lines', body: 'Ropes on the technical sections.' },
+      {
+        icon: 'users',
+        title: 'Small team',
+        body: 'Maximum eight climbers for a high guide ratio.',
+      },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'Arrival & gear check',
+        description: 'Placeholder day text: arrival, expedition briefing and equipment check.',
+        meals: ['D'],
+        accommodation: 'City hotel',
+      },
+      {
+        day: 2,
+        title: 'Drive to roadhead',
+        description: 'Placeholder day text: a long drive towards the mountains.',
+        hours: 8,
+        altitudeM: 3000,
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Guesthouse',
+      },
+      {
+        day: 3,
+        title: 'Trek to base camp',
+        description: 'Placeholder day text: trek in to establish base camp.',
+        hours: 6,
+        altitudeM: 4200,
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Base camp',
+      },
+      {
+        day: 4,
+        title: 'Acclimatisation & skills',
+        description: 'Placeholder day text: rope work, crampon and fixed-line practice.',
+        altitudeM: 4200,
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Base camp',
+      },
+      {
+        day: 5,
+        title: 'Rotation to high camp',
+        description: 'Placeholder day text: carry to high camp and return to sleep low.',
+        altitudeM: 5300,
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Base camp',
+      },
+      {
+        day: 6,
+        title: 'Summit window',
+        description: 'Placeholder day text: weather-dependent summit push with the climbing crew.',
+        altitudeM: 6096,
+        meals: ['B', 'L', 'D'],
+        accommodation: 'High camp',
+      },
+      {
+        day: 7,
+        title: 'Contingency & descent',
+        description: 'Placeholder day text: buffer day for weather, then begin the descent.',
+        altitudeM: 4200,
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Base camp',
+      },
+    ],
+    included: [
+      ...genericIncluded,
+      'Base camp tents, dining tent and kitchen crew',
+      'Group climbing hardware and fixed rope on route',
+    ],
+    excluded: [
+      ...genericExcluded,
+      'Personal climbing gear (boots, harness, crampons, axe)',
+      'Summit bonus and emergency evacuation',
+    ],
+    goodToKnow: [
+      {
+        title: 'Prerequisites',
+        body: 'Technical — prior alpine experience with rope, crampons and ice axe is required.',
+      },
+      {
+        title: 'Weather',
+        body: 'Placeholder note about summit windows and built-in contingency days.',
+      },
+      {
+        title: 'Insurance',
+        body: 'Comprehensive high-altitude insurance with helicopter evacuation cover is mandatory.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'What experience do I need?',
+        answer: 'Placeholder answer: prior technical alpine climbing experience is required.',
+      },
+      {
+        question: 'What is the guide ratio?',
+        answer:
+          'Placeholder answer: a small team of up to eight with an experienced climbing crew.',
+      },
+      {
+        question: 'Is oxygen used?',
+        answer:
+          'Placeholder answer: not on a 6,000 m peak; good acclimatisation is scheduled instead.',
+      },
+      {
+        question: 'What insurance is required?',
+        answer: 'Placeholder answer: high-altitude cover including helicopter evacuation.',
+      },
+    ],
+    departures: [
+      {
+        start: '2026-06-25',
+        end: '2026-07-17',
+        lengthDays: 23,
+        price: { amount: 4200, currency: 'USD', unit: 'per_person' },
+        status: 'available',
+        depositPercent: 30,
+      },
+      {
+        start: '2026-07-20',
+        end: '2026-08-11',
+        lengthDays: 23,
+        price: { amount: 4200, currency: 'USD', unit: 'per_person' },
+        status: 'limited',
+        depositPercent: 30,
+      },
+    ],
     updatedAt: '2026-01-01',
   },
   {
@@ -233,7 +685,10 @@ export const trips: Trip[] = [
     destinationSlugs: ['sample-region', 'lakes-district'],
     summary:
       'A placeholder festival tour timed to the spring blossom, with village celebrations and orchard valleys.',
+    description:
+      'Placeholder overview copy for a festival-timed departure. Dates are fixed to the blossom season and local celebrations, so early booking is recommended. Replace with the client’s own description of the festival, the region and what guests can expect.',
     heroImage: PLACEHOLDER_IMAGE,
+    gallery: sampleGallery,
     durationDays: 8,
     startCity: 'Gateway City',
     endCity: 'Gateway City',
@@ -246,7 +701,65 @@ export const trips: Trip[] = [
     accommodationNote: 'Comfort hotels with valley views',
     price: { amount: 1650, currency: 'USD', unit: 'per_person' },
     badge: 'Seasonal',
-    featured: false,
+    highlights: [
+      { icon: 'compass', title: 'Blossom valleys', body: 'Orchards in full bloom.' },
+      { icon: 'users', title: 'Village festival', body: 'Music, food and local celebrations.' },
+      { icon: 'map', title: 'Lakes district', body: 'A scenic add-on to the blossom route.' },
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'Arrival',
+        description: 'Placeholder day text: arrival and welcome dinner.',
+        meals: ['D'],
+        accommodation: 'City hotel',
+      },
+      {
+        day: 2,
+        title: 'To the blossom valley',
+        description: 'Placeholder day text: drive into the valley at peak bloom.',
+        hours: 5,
+        meals: ['B', 'D'],
+        accommodation: 'Valley hotel',
+      },
+      {
+        day: 3,
+        title: 'Festival day',
+        description: 'Placeholder day text: join the village celebrations.',
+        meals: ['B', 'L', 'D'],
+        accommodation: 'Valley hotel',
+      },
+      {
+        day: 4,
+        title: 'Lakes district',
+        description: 'Placeholder day text: continue to the lakes for scenery and rest.',
+        hours: 4,
+        meals: ['B', 'D'],
+        accommodation: 'Lake hotel',
+      },
+    ],
+    included: genericIncluded,
+    excluded: genericExcluded,
+    faqs: [
+      {
+        question: 'Are the dates flexible?',
+        answer: 'Placeholder answer: festival departures are fixed to the event dates.',
+      },
+      {
+        question: 'How busy is it?',
+        answer: 'Placeholder answer: popular — early booking is recommended.',
+      },
+    ],
+    departures: [
+      {
+        start: '2026-04-05',
+        end: '2026-04-12',
+        lengthDays: 8,
+        price: { amount: 1650, currency: 'USD', unit: 'per_person' },
+        status: 'limited',
+        depositPercent: 30,
+      },
+    ],
     updatedAt: '2026-01-01',
   },
   {

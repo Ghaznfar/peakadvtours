@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { CalendarDays, Gauge, Mountain, Sun } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import type { Trip, TripCategory, Difficulty, Season } from '@/types/content';
+import { tripPath } from '@/lib/trips/href';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { OptimizedImage } from '@/components/ui/OptimizedImage';
@@ -42,7 +43,7 @@ export interface TripCardProps {
  * treks/expeditions). Presentational: receives a fully-formed `Trip`.
  */
 export function TripCard({ trip, imageSizes, priority = false, className }: TripCardProps) {
-  const href = `/trips/${trip.slug}`;
+  const href = tripPath(trip);
   const showAltitude = trip.category !== 'tour' && typeof trip.maxAltitudeM === 'number';
   const seasonText = trip.seasonNote ?? trip.season.map((s) => SEASON_LABEL[s]).join(', ');
 

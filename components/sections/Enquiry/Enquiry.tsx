@@ -8,10 +8,22 @@ import { EnquiryForm } from '@/components/EnquiryForm';
 
 export interface EnquiryProps {
   destinationOptions: { value: string; label: string }[];
+  /** Preselect a destination/category in the form (e.g. from a trip page). */
+  defaultDestination?: string;
+  /** Context passed to the API for lead routing. */
+  context?: 'contact' | 'trip' | 'corporate';
+  eyebrow?: string;
+  title?: string;
 }
 
 /** Enquiry CTA + contact details + WhatsApp + lead form (sections 17–19). */
-export function Enquiry({ destinationOptions }: EnquiryProps) {
+export function Enquiry({
+  destinationOptions,
+  defaultDestination,
+  context = 'contact',
+  eyebrow = 'Plan your trip',
+  title = 'Tell us who’s travelling and roughly when',
+}: EnquiryProps) {
   const { contact } = siteConfig;
   const telHref = `tel:${contact.phone.replace(/[^\d+]/g, '')}`;
 
@@ -22,9 +34,9 @@ export function Enquiry({ destinationOptions }: EnquiryProps) {
           {/* Left: pitch + contact details */}
           <div>
             <p className="text-brand-700 text-sm font-semibold tracking-wider uppercase">
-              Plan your trip
+              {eyebrow}
             </p>
-            <h2 className="text-h2 mt-2">Tell us who&rsquo;s travelling and roughly when</h2>
+            <h2 className="text-h2 mt-2">{title}</h2>
             <p className="mt-4 text-slate-600">
               A trip planner — not a call centre — replies personally with a day-by-day itinerary
               and the full price per person. No account and no deposit to see one.
@@ -75,7 +87,11 @@ export function Enquiry({ destinationOptions }: EnquiryProps) {
 
           {/* Right: form */}
           <div className="rounded-card border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <EnquiryForm destinationOptions={destinationOptions} context="contact" />
+            <EnquiryForm
+              destinationOptions={destinationOptions}
+              defaultDestination={defaultDestination}
+              context={context}
+            />
           </div>
         </div>
       </Container>

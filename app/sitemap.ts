@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { siteConfig } from '@/site.config';
 import { getAllTrips } from '@/lib/content';
+import { tripPath } from '@/lib/trips/href';
 
 /**
  * Generated XML sitemap built from the content repository. Static marketing
@@ -33,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const trips = await getAllTrips();
   const tripRoutes: MetadataRoute.Sitemap = trips.map((trip) => ({
-    url: `${base}/trips/${trip.slug}`,
+    url: `${base}${tripPath(trip)}`,
     lastModified: new Date(trip.updatedAt),
     changeFrequency: 'weekly',
     priority: 0.8,

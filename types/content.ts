@@ -86,6 +86,8 @@ export interface Trip {
   price: Price;
   earlyBird?: boolean;
   priceOnRequest?: boolean;
+  /** Deposit required to book, as a percentage of the price. */
+  depositPercent?: number;
   /** Optional custom promo label (e.g. "Best seller", "New"). */
   badge?: string;
 
@@ -93,6 +95,8 @@ export interface Trip {
   itinerary?: ItineraryDay[];
   included?: string[];
   excluded?: string[];
+  /** "Important information" blocks shown on the detail page. */
+  goodToKnow?: Array<{ title: string; body: string }>;
   faqs?: Faq[];
   departures?: Departure[];
 
