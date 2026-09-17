@@ -16,7 +16,9 @@ export const siteConfig: SiteConfig = {
   tagline: 'Guided tours, treks and expeditions — planned by people who walk the routes.',
   description:
     'Small-group tours, treks and mountaineering expeditions with fully-inclusive pricing, local expert guides and custom itineraries built around your dates.',
-  url: 'https://example.com',
+  // Set NEXT_PUBLIC_SITE_URL in your host (e.g. Vercel env vars) to your real
+  // domain so canonical/OG/sitemap URLs are correct. Falls back to a placeholder.
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://example.com',
   logo: { alt: 'PeakAdventure Tours' },
   defaultCurrency: 'USD',
   locale: 'en-US',
