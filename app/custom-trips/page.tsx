@@ -98,7 +98,13 @@ export default async function CustomTripsPage({ searchParams }: CustomTripsPageP
         </Container>
       </Section>
 
-      <Enquiry destinationOptions={destinationOptions} />
+      <Enquiry
+        destinationOptions={destinationOptions}
+        defaultDestination={contextTrip?.destinationSlugs[0]}
+        tripSlug={contextTrip?.slug}
+        tripTitle={contextTrip?.title}
+        source={contextTrip ? `custom-trips:${contextTrip.slug}` : 'custom-trips'}
+      />
     </>
   );
 }

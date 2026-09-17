@@ -117,7 +117,7 @@ export default async function HomePage() {
 
       <Credentials credentials={credentials} />
 
-      <Enquiry destinationOptions={destinationOptions} />
+      <Enquiry destinationOptions={destinationOptions} source="home" />
     </>
   );
 }

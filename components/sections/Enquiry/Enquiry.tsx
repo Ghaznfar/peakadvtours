@@ -10,8 +10,11 @@ export interface EnquiryProps {
   destinationOptions: { value: string; label: string }[];
   /** Preselect a destination/category in the form (e.g. from a trip page). */
   defaultDestination?: string;
-  /** Context passed to the API for lead routing. */
-  context?: 'contact' | 'trip' | 'corporate';
+  /** Auto-attach a specific trip to the enquiry (from a detail page). */
+  tripSlug?: string;
+  tripTitle?: string;
+  /** Which page/context produced the enquiry (tracking). */
+  source?: string;
   eyebrow?: string;
   title?: string;
 }
@@ -20,7 +23,9 @@ export interface EnquiryProps {
 export function Enquiry({
   destinationOptions,
   defaultDestination,
-  context = 'contact',
+  tripSlug,
+  tripTitle,
+  source,
   eyebrow = 'Plan your trip',
   title = 'Tell us who’s travelling and roughly when',
 }: EnquiryProps) {
@@ -90,7 +95,9 @@ export function Enquiry({
             <EnquiryForm
               destinationOptions={destinationOptions}
               defaultDestination={defaultDestination}
-              context={context}
+              tripSlug={tripSlug}
+              tripTitle={tripTitle}
+              source={source}
             />
           </div>
         </div>

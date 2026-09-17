@@ -347,7 +347,9 @@ export function TripDetail({
       <Enquiry
         destinationOptions={destinationOptions}
         defaultDestination={trip.destinationSlugs[0]}
-        context="trip"
+        tripSlug={trip.slug}
+        tripTitle={trip.title}
+        source={`trip-detail:${trip.slug}`}
         eyebrow="Enquire"
         title={`Enquire about the ${trip.title}`}
       />

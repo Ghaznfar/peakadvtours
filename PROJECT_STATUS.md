@@ -4,7 +4,7 @@ _Last updated: 2026-09-16_
 
 ## Current phase
 
-**Trip detail pages complete.** One reusable detail template serves tours, treks, expeditions and festivals via category-scoped routes `/tours/[slug]`, `/treks/[slug]`, `/expeditions/[slug]` (festivals resolve under `/tours/[slug]`). All 27 required sections, dynamic metadata/OG/canonical, TouristTrip+Offer + FAQPage + BreadcrumbList JSON-LD, sticky desktop booking panel + sticky mobile CTA. `typecheck`/`lint`/`build` green; HTTP matrix (4 content types, JSON-LD, category-guard 404s) passes. Next: `/destinations` + institutional pages (About/Contact/Blog/legal), then forms hardening.
+**Enquiry/contact system complete.** Production enquiry form (React Hook Form + Zod, shared schema) with server-side validation, spam protection (honeypot + time-trap + IP rate-limit), accessible errors, loading/success/failure states, and trip/source tracking. Pluggable delivery layer (log always-on; email/webhook opt-in via env) ready for email/DB/CRM/WhatsApp — no secrets in the browser. `typecheck`/`lint`/`build` green; 16 schema unit tests + full API HTTP matrix pass. Next: `/destinations` + institutional pages (About/Contact/Blog/legal).
 
 ## Completed work
 
@@ -52,16 +52,24 @@ _Last updated: 2026-09-16_
 - **SEO:** dynamic `generateMetadata` (title/description/canonical/OG/Twitter, hero as social image); JSON-LD `TouristTrip` + `Offer` (omitted when price-on-request), `FAQPage`, `BreadcrumbList`. Single `<h1>` per page; `<h2>` per section.
 - **Verification:** typecheck/lint/build ✅; SSG prerender (tours 5, treks 3, expeditions 2). HTTP matrix ✅ — tour/trek/expedition/festival + minimal-content pages render; itinerary/FAQ `<details>` accordions, included/excluded, departures, gallery, sticky panel/CTA present; JSON-LD (TouristTrip/Offer/FAQPage/Breadcrumb) + canonical + og:image present; price-on-request omits Offer; **404 guard** returns 404 for unknown and cross-category slugs; card links + sitemap now category-scoped.
 
+### Enquiry/contact system (this phase)
+
+- **Shared Zod schema** (`lib/enquiry/schema.ts`): all fields (name, email, phone, country, destination, start date, adults, children, hotel, budget, message, consent) + tracking (tripSlug/tripTitle/source) + anti-spam (honeypot `company`, `elapsedMs`). Validated on **both** client (RHF `zodResolver`) and server (route handler) — one source of truth.
+- **Form** (`components/EnquiryForm`): React Hook Form + Zod; accessible (labels, `aria-invalid`, `aria-describedby`, focused error summary), loading + success + failure states, honeypot + time-trap, privacy notice + link. **Trip/source tracking**: auto-attaches the trip on detail pages (props) and reads `?source=`/`?trip=` from the URL as fallback (e.g. `/tours/x?source=enquiry`). Threaded through the `Enquiry` section on home (`source=home`), custom-trips (`custom-trips[:slug]`) and detail pages (`trip-detail:slug`).
+- **API** (`app/api/enquiry/route.ts`): server-side Zod validation (422 + `fieldErrors`), honeypot + time-trap (silent 200), IP rate-limit (5/min → 429), malformed JSON (400). Returns typed JSON.
+- **Delivery architecture** (`lib/enquiry/delivery.ts`, `server-only`): pluggable channels — `log` (always on, no setup), `email` (Resend REST, `RESEND_API_KEY`+`ENQUIRY_TO_EMAIL`), `webhook` (`ENQUIRY_WEBHOOK_URL` → CRM/WhatsApp/automation). DB channel is a documented drop-in. **No secrets reach the browser.** Simplest production-safe default = log; email/webhook enable via env with zero code change.
+- **Verification:** typecheck/lint/build ✅; **16 schema unit tests** ✅; API HTTP matrix ✅ — valid→200+id, missing/invalid-email/invalid-phone/no-consent→422 (+fieldErrors), honeypot & time-trap→200 (discarded, not delivered), malformed→400, rate-limit→5×200 then 429; log channel captured leads with `Source:` tracked.
+
 ## Next task
 
-**Destinations + institutional pages:** `/destinations` (+ `/destinations/[slug]` hub pages), `/about`, `/contact`, `/blog` (+ posts), and legal pages (`/terms`, `/privacy`, `/booking-info`) — all currently linked in nav/footer but 404. Then forms hardening (Zod + Resend). Add Vitest + Playwright per CLAUDE.md §10.
+**Destinations + institutional pages:** `/destinations` (+ `/destinations/[slug]` hub pages), `/about`, `/contact`, `/blog` (+ posts), and legal pages (`/terms`, `/privacy`, `/booking-info`) — all currently linked in nav/footer but 404. Add Vitest + Playwright per CLAUDE.md §10.
 
 ## Known issues / follow-ups
 
-- **`/destinations`, `/about`, `/contact`, `/blog`, legal pages** referenced in nav/footer are not built yet → 404 until their phases.
+- **`/destinations`, `/about`, `/contact`, `/blog`, legal pages** referenced in nav/footer are not built yet → 404 until their phases. (The form's privacy link → `/privacy` 404s until the legal pages ship.)
 - **Visual responsive QA pending:** no browser tooling this session, so desktop/tablet/mobile were verified structurally (HTML/semantics/overflow scan + mobile-first classes) rather than by screenshot. Recommend a visual pass at 375 / 768 / 1440px before launch.
-- **Enquiry API is a stub:** no email/CRM delivery yet, no rate-limit/CAPTCHA — hardened in the forms phase.
-- **React lint gotchas:** dynamic content icons must go through `DynamicIcon` (`createElement`), never `const X = resolveIcon(...)` then `<X/>`; never call `setState` synchronously inside a `useEffect` (`react-hooks/set-state-in-effect`) — adjust state during render (guarded) instead.
+- **Enquiry delivery:** works out of the box via the log channel; to receive leads set `RESEND_API_KEY`+`ENQUIRY_TO_EMAIL` (email) and/or `ENQUIRY_WEBHOOK_URL` (CRM/WhatsApp) in the host env. Rate-limit is in-memory (per instance) — swap for Upstash/Redis for strict multi-instance limits. Optionally add a CAPTCHA (Turnstile) later.
+- **React lint gotchas:** dynamic content icons must go through `DynamicIcon` (`createElement`), never `const X = resolveIcon(...)` then `<X/>`; never call `setState` synchronously inside a `useEffect` (`react-hooks/set-state-in-effect`) — adjust during render (guarded); avoid reading refs / calling impure fns (`Date.now`) inside functions passed to hooks in render (`react-hooks/refs`, `react-hooks/purity`) — use lazy state or scope-local disables.
 
 ## Known issues / open questions (for client)
 
