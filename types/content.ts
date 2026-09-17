@@ -99,6 +99,8 @@ export interface Trip {
   goodToKnow?: Array<{ title: string; body: string }>;
   faqs?: Faq[];
   departures?: Departure[];
+  /** Manually curated related trips (slugs); falls back to auto-related. */
+  relatedSlugs?: string[];
 
   featured?: boolean;
   seo?: Seo;
@@ -171,4 +173,36 @@ export interface Stat {
   id: string;
   value: string;
   label: string;
+}
+
+export interface BlogPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  tags: string[];
+  coverImage: ImageRef;
+  author: string;
+  publishedAt: string;
+  updatedAt?: string;
+  readingTimeMin?: number;
+  /** Rendered/serialized long-form body (portable text → HTML/MDX at handoff). */
+  body?: string;
+  seo?: Seo;
+  draft?: boolean;
+}
+
+/** Editable site-wide settings (mirrors `site.config.ts`; Sanity singleton). */
+export interface SiteSettings {
+  name?: string;
+  tagline?: string;
+  description?: string;
+  contact?: {
+    phone?: string;
+    whatsapp?: string;
+    email?: string;
+    hours?: string;
+    address?: { line1?: string; city?: string; country?: string };
+  };
+  social?: Record<string, string | undefined>;
 }

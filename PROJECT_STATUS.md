@@ -4,7 +4,7 @@ _Last updated: 2026-09-16_
 
 ## Current phase
 
-**Enquiry/contact system complete.** Production enquiry form (React Hook Form + Zod, shared schema) with server-side validation, spam protection (honeypot + time-trap + IP rate-limit), accessible errors, loading/success/failure states, and trip/source tracking. Pluggable delivery layer (log always-on; email/webhook opt-in via env) ready for email/DB/CRM/WhatsApp — no secrets in the browser. `typecheck`/`lint`/`build` green; 16 schema unit tests + full API HTTP matrix pass. Next: `/destinations` + institutional pages (About/Contact/Blog/legal).
+**Sanity CMS integrated.** Content is now managed in **Sanity Studio** (standalone: `npm run studio:dev` / hosted `*.sanity.studio`) and read by the site through the Sanity API behind `lib/content/`, with a **local-seed fallback** when Sanity env vars are unset. No custom admin, no app DB, no app auth. `typecheck`/`lint`/`build` green; fallback rendering + 404/missing-content verified. **Live Sanity connection/fetch/draft tests require the client to create a Sanity project + set env** (documented). Next: `/destinations` + institutional pages (About/Contact/Blog/legal).
 
 ## Completed work
 
@@ -60,9 +60,20 @@ _Last updated: 2026-09-16_
 - **Delivery architecture** (`lib/enquiry/delivery.ts`, `server-only`): pluggable channels — `log` (always on, no setup), `email` (Resend REST, `RESEND_API_KEY`+`ENQUIRY_TO_EMAIL`), `webhook` (`ENQUIRY_WEBHOOK_URL` → CRM/WhatsApp/automation). DB channel is a documented drop-in. **No secrets reach the browser.** Simplest production-safe default = log; email/webhook enable via env with zero code change.
 - **Verification:** typecheck/lint/build ✅; **16 schema unit tests** ✅; API HTTP matrix ✅ — valid→200+id, missing/invalid-email/invalid-phone/no-consent→422 (+fieldErrors), honeypot & time-trap→200 (discarded, not delivered), malformed→400, rate-limit→5×200 then 429; log channel captured leads with `Source:` tracked.
 
+### Sanity CMS (this phase)
+
+- **Packages:** `sanity@6.15.0`, `next-sanity@13.3.4`, `@sanity/vision@6.15.0`, `@sanity/image-url@2.1.1`.
+- **Schemas** (`sanity/schemaTypes/`): documents `tour` (full: all quick-facts, itinerary, included/excluded, departures, faqs, gallery, SEO, relationships to destinations + related tours), `destination`, `category`, `testimonial` (consent-gated), `teamMember` (orderable), `blogPost` (portable text), `siteSettings` (singleton); shared objects `imageWithAlt`, `seo`, `priceType`, `itineraryDay`, `departure`, `highlight`, `infoBlock`, `faq`. Validation on required/important fields; grouped tour form + desk `structure` for a friendly editor UX.
+- **Studio:** standalone (`npm run studio:dev` → :3333, `npm run studio:deploy` → `*.sanity.studio`) — **not embedded** (Sanity Studio + Next 16 Turbopack RSC don't co-build; `swr` react-server export clash). `sanity.config.ts` + `sanity.cli.ts`.
+- **Data layer:** `lib/content/` split into `tours/destinations/categories/testimonials/team/blog/site/marketing`; each reads Sanity (`sanity/client.ts` + `sanity/queries.ts`, published perspective, ISR 60s) when `NEXT_PUBLIC_SANITY_PROJECT_ID` set, else **local seed fallback**. Public API preserved (`getAllTrips`, `getTripBySlug`, …) + new aliases (`getTours`, `getFeaturedTours`, `getDestinationBySlug`, `getTeamMembers`, `getBlogPosts`, `getSiteSettings`). **UI imports only from `@/lib/content`** — never `@/sanity/*`.
+- **Images:** `cdn.sanity.io` allow-listed in `next.config`; GROQ projects `src`/`alt`/dimensions/`lqip` blur.
+- **Env & secrets:** documented in `.env.example` + README; `NEXT_PUBLIC_SANITY_*` are public read-only; no tokens committed (`.env*.local` gitignored). `scripts/sanity-check.mjs` connection tester (`npm run sanity:check`).
+- **Verification done here:** typecheck/lint/build/format ✅ (against installed Sanity packages); fallback rendering ✅ (home, `/tours` 5 cards, trek detail with itinerary, `next/image`); missing tour → 404 ✅; empty blog when unconfigured ✅.
+- **Pending (needs client's Sanity project + env — manual):** live connection test, fetching from Sanity, draft-vs-published behavior, Sanity image rendering. Run `npm run sanity:check` and browse the site after setting env + adding CORS.
+
 ## Next task
 
-**Destinations + institutional pages:** `/destinations` (+ `/destinations/[slug]` hub pages), `/about`, `/contact`, `/blog` (+ posts), and legal pages (`/terms`, `/privacy`, `/booking-info`) — all currently linked in nav/footer but 404. Add Vitest + Playwright per CLAUDE.md §10.
+**Destinations + institutional pages:** `/destinations` (+ `/destinations/[slug]` hub pages), `/about`, `/contact`, `/blog` (+ posts using Sanity), and legal pages (`/terms`, `/privacy`, `/booking-info`) — all currently linked in nav/footer but 404. Add Vitest + Playwright per CLAUDE.md §10.
 
 ## Known issues / follow-ups
 
@@ -73,7 +84,7 @@ _Last updated: 2026-09-16_
 
 ## Known issues / open questions (for client)
 
-- **CMS now or later?** v1 ships file-based content behind a repository interface; recommend migrating to **Sanity** when self-service editing is needed. Confirm preference.
+- **CMS: DECIDED → Sanity.** ✅ Resolved. See "Decisions made" below. Content self-editing via Sanity Studio; no custom admin, no app DB, no app auth.
 - **Currency & locale:** single default currency (config); multi-currency and i18n are post-v1. Confirm default currency.
 - **Map:** interactive MapLibre explorer is the riskiest UI; static fallback ships first. Confirm it's wanted for v1.
 - **Form delivery:** default is Resend email + optional CRM webhook. Need client's inbox/CRM + spam-protection (Turnstile) keys.
@@ -87,7 +98,8 @@ _Last updated: 2026-09-16_
 - **Social icons:** lucide-react v1 dropped trademarked brand icons, so social glyphs are local inline SVGs in `components/ui/icons/SocialIcons.tsx` (client swaps at handoff).
 - **Placeholder images:** first-party placeholder SVG rendered through `next/image` via `dangerouslyAllowSVG` + a locked-down image CSP; removed once real raster photography is supplied.
 - **Desktop nav:** pure-CSS dropdowns (open on hover + keyboard focus) keep `SiteHeader` a server component with zero client JS; only the mobile drawer hydrates.
-- **Content:** one `Trip` type with `category = tour|trek|expedition`; file-based content behind `lib/content/` repository (CMS-swappable). All branding in `site.config.ts`.
+- **Content:** one `Trip` type with `category = tour|trek|expedition`; content behind `lib/content/` repository (CMS-swappable). All branding in `site.config.ts`.
+- **CMS (decided 2026-09-17):** **Sanity**. Content management = **Sanity Studio** (embedded at `/studio`); website reads content via the **Sanity API/client** behind `lib/content/`. Explicitly: **no custom admin dashboard**, **no runtime application database** for CMS, **no application admin authentication** (auth/roles are Sanity's, managed in sanity.io). The repository falls back to local seed data when Sanity env vars are unset, so the site builds/runs without a live project. _Rationale: self-service editing for a non-technical client without building/securing bespoke auth + DB; hardened, audited editing UI out of the box._
 - **Trip detail route:** unified `/trips/[slug]`; `/tours`, `/treks`, `/expeditions` are category-filtered views of one listing template.
 - **Filtering:** client-side + URL-synced over static data; no runtime DB.
 - **Scope:** lead-gen/enquiry site; no payments/accounts/live inventory in v1.

@@ -4,7 +4,9 @@ Content/data architecture. Designed so a **non-technical client can replace ever
 
 ## 1. Storage strategy & CMS migration path
 
-- **v1 (default):** typed content collections in the repo:
+> **DECISION (2026-09-17): Sanity is the CMS.** Content is managed in **Sanity Studio** (embedded at `/studio`) and read by the site through the **Sanity API/client**, all behind the `lib/content/` repository. There is **no custom admin dashboard, no runtime application database, and no application-level authentication** (editor auth/roles are handled by Sanity). Sanity schemas live in `sanity/schemaTypes/`. The repository **falls back to local seed data** when Sanity env vars are unset so the app still builds/runs offline. The notes below on "file-based v1" describe the fallback and the original portability rationale.
+
+- **v1 fallback / portability:** typed content collections in the repo:
   - Structured records → JSON or TS in `content/` (trips, destinations, testimonials, team, credentials, settings).
   - Long-form → **MDX** (`content/blog/*.mdx`, destination guide bodies).
   - Images → `/public/images/...` (or a CDN URL field).

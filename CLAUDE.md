@@ -32,7 +32,7 @@ Read the full plan in:
 ## 4. Architecture rules
 
 - Layers: `primitives → composites → sections → templates(pages)`. Dependencies point downward only.
-- Data access isolated in `lib/content/` (repository pattern) so storage can swap file→CMS without touching UI. See `DATA_MODEL.md`.
+- Data access isolated in `lib/content/` (repository pattern). **CMS is Sanity** (decided 2026-09-17): the repository reads from Sanity when configured, else local seed data. **UI/pages import ONLY from `@/lib/content`** — never from `@/sanity/*` or GROQ queries directly. Content management is Sanity Studio (`/studio`); no custom admin, no app DB, no app auth. See `DATA_MODEL.md`.
 - Rendering: SSG/ISR for content pages (`generateStaticParams` + `revalidate`); route handlers for forms/sitemap/robots. See `SITE_ARCHITECTURE.md §4`.
 - Filter/sort state is **client-side + URL-synced** (`?effort=…&sort=…`), operating over statically-embedded data — no runtime DB.
 - One `Trip` content type with `category: tour|trek|expedition`; do not create three parallel templates.

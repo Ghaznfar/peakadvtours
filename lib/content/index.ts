@@ -1,114 +1,39 @@
-import type {
-  Category,
-  Credential,
-  Destination,
-  Stat,
-  TeamMember,
-  Testimonial,
-  Trip,
-  TripCategory,
-  ValueProp,
-} from '@/types/content';
-import { categories, trips } from './trips.data';
-import { destinations } from './destinations.data';
-import { testimonials } from './testimonials.data';
-import { team } from './team.data';
-import { credentials, stats, valueProps } from './marketing.data';
-
 /**
  * CONTENT REPOSITORY (the CMS seam).
  *
- * UI and pages call ONLY these functions — never the raw data files. To move
- * from local seed data to a CMS (e.g. Sanity), reimplement this module against
- * the CMS client; components stay untouched. See docs/DATA_MODEL.md §1.
- *
- * Functions are async to match a future networked data source.
+ * UI and pages import ONLY from here — never from `@/sanity/*` or the raw data
+ * files. Each entity lives in its own module and reads from Sanity when
+ * configured, falling back to local seed data otherwise. See docs/DATA_MODEL.md.
  */
 
-function isPublished(trip: Trip): boolean {
-  return !trip.draft;
-}
+// Tours / treks / expeditions (unified `Trip`)
+export {
+  getTours,
+  getAllTrips,
+  getFeaturedTours,
+  getFeaturedTrips,
+  getToursByCategory,
+  getTripsByCategory,
+  getToursByTag,
+  getTripsByTag,
+  getTourBySlug,
+  getTripBySlug,
+  getAllTripSlugs,
+  getTripSlugsByCategory,
+  getRelatedTrips,
+} from './tours';
 
-export async function getAllTrips(): Promise<Trip[]> {
-  return trips.filter(isPublished);
-}
+// Destinations
+export { getDestinations, getFeaturedDestinations, getDestinationBySlug } from './destinations';
 
-export async function getFeaturedTrips(limit?: number): Promise<Trip[]> {
-  const featured = trips.filter((t) => isPublished(t) && t.featured);
-  return typeof limit === 'number' ? featured.slice(0, limit) : featured;
-}
+// Categories
+export { getCategories, getCategoryByKey } from './categories';
 
-export async function getTripsByCategory(category: TripCategory): Promise<Trip[]> {
-  return trips.filter((t) => isPublished(t) && t.category === category);
-}
+// Testimonials / team / blog / site settings
+export { getTestimonials } from './testimonials';
+export { getTeamMembers, getTeam } from './team';
+export { getBlogPosts, getBlogPostBySlug } from './blog';
+export { getSiteSettings } from './site';
 
-export async function getTripsByTag(tag: string): Promise<Trip[]> {
-  return trips.filter((t) => isPublished(t) && t.tags.includes(tag));
-}
-
-export async function getTripBySlug(slug: string): Promise<Trip | undefined> {
-  return trips.find((t) => t.slug === slug && isPublished(t));
-}
-
-export async function getAllTripSlugs(): Promise<string[]> {
-  return trips.filter(isPublished).map((t) => t.slug);
-}
-
-export async function getTripSlugsByCategory(category: TripCategory): Promise<string[]> {
-  return trips.filter((t) => isPublished(t) && t.category === category).map((t) => t.slug);
-}
-
-/**
- * Related trips for a detail page: same category, excluding the current trip,
- * preferring those that share a destination. Falls back to same-category fill.
- */
-export async function getRelatedTrips(trip: Trip, limit = 3): Promise<Trip[]> {
-  const pool = trips.filter(
-    (t) => isPublished(t) && t.slug !== trip.slug && t.category === trip.category,
-  );
-  const sharesDestination = (t: Trip) =>
-    t.destinationSlugs.some((d) => trip.destinationSlugs.includes(d));
-  const ranked = [...pool].sort(
-    (a, b) => Number(sharesDestination(b)) - Number(sharesDestination(a)),
-  );
-  return ranked.slice(0, limit);
-}
-
-export async function getCategories(): Promise<Category[]> {
-  return categories;
-}
-
-export async function getCategoryByKey(key: TripCategory): Promise<Category | undefined> {
-  return categories.find((c) => c.key === key);
-}
-
-export async function getDestinations(): Promise<Destination[]> {
-  return destinations;
-}
-
-export async function getFeaturedDestinations(limit?: number): Promise<Destination[]> {
-  const featured = destinations.filter((d) => d.featured);
-  return typeof limit === 'number' ? featured.slice(0, limit) : featured;
-}
-
-/** Only consented testimonials are ever returned (CLAUDE.md §2). */
-export async function getTestimonials(limit?: number): Promise<Testimonial[]> {
-  const consented = testimonials.filter((t) => t.consentGiven);
-  return typeof limit === 'number' ? consented.slice(0, limit) : consented;
-}
-
-export async function getTeam(): Promise<TeamMember[]> {
-  return [...team].sort((a, b) => a.order - b.order);
-}
-
-export async function getValueProps(): Promise<ValueProp[]> {
-  return valueProps;
-}
-
-export async function getStats(): Promise<Stat[]> {
-  return stats;
-}
-
-export async function getCredentials(): Promise<Credential[]> {
-  return credentials;
-}
+// Marketing (local)
+export { getValueProps, getStats, getCredentials } from './marketing';

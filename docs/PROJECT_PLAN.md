@@ -21,7 +21,7 @@ The build is **inspired by the UX, information architecture and interaction patt
 ## 3. Non-goals (v1)
 
 - No online card payment / checkout / cart.
-- No user accounts / login.
+- No user accounts / login **for the public site or a custom admin** — content-editor auth is provided by **Sanity** (see §5; decided 2026-09-17). No bespoke admin dashboard, no application database.
 - No live availability inventory sync.
 - No multi-currency conversion engine (display currency is configurable, single default).
 - No multi-language i18n in v1 (architecture leaves room; see SEO_PLAN).
