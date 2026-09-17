@@ -27,9 +27,13 @@ export interface SocialLinks {
 
 export interface ContactInfo {
   phone: string;
+  /** Optional second phone line shown alongside the primary. */
+  phoneSecondary?: string;
   /** International WhatsApp number, digits only, no leading `+`. */
   whatsapp: string;
   email: string;
+  /** Optional second inbox shown alongside the primary. */
+  emailSecondary?: string;
   hours: string;
   address: {
     line1: string;

@@ -25,14 +25,16 @@ export const siteConfig: SiteConfig = {
   foundedYear: 2010,
 
   contact: {
-    phone: '+1 (000) 000-0000',
-    whatsapp: '10000000000',
-    email: 'hello@example.com',
+    phone: '+92 334 5290511',
+    phoneSecondary: '+92 321 7499259',
+    whatsapp: '923345290511',
+    email: 'hello@peakadvtours.com',
+    emailSecondary: 'peakadventuretour@gmail.com',
     hours: '9am – 9pm, seven days a week',
     address: {
-      line1: '000 Example Street, Suite 00',
-      city: 'Anytown',
-      country: 'Country',
+      line1: 'House No. 155, Street 12-A, Mohra Road, Simly Dam Road',
+      city: 'Islamabad',
+      country: 'Pakistan',
     },
     geo: { lat: 0, lng: 0 },
   },

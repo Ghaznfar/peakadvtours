@@ -94,6 +94,15 @@ export function SiteFooter() {
               <Phone aria-hidden className="text-brand-600 size-4 shrink-0" />
               {contact.phone}
             </a>
+            {contact.phoneSecondary && (
+              <a
+                href={`tel:${contact.phoneSecondary.replace(/[^\d+]/g, '')}`}
+                className="hover:text-brand-700 flex items-center gap-2"
+              >
+                <Phone aria-hidden className="size-4 shrink-0 text-transparent" />
+                {contact.phoneSecondary}
+              </a>
+            )}
             <a
               href={`mailto:${contact.email}`}
               className="hover:text-brand-700 flex items-center gap-2"
@@ -101,6 +110,15 @@ export function SiteFooter() {
               <Mail aria-hidden className="text-brand-600 size-4 shrink-0" />
               {contact.email}
             </a>
+            {contact.emailSecondary && (
+              <a
+                href={`mailto:${contact.emailSecondary}`}
+                className="hover:text-brand-700 flex items-center gap-2"
+              >
+                <Mail aria-hidden className="size-4 shrink-0 text-transparent" />
+                {contact.emailSecondary}
+              </a>
+            )}
             <span className="text-slate-500">{contact.hours}</span>
           </address>
         </div>

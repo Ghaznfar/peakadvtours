@@ -50,15 +50,32 @@ export function Enquiry({
             <ul className="mt-8 space-y-4 text-sm">
               <li className="flex items-start gap-3">
                 <Phone aria-hidden className="text-brand-600 mt-0.5 size-5 shrink-0" />
-                <a href={telHref} className="hover:text-brand-700 text-slate-700">
-                  {contact.phone}
-                </a>
+                <span className="flex flex-col text-slate-700">
+                  <a href={telHref} className="hover:text-brand-700">
+                    {contact.phone}
+                  </a>
+                  {contact.phoneSecondary && (
+                    <a
+                      href={`tel:${contact.phoneSecondary.replace(/[^\d+]/g, '')}`}
+                      className="hover:text-brand-700"
+                    >
+                      {contact.phoneSecondary}
+                    </a>
+                  )}
+                </span>
               </li>
               <li className="flex items-start gap-3">
                 <Mail aria-hidden className="text-brand-600 mt-0.5 size-5 shrink-0" />
-                <a href={`mailto:${contact.email}`} className="hover:text-brand-700 text-slate-700">
-                  {contact.email}
-                </a>
+                <span className="flex flex-col text-slate-700">
+                  <a href={`mailto:${contact.email}`} className="hover:text-brand-700">
+                    {contact.email}
+                  </a>
+                  {contact.emailSecondary && (
+                    <a href={`mailto:${contact.emailSecondary}`} className="hover:text-brand-700">
+                      {contact.emailSecondary}
+                    </a>
+                  )}
+                </span>
               </li>
               <li className="flex items-start gap-3">
                 <Clock aria-hidden className="text-brand-600 mt-0.5 size-5 shrink-0" />
