@@ -3,7 +3,13 @@ import Link from 'next/link';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { siteConfig } from '@/site.config';
 import { Container } from '@/components/ui/Container';
-import { FacebookIcon, InstagramIcon, XIcon, YoutubeIcon } from '@/components/ui/icons/SocialIcons';
+import {
+  FacebookIcon,
+  InstagramIcon,
+  TiktokIcon,
+  XIcon,
+  YoutubeIcon,
+} from '@/components/ui/icons/SocialIcons';
 
 type IconType = ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
 
@@ -11,6 +17,7 @@ const SOCIAL_ICONS: Partial<Record<keyof typeof siteConfig.social, IconType>> = 
   facebook: FacebookIcon,
   instagram: InstagramIcon,
   youtube: YoutubeIcon,
+  tiktok: TiktokIcon,
   x: XIcon,
 };
 

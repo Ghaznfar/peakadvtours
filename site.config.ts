@@ -40,11 +40,11 @@ export const siteConfig: SiteConfig = {
   },
 
   social: {
-    facebook: 'https://facebook.com/example',
-    instagram: 'https://instagram.com/example',
-    youtube: 'https://youtube.com/@example',
-    tiktok: '',
-    x: 'https://x.com/example',
+    facebook: 'https://www.facebook.com/share/1EXQ2QNMJE/',
+    instagram: 'https://www.instagram.com/peak_adventure_tours',
+    youtube: '',
+    tiktok: 'https://www.tiktok.com/@peakadventuretour',
+    x: '',
     pinterest: '',
   },
 

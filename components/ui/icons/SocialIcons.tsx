@@ -47,3 +47,11 @@ export function XIcon(props: IconProps) {
     </svg>
   );
 }
+
+export function TiktokIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M16.5 2h-3.1v13.6a2.9 2.9 0 1 1-2.9-2.9c.2 0 .4 0 .6.1V9.7a6 6 0 0 0-.6 0A6 6 0 1 0 16.5 15.7V9.4a8.6 8.6 0 0 0 4.9 1.6V7.9a5.4 5.4 0 0 1-4.9-5.9z" />
+    </svg>
+  );
+}
