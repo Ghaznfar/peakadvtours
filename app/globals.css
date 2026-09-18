@@ -7,23 +7,23 @@
  * Neutral scale uses Tailwind's built-in `slate`.
  * ------------------------------------------------------------------ */
 @theme {
-  /* Brand — primary (teal). Replace with client brand at handoff. */
-  --color-brand-50: #eefdfb;
-  --color-brand-100: #d3f8f2;
-  --color-brand-200: #abf0e7;
-  --color-brand-300: #72e3d6;
-  --color-brand-400: #38ccbe;
-  --color-brand-500: #17b0a3;
-  --color-brand-600: #0d8e85;
-  --color-brand-700: #10716b;
-  --color-brand-800: #135a57;
-  --color-brand-900: #144b48;
-  --color-brand-950: #052e2d;
+  /* Brand — navy, sampled from the Peak Adventure Tour logo (#071a27 ring). */
+  --color-brand-50: #f0f9ff;
+  --color-brand-100: #def0fc;
+  --color-brand-200: #b9dcf4;
+  --color-brand-300: #89c0e6;
+  --color-brand-400: #54a0d4;
+  --color-brand-500: #2d83be;
+  --color-brand-600: #1c6292;
+  --color-brand-700: #12486e;
+  --color-brand-800: #0a324c;
+  --color-brand-900: #062032;
+  --color-brand-950: #031623;
 
-  /* Accent — used sparingly for highlights/promos (amber). */
-  --color-accent-400: #fbbf24;
-  --color-accent-500: #f59e0b;
-  --color-accent-600: #d97706;
+  /* Accent — gold, sampled from the logo's sunburst/text (#fdb320). */
+  --color-accent-400: #fcba36;
+  --color-accent-500: #fbae13;
+  --color-accent-600: #da950b;
 
   /* WhatsApp brand green (used only on the WhatsApp CTA). */
   --color-whatsapp: #25d366;
