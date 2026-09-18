@@ -21,10 +21,10 @@ export function SiteHeader() {
           <Image
             src={logo.src}
             alt={logo.alt}
-            width={40}
-            height={40}
+            width={56}
+            height={56}
             priority
-            className="size-10 rounded-full object-cover"
+            className="size-14 rounded-full object-cover"
           />
         </Link>
 

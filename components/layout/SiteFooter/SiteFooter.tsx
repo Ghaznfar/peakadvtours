@@ -42,9 +42,9 @@ export function SiteFooter() {
             <Image
               src={logo.src}
               alt={logo.alt}
-              width={36}
-              height={36}
-              className="size-9 rounded-full object-cover"
+              width={64}
+              height={64}
+              className="size-16 rounded-full object-cover"
             />
           </div>
           <p className="mt-4 max-w-sm text-sm">{footer.about}</p>
