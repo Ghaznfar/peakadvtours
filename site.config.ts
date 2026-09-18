@@ -19,7 +19,7 @@ export const siteConfig: SiteConfig = {
   // Set NEXT_PUBLIC_SITE_URL in your host (e.g. Vercel env vars) to your real
   // domain so canonical/OG/sitemap URLs are correct. Falls back to a placeholder.
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://example.com',
-  logo: { alt: 'PeakAdventure Tours' },
+  logo: { src: '/images/brand/logo.jpg', alt: 'Peak Adventure Tour logo' },
   defaultCurrency: 'USD',
   locale: 'en-US',
   foundedYear: 2010,

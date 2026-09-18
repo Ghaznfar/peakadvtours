@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ChevronDown, Phone } from 'lucide-react';
 import { siteConfig } from '@/site.config';
 import { Container } from '@/components/ui/Container';
@@ -11,23 +12,24 @@ import { MobileNav } from '@/components/layout/MobileNav';
  * for the desktop nav. Only the mobile drawer (`MobileNav`) is a client island.
  */
 export function SiteHeader() {
-  const { nav, contact, name } = siteConfig;
+  const { nav, contact, name, logo } = siteConfig;
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
       <Container className="flex h-16 items-center justify-between gap-4">
-        {/* Logo — text-based placeholder; swap for an <OptimizedImage> logo. */}
         <Link
           href="/"
           className="font-display flex items-center gap-2 text-lg font-bold text-slate-900"
         >
-          <span
-            aria-hidden
-            className="bg-brand-600 inline-flex size-8 items-center justify-center rounded-md text-sm font-bold text-white"
-          >
-            PA
-          </span>
-          <span>{name}</span>
+          <Image
+            src={logo.src}
+            alt={logo.alt}
+            width={40}
+            height={40}
+            priority
+            className="size-10 rounded-full object-cover"
+          />
+          <span className="hidden sm:inline">{name}</span>
         </Link>
 
         {/* Desktop navigation */}

@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { siteConfig } from '@/site.config';
 import { Container } from '@/components/ui/Container';
@@ -23,7 +24,7 @@ const SOCIAL_ICONS: Partial<Record<keyof typeof siteConfig.social, IconType>> = 
 
 /** Site footer — every value is sourced from `siteConfig`. Server component. */
 export function SiteFooter() {
-  const { footer, contact, social, name, legalName, foundedYear } = siteConfig;
+  const { footer, contact, social, name, legalName, foundedYear, logo } = siteConfig;
   const year = new Date().getFullYear();
 
   const socialEntries = (Object.keys(SOCIAL_ICONS) as Array<keyof typeof social>)
@@ -38,12 +39,13 @@ export function SiteFooter() {
         {/* Brand + socials */}
         <div className="lg:col-span-2">
           <div className="font-display flex items-center gap-2 text-lg font-bold text-slate-900">
-            <span
-              aria-hidden
-              className="bg-brand-600 inline-flex size-8 items-center justify-center rounded-md text-sm font-bold text-white"
-            >
-              PA
-            </span>
+            <Image
+              src={logo.src}
+              alt={logo.alt}
+              width={36}
+              height={36}
+              className="size-9 rounded-full object-cover"
+            />
             {name}
           </div>
           <p className="mt-4 max-w-sm text-sm">{footer.about}</p>

@@ -54,7 +54,7 @@ export interface SiteConfig {
   tagline: string;
   description: string;
   url: string;
-  logo: { alt: string };
+  logo: { src: string; alt: string };
   defaultCurrency: string;
   locale: string;
   foundedYear: number;
