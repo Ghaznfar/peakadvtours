@@ -106,13 +106,23 @@ _Last updated: 2026-09-16_
 - **Quality gates:** WCAG 2.2 AA; LCP<2.5s/CLS<0.1/INP<200ms; Lighthouse ≥90 in CI.
 - **Originality:** strict no-copy policy; all seed content is placeholder; no fabricated reviews/ratings. (See `CLAUDE.md §2`.)
 
+## Deployment (Vercel) — fixed 2026-09-18
+
+- **Root cause of stale live site:** the Vercel project (`peakadvtour`) was Git-connected to the **wrong repo** (`Ghaznfar/peakadvtour`, no "s") while all commits went to `Ghaznfar/peakadvtours`. No push ever reached the watched repo, so auto-deploy never fired — only 3 manual `vercel --prod` deploys existed total.
+- **Fixed:** granted the Vercel GitHub App access to `peakadvtours` (github.com/settings/installations), then `vercel git connect` succeeded. Pushes to `main` now auto-deploy.
+- **Also fixed:** Production had **zero environment variables** set (the dashboard's "upgrade to Pro" prompt had blocked adding them there). Added via CLI instead (`vercel env add … production`) — confirms it was a UI-only quirk, not a real plan limit: `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `NEXT_PUBLIC_SANITY_API_VERSION`, `NEXT_PUBLIC_SITE_URL` (= `https://peakadvtour.vercel.app`).
+- **Manually redeployed** current `main` to production to apply the above immediately (logo, navy/gold rebrand, `/destinations` pages, real contact/social info).
+- Real logo (`public/images/brand/logo.jpg`, also `app/icon.jpg` favicon) and site color tokens (`app/globals.css`) were rebranded to navy (#031623–#f0f9ff) + gold (#da950b–#fcba36), sampled directly from the logo's pixels.
+
 ## Pre-launch checklist (track later)
 
 - [ ] All `PLACEHOLDER` values replaced (run placeholder scan)
-- [ ] Real branding in `site.config.ts` (name, logo, colors, contact, socials)
+- [x] Real branding in `site.config.ts` (name, logo, colors, contact, socials)
 - [ ] Real trips/destinations/blog content + licensed images with alt text
 - [ ] Real, consented testimonials + credentials
-- [ ] Forms deliver to client inbox/CRM; spam protection live
+- [ ] Forms deliver to client inbox/CRM; spam protection live (RESEND_API_KEY/ENQUIRY_TO_EMAIL still unset)
 - [ ] SEO: metadata, JSON-LD (real data), sitemap, robots, redirects
 - [ ] Lighthouse ≥90 + axe clean on key templates
 - [ ] Analytics + Search Console connected; domain/SSL configured
+- [x] Vercel env vars set (Sanity + site URL) — production
+- [x] Vercel Git auto-deploy connected to correct repo
