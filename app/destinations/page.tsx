@@ -1,0 +1,67 @@
+import { getDestinations } from '@/lib/content';
+import { buildMetadata } from '@/lib/seo/metadata';
+import { Container } from '@/components/ui/Container';
+import { Section } from '@/components/ui/Section';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import { CtaBanner } from '@/components/ui/CtaBanner';
+import { DestinationCard } from '@/components/DestinationCard';
+
+export const metadata = buildMetadata({
+  title: 'Destinations',
+  description:
+    'Regions we know first-hand, each with its own tours, treks and expeditions and seasons.',
+  path: '/destinations',
+});
+
+export default async function DestinationsPage() {
+  const destinations = await getDestinations();
+
+  return (
+    <>
+      <Section spacing="sm" ariaLabel="Destinations">
+        <Container>
+          <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Destinations' }]} />
+          <div className="mt-4 max-w-2xl">
+            <p className="text-brand-700 text-sm font-semibold tracking-wider uppercase">
+              Where we go
+            </p>
+            <h1 className="text-h1 mt-2">Explore our destinations</h1>
+            <p className="mt-3 text-slate-600">
+              Regions we know first-hand, each with its own tours, treks and seasons.
+            </p>
+          </div>
+
+          {destinations.length > 0 ? (
+            <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {destinations.map((destination, i) => (
+                <li key={destination.slug}>
+                  <DestinationCard
+                    destination={destination}
+                    priority={i === 0}
+                    imageSizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="h-full"
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="rounded-card mt-8 border border-dashed border-slate-300 p-12 text-center">
+              <h2 className="font-display text-lg font-semibold text-slate-900">
+                Destinations coming soon
+              </h2>
+              <p className="mt-2 text-sm text-slate-600">
+                We&rsquo;re adding destinations. Browse all trips in the meantime.
+              </p>
+            </div>
+          )}
+        </Container>
+      </Section>
+
+      <CtaBanner
+        heading="Can't find the right destination?"
+        body="Tell us where you want to go and we'll build a custom day-by-day itinerary."
+        primary={{ label: 'Plan a custom trip', href: '/custom-trips' }}
+      />
+    </>
+  );
+}

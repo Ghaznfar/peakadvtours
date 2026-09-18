@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { siteConfig } from '@/site.config';
-import { getAllTrips } from '@/lib/content';
+import { getAllTrips, getDestinations } from '@/lib/content';
 import { tripPath } from '@/lib/trips/href';
 
 /**
@@ -40,5 +40,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...tripRoutes];
+  const destinations = await getDestinations();
+  const destinationRoutes: MetadataRoute.Sitemap = destinations.map((destination) => ({
+    url: `${base}/destinations/${destination.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }));
+
+  return [...staticRoutes, ...tripRoutes, ...destinationRoutes];
 }
