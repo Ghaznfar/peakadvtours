@@ -12,15 +12,12 @@ import { MobileNav } from '@/components/layout/MobileNav';
  * for the desktop nav. Only the mobile drawer (`MobileNav`) is a client island.
  */
 export function SiteHeader() {
-  const { nav, contact, name, logo } = siteConfig;
+  const { nav, contact, logo } = siteConfig;
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
       <Container className="flex h-16 items-center justify-between gap-4">
-        <Link
-          href="/"
-          className="font-display flex items-center gap-2 text-lg font-bold text-slate-900"
-        >
+        <Link href="/" aria-label="Home" className="flex items-center">
           <Image
             src={logo.src}
             alt={logo.alt}
@@ -29,7 +26,6 @@ export function SiteHeader() {
             priority
             className="size-10 rounded-full object-cover"
           />
-          <span className="hidden sm:inline">{name}</span>
         </Link>
 
         {/* Desktop navigation */}

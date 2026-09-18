@@ -46,7 +46,6 @@ export function SiteFooter() {
               height={36}
               className="size-9 rounded-full object-cover"
             />
-            {name}
           </div>
           <p className="mt-4 max-w-sm text-sm">{footer.about}</p>
           {socialEntries.length > 0 && (
