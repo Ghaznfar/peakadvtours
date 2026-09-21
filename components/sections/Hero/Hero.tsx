@@ -30,7 +30,14 @@ export function Hero({ eyebrow, title, subtitle, primary, secondary, chips = [] 
       className="bg-brand-950 relative flex min-h-[36rem] items-center overflow-hidden lg:min-h-[42rem]"
     >
       {/* Background image (LCP) */}
-      <Image src="/images/hero.svg" alt="" fill priority sizes="100vw" className="object-cover" />
+      <Image
+        src="/images/stock/hero-mountain-sunrise.jpg"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover"
+      />
       <div
         aria-hidden
         className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/55 to-slate-950/20"

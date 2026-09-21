@@ -19,6 +19,29 @@ const img = (alt: string): ImageRef => ({
 
 const PLACEHOLDER_IMAGE = img('Placeholder scenery — replace with a licensed client photograph');
 
+/** Real, freely-licensed stock photos (Pexels License) standing in for the three fully-detailed sample trips. */
+const VALLEY_TOUR_IMAGE: ImageRef = {
+  src: '/images/stock/trip-valley-tour.jpg',
+  alt: 'Green valley with trees between mountains',
+  width: 1200,
+  height: 800,
+  credit: 'Photo via Pexels',
+};
+const TREK_IMAGE: ImageRef = {
+  src: '/images/stock/trip-trek-hikers.jpg',
+  alt: 'Two hikers with backpacks walking up a mountain trail',
+  width: 1200,
+  height: 800,
+  credit: 'Photo by Alex Moliski / Pexels',
+};
+const EXPEDITION_IMAGE: ImageRef = {
+  src: '/images/stock/trip-expedition-climbers.jpg',
+  alt: 'Mountaineers climbing with ropes on rock',
+  width: 1200,
+  height: 800,
+  credit: 'Photo by Felipe Queiroz / Pexels',
+};
+
 const sampleGallery: ImageRef[] = [
   img('Placeholder gallery image 1 — replace with a client photograph'),
   img('Placeholder gallery image 2 — replace with a client photograph'),
@@ -79,7 +102,7 @@ export const trips: Trip[] = [
       'A placeholder tour showing how a comfortable, guided valley itinerary is presented on a card and detail page.',
     description:
       'This is placeholder overview copy. On a real trip this section sets the scene: what the journey is, who it suits, the pace, and what makes it special. Swap it for the client’s own words. The Sample Valley Tour is an easy, hotel-based journey through orchard valleys and old villages, designed for travellers who want the scenery and culture without any trekking.',
-    heroImage: PLACEHOLDER_IMAGE,
+    heroImage: VALLEY_TOUR_IMAGE,
     gallery: sampleGallery,
     durationDays: 7,
     startCity: 'Gateway City',
@@ -232,7 +255,7 @@ export const trips: Trip[] = [
       'A placeholder trek demonstrating altitude, difficulty and departure data on the reusable trip card.',
     description:
       'Placeholder overview copy for a classic base-camp trek. This is a strenuous but non-technical route with full camp support: porters carry the loads, a cook prepares meals, and an experienced guide sets the pace for safe acclimatisation. Replace with the client’s own description of the trail, the scenery and who it suits.',
-    heroImage: PLACEHOLDER_IMAGE,
+    heroImage: TREK_IMAGE,
     gallery: sampleGallery,
     durationDays: 14,
     startCity: 'Gateway City',
@@ -411,7 +434,7 @@ export const trips: Trip[] = [
       'A placeholder expedition showing how a technical, high-altitude climb is summarised for prospective clients.',
     description:
       'Placeholder overview copy for a supported peak expedition. This is a technical climb for experienced mountaineers, run with a full expedition structure: base camp, fixed lines on the technical sections, high-altitude support and a generous acclimatisation schedule. Replace with the client’s own route description and prerequisites.',
-    heroImage: PLACEHOLDER_IMAGE,
+    heroImage: EXPEDITION_IMAGE,
     gallery: sampleGallery,
     durationDays: 23,
     startCity: 'Gateway City',
