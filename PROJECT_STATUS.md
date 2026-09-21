@@ -1,10 +1,10 @@
 # PROJECT STATUS
 
-_Last updated: 2026-09-16_
+_Last updated: 2026-09-21_
 
 ## Current phase
 
-**Sanity CMS integrated.** Content is now managed in **Sanity Studio** (standalone: `npm run studio:dev` / hosted `*.sanity.studio`) and read by the site through the Sanity API behind `lib/content/`, with a **local-seed fallback** when Sanity env vars are unset. No custom admin, no app DB, no app auth. `typecheck`/`lint`/`build` green; fallback rendering + 404/missing-content verified. **Live Sanity connection/fetch/draft tests require the client to create a Sanity project + set env** (documented). Next: `/destinations` + institutional pages (About/Contact/Blog/legal).
+**All nav/footer-linked pages now exist — no more 404s.** `/destinations`, `/about`, `/contact`, `/blog` (+ `/blog/[slug]`), `/terms`, `/privacy`, `/booking-info`, `/corporate-retreats` and a human-readable `/sitemap` are built with original placeholder content, following the existing `lib/content/` repository + Sanity-fallback pattern. `typecheck`/`lint`/`build` green; HTTP smoke-check confirms 200s + single `<h1>` on every new route. **Live site currently reads from the client's configured Sanity project** (`eigm30ey`), so the new local placeholder fallbacks (blog, team) only render when Sanity is unconfigured or empty of that content type — this is existing, intended behavior, not new to this phase. Next: write Vitest/Playwright coverage for the new pages, then real content/testing pass.
 
 ## Completed work
 
@@ -71,13 +71,26 @@ _Last updated: 2026-09-16_
 - **Verification done here:** typecheck/lint/build/format ✅ (against installed Sanity packages); fallback rendering ✅ (home, `/tours` 5 cards, trek detail with itinerary, `next/image`); missing tour → 404 ✅; empty blog when unconfigured ✅.
 - **Pending (needs client's Sanity project + env — manual):** live connection test, fetching from Sanity, draft-vs-published behavior, Sanity image rendering. Run `npm run sanity:check` and browse the site after setting env + adding CORS.
 
+### Institutional pages (this phase)
+
+- **Blog:** `lib/content/blog.data.ts` (3 original placeholder posts) + `blog.ts` updated to fall back to local seed when Sanity is unset, matching the `destinations`/`team` pattern. New `BlogCard` composite (`components/BlogCard/`). `/blog` (listing, empty-state aware) + `/blog/[slug]` (detail, `generateStaticParams`, 404 on unknown slug, `dangerouslySetInnerHTML` for the placeholder HTML body — same trust boundary as trip FAQs, not user input).
+- **`/about`:** reuses existing `WhyChooseUs`, `Stats`, `Team`, `Credentials` sections (same data as homepage) + original story copy + closing `CtaBanner`.
+- **`/contact`:** reuses the `Enquiry` section (`source="contact"`) — already has phone/email/hours/address/WhatsApp, so no new contact-details component was needed.
+- **`/corporate-retreats`:** new landing page (footer-linked, not in original phase docs) — pitch + 3 feature cards + `Enquiry` (`source="corporate-retreats"`), same shape as `/custom-trips`.
+- **`/terms`, `/privacy`, `/booking-info`:** original placeholder legal copy (clearly marked `PLACEHOLDER` where jurisdiction-specific input is required) +, on `/booking-info`, a 4-step how-it-works list and an FAQ `Disclosure` accordion with `FAQPage` JSON-LD (`faqSchema`, reused from trip detail).
+- **`/sitemap`:** new human-readable sitemap page (distinct from `app/sitemap.ts`'s generated `/sitemap.xml`), grouped links across explore/destinations/company/legal/trips.
+- **`app/sitemap.ts`:** added `/corporate-retreats` to the static route list and blog posts to the generated XML sitemap.
+- **Verification:** `typecheck`/`lint`/`build` all clean; production server HTTP smoke-check — all 9 new routes return 200 with exactly one `<h1>`.
+- **Not done in this phase:** Vitest/Playwright tests for the new pages (CLAUDE.md §10), visual QA, and populating the client's live Sanity project with real blog/team content (it currently has only test/placeholder documents, e.g. a destination titled "Destinations 2").
+
 ## Next task
 
-**Destinations + institutional pages:** `/destinations` (+ `/destinations/[slug]` hub pages), `/about`, `/contact`, `/blog` (+ posts using Sanity), and legal pages (`/terms`, `/privacy`, `/booking-info`) — all currently linked in nav/footer but 404. Add Vitest + Playwright per CLAUDE.md §10.
+**Testing pass:** add Vitest coverage for `BlogCard` + the blog repository functions, and Playwright coverage for the institutional pages (nav → page → form/FAQ interaction), per CLAUDE.md §10. Then a real-content pass once the client supplies copy/photos/team bios.
 
 ## Known issues / follow-ups
 
-- **`/destinations`, `/about`, `/contact`, `/blog`, legal pages** referenced in nav/footer are not built yet → 404 until their phases. (The form's privacy link → `/privacy` 404s until the legal pages ship.)
+- **No automated tests yet for the institutional pages** (`/about`, `/contact`, `/blog`, `/terms`, `/privacy`, `/booking-info`, `/corporate-retreats`, `/sitemap`) — verified via typecheck/lint/build + HTTP smoke-check only, same as prior phases before their test pass.
+- **Legal pages (`/terms`, `/privacy`) contain original placeholder text with explicit `PLACEHOLDER` markers** for jurisdiction-specific clauses (cancellation scale, governing law, payment methods, cookie tools) — must be reviewed by a qualified lawyer before launch, not just filled in.
 - **Visual responsive QA pending:** no browser tooling this session, so desktop/tablet/mobile were verified structurally (HTML/semantics/overflow scan + mobile-first classes) rather than by screenshot. Recommend a visual pass at 375 / 768 / 1440px before launch.
 - **Enquiry delivery:** works out of the box via the log channel; to receive leads set `RESEND_API_KEY`+`ENQUIRY_TO_EMAIL` (email) and/or `ENQUIRY_WEBHOOK_URL` (CRM/WhatsApp) in the host env. Rate-limit is in-memory (per instance) — swap for Upstash/Redis for strict multi-instance limits. Optionally add a CAPTCHA (Turnstile) later.
 - **React lint gotchas:** dynamic content icons must go through `DynamicIcon` (`createElement`), never `const X = resolveIcon(...)` then `<X/>`; never call `setState` synchronously inside a `useEffect` (`react-hooks/set-state-in-effect`) — adjust during render (guarded); avoid reading refs / calling impure fns (`Date.now`) inside functions passed to hooks in render (`react-hooks/refs`, `react-hooks/purity`) — use lazy state or scope-local disables.
@@ -116,9 +129,10 @@ _Last updated: 2026-09-16_
 
 ## Pre-launch checklist (track later)
 
-- [ ] All `PLACEHOLDER` values replaced (run placeholder scan)
+- [ ] All `PLACEHOLDER` values replaced (run placeholder scan) — now includes `/terms` and `/privacy` clauses
 - [x] Real branding in `site.config.ts` (name, logo, colors, contact, socials)
-- [ ] Real trips/destinations/blog content + licensed images with alt text
+- [x] No more 404s on nav/footer-linked pages (all built with placeholder content)
+- [ ] Real trips/destinations/blog/team content + licensed images with alt text
 - [ ] Real, consented testimonials + credentials
 - [ ] Forms deliver to client inbox/CRM; spam protection live (RESEND_API_KEY/ENQUIRY_TO_EMAIL still unset)
 - [ ] SEO: metadata, JSON-LD (real data), sitemap, robots, redirects

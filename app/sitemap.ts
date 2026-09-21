@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { siteConfig } from '@/site.config';
-import { getAllTrips, getDestinations } from '@/lib/content';
+import { getAllTrips, getBlogPosts, getDestinations } from '@/lib/content';
 import { tripPath } from '@/lib/trips/href';
 
 /**
@@ -19,6 +19,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/trips',
     '/custom-trips',
     '/destinations',
+    '/corporate-retreats',
     '/about',
     '/contact',
     '/blog',
@@ -48,5 +49,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...tripRoutes, ...destinationRoutes];
+  const posts = await getBlogPosts();
+  const blogRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
+    url: `${base}/blog/${post.slug}`,
+    lastModified: new Date(post.updatedAt ?? post.publishedAt),
+    changeFrequency: 'monthly',
+    priority: 0.6,
+  }));
+
+  return [...staticRoutes, ...tripRoutes, ...destinationRoutes, ...blogRoutes];
 }

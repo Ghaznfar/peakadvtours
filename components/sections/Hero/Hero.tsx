@@ -1,8 +1,42 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowRight, ShieldCheck, Star, Users } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
+import { HeroSlideshow, type HeroSlide } from './HeroSlideshow';
+
+/**
+ * Real, freely-licensed stock photos (Pexels License) standing in for each
+ * featured route until the client supplies their own photography. Labels are
+ * the client's real trip names — replace the `src` with a licensed photo of
+ * the actual route as soon as one is available.
+ */
+const SLIDES: HeroSlide[] = [
+  {
+    src: '/images/stock/trip-trek-hikers.jpg',
+    alt: 'Two hikers with backpacks walking up a mountain trail',
+    label: 'K2 Base Camp & Gondogoro La Trek',
+  },
+  {
+    src: '/images/stock/trip-valley-tour.jpg',
+    alt: 'Green valley with trees between mountains',
+    label: 'Hunza Valley Tour',
+  },
+  {
+    src: '/images/stock/destination-lakes-district.jpg',
+    alt: 'Turquoise alpine lake surrounded by mountains',
+    label: 'Skardu & Baltistan Tours',
+  },
+  {
+    src: '/images/stock/destination-highland-region.jpg',
+    alt: 'Snow-capped mountain peaks in a northern highland valley',
+    label: 'Kalash & Shandur',
+  },
+  {
+    src: '/images/stock/trip-expedition-climbers.jpg',
+    alt: 'Mountaineers climbing with ropes on rock',
+    label: 'Karakoram Expeditions',
+  },
+];
 
 export interface HeroChip {
   label: string;
@@ -29,15 +63,8 @@ export function Hero({ eyebrow, title, subtitle, primary, secondary, chips = [] 
       aria-label="Introduction"
       className="bg-brand-950 relative flex min-h-[36rem] items-center overflow-hidden lg:min-h-[42rem]"
     >
-      {/* Background image (LCP) */}
-      <Image
-        src="/images/stock/hero-mountain-sunrise.jpg"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover"
-      />
+      {/* Background slideshow (first slide is the LCP image) */}
+      <HeroSlideshow slides={SLIDES} />
       <div
         aria-hidden
         className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/55 to-slate-950/20"
