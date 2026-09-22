@@ -193,6 +193,16 @@ export interface BlogPost {
 }
 
 /** Editable site-wide settings (mirrors `site.config.ts`; Sanity singleton). */
+/** A homepage hero slide. `ctaHref`/`ctaLabel` are derived from the linked
+ * tour (category + slug) when sourced from Sanity — see `lib/content/site.ts`. */
+export interface HeroSlideEntry {
+  image: ImageRef;
+  eyebrow: string;
+  title: string;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
 export interface SiteSettings {
   name?: string;
   tagline?: string;
@@ -205,4 +215,5 @@ export interface SiteSettings {
     address?: { line1?: string; city?: string; country?: string };
   };
   social?: Record<string, string | undefined>;
+  heroSlides?: HeroSlideEntry[];
 }

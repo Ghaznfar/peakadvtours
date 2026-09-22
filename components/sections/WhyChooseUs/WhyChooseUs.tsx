@@ -2,6 +2,7 @@ import { Container } from '@/components/ui/Container';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { ValuePropCard } from '@/components/ValuePropCard';
+import { Reveal } from '@/components/animation/Reveal';
 import type { ValueProp } from '@/types/content';
 
 export interface WhyChooseUsProps {
@@ -11,7 +12,7 @@ export interface WhyChooseUsProps {
 /** Trust / "why book with us" section — a grid of value-proposition cards. */
 export function WhyChooseUs({ valueProps }: WhyChooseUsProps) {
   return (
-    <Section ariaLabel="Why book with us" className="bg-slate-50">
+    <Section ariaLabel="Why book with us" className="bg-slate-50 dark:bg-[#0d1117]">
       <Container>
         <SectionHeading
           eyebrow="Why book with us"
@@ -20,10 +21,10 @@ export function WhyChooseUs({ valueProps }: WhyChooseUsProps) {
           align="center"
         />
         <ul className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {valueProps.map((vp) => (
-            <li key={vp.id}>
+          {valueProps.map((vp, i) => (
+            <Reveal as="li" key={vp.id} delayMs={(i % 3) * 80}>
               <ValuePropCard valueProp={vp} />
-            </li>
+            </Reveal>
           ))}
         </ul>
       </Container>

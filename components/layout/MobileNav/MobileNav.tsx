@@ -6,6 +6,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Menu, X } from 'lucide-react';
 import { siteConfig } from '@/site.config';
 import { Button } from '@/components/ui/Button';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 /**
  * Mobile navigation drawer. Client island — manages open state and uses Radix
@@ -22,31 +23,36 @@ export function MobileNav() {
         <button
           type="button"
           aria-label="Open menu"
-          className="focus-visible:ring-brand-600 inline-flex size-11 items-center justify-center rounded-md text-slate-700 hover:bg-slate-100 focus-visible:ring-2 focus-visible:outline-none lg:hidden"
+          className="focus-visible:ring-ring inline-flex size-11 items-center justify-center rounded-md text-slate-700 hover:bg-slate-100 focus-visible:ring-2 focus-visible:outline-none lg:hidden dark:text-slate-300 dark:hover:bg-slate-800"
         >
           <Menu aria-hidden className="size-6" />
         </button>
       </Dialog.Trigger>
 
       <Dialog.Portal>
-        <Dialog.Overlay className="data-[state=open]:animate-in fixed inset-0 z-50 bg-slate-900/50" />
+        <Dialog.Overlay
+          className="fixed inset-0 z-50 bg-slate-900/50 data-[state=closed]:[animation:overlay-fade-out_200ms_ease-in] data-[state=open]:[animation:overlay-fade-in_200ms_ease-out]"
+        />
         <Dialog.Content
-          className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white shadow-xl focus:outline-none"
+          className="bg-card fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col shadow-xl focus:outline-none data-[state=closed]:[animation:drawer-slide-out_250ms_ease-in] data-[state=open]:[animation:drawer-slide-in_250ms_ease-out]"
           aria-label="Site menu"
         >
-          <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4">
-            <Dialog.Title className="font-display text-base font-semibold text-slate-900">
+          <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4 dark:border-slate-800">
+            <Dialog.Title className="text-card-foreground font-display text-base font-semibold">
               {siteConfig.name}
             </Dialog.Title>
-            <Dialog.Close asChild>
-              <button
-                type="button"
-                aria-label="Close menu"
-                className="focus-visible:ring-brand-600 inline-flex size-11 items-center justify-center rounded-md text-slate-700 hover:bg-slate-100 focus-visible:ring-2 focus-visible:outline-none"
-              >
-                <X aria-hidden className="size-6" />
-              </button>
-            </Dialog.Close>
+            <div className="flex items-center gap-1">
+              <ThemeToggle />
+              <Dialog.Close asChild>
+                <button
+                  type="button"
+                  aria-label="Close menu"
+                  className="focus-visible:ring-ring inline-flex size-11 items-center justify-center rounded-md text-slate-700 hover:bg-slate-100 focus-visible:ring-2 focus-visible:outline-none dark:text-slate-300 dark:hover:bg-slate-800"
+                >
+                  <X aria-hidden className="size-6" />
+                </button>
+              </Dialog.Close>
+            </div>
           </div>
 
           <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-2 py-4">
@@ -55,11 +61,11 @@ export function MobileNav() {
                 item.children ? (
                   <li key={item.href}>
                     <details className="group rounded-lg">
-                      <summary className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden">
+                      <summary className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden dark:text-slate-100 dark:hover:bg-slate-800">
                         {item.label}
                         <span
                           aria-hidden
-                          className="text-slate-400 transition-transform group-open:rotate-180"
+                          className="text-slate-400 transition-transform group-open:rotate-180 dark:text-slate-500"
                         >
                           ▾
                         </span>
@@ -69,7 +75,7 @@ export function MobileNav() {
                           <Link
                             href={item.href}
                             onClick={close}
-                            className="block rounded-md px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                            className="block rounded-md px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800"
                           >
                             All {item.label.toLowerCase()}
                           </Link>
@@ -79,7 +85,7 @@ export function MobileNav() {
                             <Link
                               href={child.href}
                               onClick={close}
-                              className="block rounded-md px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
+                              className="block rounded-md px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800"
                             >
                               {child.label}
                             </Link>
@@ -93,7 +99,7 @@ export function MobileNav() {
                     <Link
                       href={item.href}
                       onClick={close}
-                      className="block rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50"
+                      className="block rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50 dark:text-slate-100 dark:hover:bg-slate-800"
                     >
                       {item.label}
                     </Link>
@@ -103,7 +109,7 @@ export function MobileNav() {
             </ul>
           </nav>
 
-          <div className="border-t border-slate-200 p-4">
+          <div className="border-t border-slate-200 p-4 dark:border-slate-800">
             <Button asChild fullWidth>
               <Link href="/contact" onClick={close}>
                 Enquire now
@@ -111,7 +117,7 @@ export function MobileNav() {
             </Button>
             <a
               href={`tel:${siteConfig.contact.phone.replace(/[^\d+]/g, '')}`}
-              className="mt-3 block text-center text-sm text-slate-600"
+              className="mt-3 block text-center text-sm text-slate-600 dark:text-slate-400"
             >
               {siteConfig.contact.phone}
             </a>

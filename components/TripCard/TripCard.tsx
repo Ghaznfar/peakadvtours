@@ -50,7 +50,7 @@ export function TripCard({ trip, imageSizes, priority = false, className }: Trip
   return (
     <article
       className={cn(
-        'group rounded-card flex flex-col overflow-hidden border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md',
+        'group rounded-card bg-card flex flex-col overflow-hidden border border-slate-200 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:shadow-black/30 dark:hover:border-slate-700',
         className,
       )}
     >
@@ -77,42 +77,46 @@ export function TripCard({ trip, imageSizes, priority = false, className }: Trip
 
       <div className="flex flex-1 flex-col p-5">
         <h3 className="text-h3">
-          <Link href={href} className="hover:text-brand-700">
+          <Link href={href} className="hover:text-brand-700 dark:hover:text-brand-400">
             {trip.title}
           </Link>
         </h3>
-        <p className="mt-2 line-clamp-3 text-sm text-slate-600">{trip.summary}</p>
+        <p className="mt-2 line-clamp-3 text-sm text-slate-600 dark:text-slate-400">
+          {trip.summary}
+        </p>
 
-        <dl className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-600">
+        <dl className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-600 dark:text-slate-400">
           <div className="flex items-center gap-1.5">
-            <CalendarDays aria-hidden className="text-brand-600 size-4" />
+            <CalendarDays aria-hidden className="text-brand-600 dark:text-brand-400 size-4" />
             <dt className="sr-only">Duration</dt>
             <dd>{trip.durationDays} days</dd>
           </div>
           <div className="flex items-center gap-1.5">
-            <Gauge aria-hidden className="text-brand-600 size-4" />
+            <Gauge aria-hidden className="text-brand-600 dark:text-brand-400 size-4" />
             <dt className="sr-only">Difficulty</dt>
             <dd>{DIFFICULTY_LABEL[trip.difficulty]}</dd>
           </div>
           {showAltitude && (
             <div className="flex items-center gap-1.5">
-              <Mountain aria-hidden className="text-brand-600 size-4" />
+              <Mountain aria-hidden className="text-brand-600 dark:text-brand-400 size-4" />
               <dt className="sr-only">Maximum altitude</dt>
               <dd>{trip.maxAltitudeM?.toLocaleString()} m</dd>
             </div>
           )}
           {seasonText && (
             <div className="flex items-center gap-1.5">
-              <Sun aria-hidden className="text-brand-600 size-4" />
+              <Sun aria-hidden className="text-brand-600 dark:text-brand-400 size-4" />
               <dt className="sr-only">Season</dt>
               <dd>{seasonText}</dd>
             </div>
           )}
         </dl>
 
-        <div className="mt-5 flex items-end justify-between gap-3 border-t border-slate-100 pt-4">
+        <div className="mt-5 flex items-end justify-between gap-3 border-t border-slate-100 pt-4 dark:border-slate-800">
           {trip.priceOnRequest ? (
-            <span className="text-sm font-medium text-slate-700">Price on request</span>
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              Price on request
+            </span>
           ) : (
             <Price price={trip.price} />
           )}

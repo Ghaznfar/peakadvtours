@@ -2,6 +2,7 @@ import { Container } from '@/components/ui/Container';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { DestinationCard } from '@/components/DestinationCard';
+import { Reveal } from '@/components/animation/Reveal';
 import type { Destination } from '@/types/content';
 
 export interface DestinationShowcaseProps {
@@ -25,14 +26,14 @@ export function DestinationShowcase({ destinations }: DestinationShowcaseProps) 
           action={{ label: 'All destinations', href: '/destinations' }}
         />
         <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {destinations.map((destination) => (
-            <li key={destination.slug}>
+          {destinations.map((destination, i) => (
+            <Reveal as="li" key={destination.slug} delayMs={(i % 4) * 80}>
               <DestinationCard
                 destination={destination}
                 imageSizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 className="h-full"
               />
-            </li>
+            </Reveal>
           ))}
         </ul>
       </Container>

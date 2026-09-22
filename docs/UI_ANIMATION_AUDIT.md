@@ -1,6 +1,8 @@
 # UI / ANIMATION AUDIT
 
-_Read-only audit, dated 2026-09-22, ahead of the "premium visual + animation" upgrade. Nothing in this document has been implemented yet — see PROPOSED IMPROVEMENTS §4 for the one decision that needs sign-off before Phase 3+ starts._
+_Audit dated 2026-09-22, ahead of the "premium visual + animation" upgrade._
+
+> **Status: implemented.** Both decisions in §4 and §5 were confirmed by the client (CSS + `IntersectionObserver` primitives, no animation library; testimonials stay a static grid) and built on branch `ui-premium-upgrade`. See `PROJECT_STATUS.md` → "UI / animation upgrade" for the full breakdown of what was built, verified, and intentionally left for later. This document is kept as-is below as the original audit record.
 
 ## 1. Current state summary
 

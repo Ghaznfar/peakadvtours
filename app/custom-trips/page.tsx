@@ -54,17 +54,17 @@ export default async function CustomTripsPage({ searchParams }: CustomTripsPageP
         <Container>
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Custom trips' }]} />
           <div className="mt-4 max-w-2xl">
-            <p className="text-brand-700 text-sm font-semibold tracking-wider uppercase">
+            <p className="text-brand-700 dark:text-brand-400 text-sm font-semibold tracking-wider uppercase">
               Your dates, your route
             </p>
             <h1 className="text-h1 mt-2">Design your own trip</h1>
-            <p className="mt-3 text-slate-600">
+            <p className="mt-3 text-slate-600 dark:text-slate-400">
               Nothing off-the-shelf fits? Tell us where you want to go and we build a custom
               day-by-day itinerary around your dates, with the full price per person — no deposit to
               see one.
             </p>
             {contextTrip && (
-              <p className="bg-brand-50 text-brand-800 mt-4 inline-block rounded-lg px-4 py-2 text-sm">
+              <p className="bg-brand-50 text-brand-800 dark:text-brand-400 mt-4 inline-block rounded-lg px-4 py-2 text-sm">
                 Enquiring about <span className="font-semibold">{contextTrip.title}</span> — mention
                 any changes you&rsquo;d like below.
               </p>
@@ -75,23 +75,23 @@ export default async function CustomTripsPage({ searchParams }: CustomTripsPageP
             {STEPS.map((step, i) => (
               <li
                 key={step.title}
-                className="rounded-card border border-slate-200 bg-white p-6 shadow-sm"
+                className="rounded-card border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm"
               >
                 <div className="flex items-center gap-3">
                   <span
                     aria-hidden
-                    className="bg-brand-50 text-brand-700 inline-flex size-10 items-center justify-center rounded-xl"
+                    className="bg-brand-50 text-brand-700 dark:text-brand-400 inline-flex size-10 items-center justify-center rounded-xl"
                   >
                     <step.icon className="size-5" />
                   </span>
-                  <span className="font-display text-sm font-semibold text-slate-400">
+                  <span className="font-display text-sm font-semibold text-slate-400 dark:text-slate-600">
                     Step {i + 1}
                   </span>
                 </div>
-                <h2 className="font-display mt-4 text-lg font-semibold text-slate-900">
+                <h2 className="font-display mt-4 text-lg font-semibold text-slate-900 dark:text-white">
                   {step.title}
                 </h2>
-                <p className="mt-2 text-sm text-slate-600">{step.body}</p>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{step.body}</p>
               </li>
             ))}
           </ol>

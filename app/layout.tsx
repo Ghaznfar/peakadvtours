@@ -6,7 +6,15 @@ import { AnnouncementBar } from '@/components/layout/AnnouncementBar';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { WhatsAppButton } from '@/components/layout/WhatsAppButton';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import './globals.css';
+
+// Runs before hydration so the correct theme is applied on first paint — no
+// light→dark (or dark→light) flash. Kept tiny and dependency-free. Light is
+// the default for a first-time visitor; dark only applies once the user has
+// explicitly chosen it (persisted in localStorage) — OS preference is not
+// used to pick the initial theme.
+const THEME_INIT_SCRIPT = `(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`;
 
 const inter = Inter({
   subsets: ['latin'],
@@ -24,24 +32,36 @@ export const metadata = defaultMetadata;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${sora.variable}`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${sora.variable}`}
+      // The theme init script mutates this element's class before hydration
+      // (by design — see THEME_INIT_SCRIPT), which would otherwise trigger a
+      // false-positive hydration warning.
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body>
-        {/* Skip link — first focusable element for keyboard/screen-reader users. */}
-        <a
-          href="#main-content"
-          className="focus:bg-brand-700 sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:px-4 focus:py-2 focus:text-white"
-        >
-          Skip to main content
-        </a>
+        <ThemeProvider>
+          {/* Skip link — first focusable element for keyboard/screen-reader users. */}
+          <a
+            href="#main-content"
+            className="focus:bg-brand-700 sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:px-4 focus:py-2 focus:text-white"
+          >
+            Skip to main content
+          </a>
 
-        <AnnouncementBar />
-        <SiteHeader />
-        <main id="main-content">{children}</main>
-        <SiteFooter />
-        <WhatsAppButton />
+          <AnnouncementBar />
+          <SiteHeader />
+          <main id="main-content">{children}</main>
+          <SiteFooter />
+          <WhatsAppButton />
 
-        <JsonLd data={organizationSchema()} />
-        <JsonLd data={websiteSchema()} />
+          <JsonLd data={organizationSchema()} />
+          <JsonLd data={websiteSchema()} />
+        </ThemeProvider>
       </body>
     </html>
   );

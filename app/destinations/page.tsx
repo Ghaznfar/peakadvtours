@@ -22,11 +22,11 @@ export default async function DestinationsPage() {
         <Container>
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Destinations' }]} />
           <div className="mt-4 max-w-2xl">
-            <p className="text-brand-700 text-sm font-semibold tracking-wider uppercase">
+            <p className="text-brand-700 dark:text-brand-400 text-sm font-semibold tracking-wider uppercase">
               Where we go
             </p>
             <h1 className="text-h1 mt-2">Explore our destinations</h1>
-            <p className="mt-3 text-slate-600">
+            <p className="mt-3 text-slate-600 dark:text-slate-400">
               Regions we know first-hand, each with its own tours, treks and seasons.
             </p>
           </div>
@@ -45,11 +45,11 @@ export default async function DestinationsPage() {
               ))}
             </ul>
           ) : (
-            <div className="rounded-card mt-8 border border-dashed border-slate-300 p-12 text-center">
-              <h2 className="font-display text-lg font-semibold text-slate-900">
+            <div className="rounded-card mt-8 border border-dashed border-slate-300 dark:border-slate-700 p-12 text-center">
+              <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">
                 Destinations coming soon
               </h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                 We&rsquo;re adding destinations. Browse all trips in the meantime.
               </p>
             </div>

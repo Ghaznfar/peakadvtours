@@ -2,6 +2,7 @@ import { Container } from '@/components/ui/Container';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { TestimonialCard } from '@/components/TestimonialCard';
+import { Reveal } from '@/components/animation/Reveal';
 import type { Testimonial } from '@/types/content';
 
 export interface TestimonialsProps {
@@ -12,7 +13,7 @@ export interface TestimonialsProps {
 export function Testimonials({ testimonials }: TestimonialsProps) {
   if (testimonials.length === 0) return null;
   return (
-    <Section ariaLabel="Traveller reviews" className="bg-slate-50">
+    <Section ariaLabel="Traveller reviews" className="bg-slate-50 dark:bg-[#0d1117]">
       <Container>
         <SectionHeading
           eyebrow="What travellers say"
@@ -21,10 +22,10 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
           align="center"
         />
         <ul className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((t) => (
-            <li key={t.id}>
+          {testimonials.map((t, i) => (
+            <Reveal as="li" key={t.id} delayMs={(i % 3) * 80}>
               <TestimonialCard testimonial={t} />
-            </li>
+            </Reveal>
           ))}
         </ul>
       </Container>

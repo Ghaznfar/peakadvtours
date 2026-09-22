@@ -4,6 +4,7 @@ import {
   getDestinations,
   getFeaturedDestinations,
   getFeaturedTrips,
+  getHeroSlides,
   getStats,
   getTeam,
   getTestimonials,
@@ -34,6 +35,7 @@ const CATEGORY_ICON: Record<TripCategory, string> = {
 /** Homepage — composes the marketing sections from the content repository. */
 export default async function HomePage() {
   const [
+    heroSlides,
     categories,
     allTrips,
     featuredTrips,
@@ -45,6 +47,7 @@ export default async function HomePage() {
     testimonials,
     credentials,
   ] = await Promise.all([
+    getHeroSlides(),
     getCategories(),
     getAllTrips(),
     getFeaturedTrips(6),
@@ -79,18 +82,9 @@ export default async function HomePage() {
     ...destinations.map((d) => ({ value: d.slug, label: d.name })),
   ];
 
-  const heroChips = categories.map((c) => ({ label: c.pluralLabel, href: `/${c.slug}` }));
-
   return (
     <>
-      <Hero
-        eyebrow={`Since ${siteConfig.foundedYear}`}
-        title="Small-group adventures, planned by people who walk the routes"
-        subtitle={siteConfig.description}
-        primary={{ label: 'Find your trip', href: '/trips' }}
-        secondary={{ label: 'Build a custom trip', href: '/custom-trips' }}
-        chips={heroChips}
-      />
+      <Hero slides={heroSlides} />
 
       <CategoryCards categories={categoryVMs} />
 

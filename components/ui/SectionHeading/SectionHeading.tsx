@@ -36,15 +36,19 @@ export function SectionHeading({
     >
       <div className={cn('max-w-2xl', centered && 'text-center')}>
         {eyebrow && (
-          <p className="text-brand-700 text-sm font-semibold tracking-wider uppercase">{eyebrow}</p>
+          <p className="text-brand-700 text-sm font-semibold tracking-wider uppercase dark:text-brand-400">
+            {eyebrow}
+          </p>
         )}
         <Heading className="text-h2 mt-2">{title}</Heading>
-        {description && <p className="mt-3 text-slate-600">{description}</p>}
+        {description && (
+          <p className="mt-3 text-slate-600 dark:text-slate-400">{description}</p>
+        )}
       </div>
       {action && (
         <Link
           href={action.href}
-          className="text-brand-700 hover:text-brand-800 inline-flex shrink-0 items-center gap-1 text-sm font-medium hover:underline"
+          className="text-brand-700 hover:text-brand-800 inline-flex shrink-0 items-center gap-1 text-sm font-medium hover:underline dark:text-brand-400 dark:hover:text-brand-300"
         >
           {action.label}
           <ArrowRight aria-hidden className="size-4" />

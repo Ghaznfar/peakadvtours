@@ -15,7 +15,7 @@ import {
 } from '@/lib/enquiry/schema';
 
 const inputClasses =
-  'h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 aria-[invalid=true]:border-red-500 aria-[invalid=true]:ring-red-500';
+  'h-11 w-full rounded-lg border border-slate-300 bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 aria-[invalid=true]:border-red-500 aria-[invalid=true]:ring-red-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus-visible:ring-brand-400 dark:aria-[invalid=true]:border-red-500 dark:aria-[invalid=true]:ring-red-500';
 
 export interface EnquiryFormProps {
   destinationOptions?: { value: string; label: string }[];
@@ -126,14 +126,16 @@ export function EnquiryForm({
     return (
       <div
         className={cn(
-          'rounded-card border-brand-200 bg-brand-50 flex flex-col items-center border p-8 text-center',
+          'rounded-card border-brand-200 bg-brand-50 flex flex-col items-center border p-8 text-center dark:border-brand-900 dark:bg-brand-950/60',
           className,
         )}
         role="status"
       >
-        <CheckCircle2 aria-hidden className="text-brand-600 size-10" />
-        <h3 className="font-display mt-3 text-xl font-semibold text-slate-900">Enquiry sent</h3>
-        <p className="mt-2 text-sm text-slate-600">
+        <CheckCircle2 aria-hidden className="text-brand-600 dark:text-brand-400 size-10" />
+        <h3 className="font-display mt-3 text-xl font-semibold text-slate-900 dark:text-white">
+          Enquiry sent
+        </h3>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
           Thanks{tripTitle ? ` for your interest in the ${tripTitle}` : ''} — a trip planner will
           reply personally, usually within a few hours.
         </p>
@@ -158,7 +160,7 @@ export function EnquiryForm({
           ref={summaryRef}
           tabIndex={-1}
           role="alert"
-          className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:outline-none"
+          className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:outline-none dark:border-red-900 dark:bg-red-950/50 dark:text-red-300"
         >
           {serverError && <p className="font-semibold">{serverError}</p>}
           {errorEntries.length > 0 && (
@@ -359,12 +361,12 @@ export function EnquiryForm({
       </div>
 
       <div>
-        <label className="flex items-start gap-2 text-sm text-slate-600">
+        <label className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
           <input
             type="checkbox"
             aria-invalid={Boolean(errors.consent)}
             aria-describedby={describedBy('consent')}
-            className="focus-visible:ring-brand-600 text-brand-600 mt-0.5 size-4 rounded border-slate-300 focus-visible:ring-2"
+            className="focus-visible:ring-brand-600 text-brand-600 mt-0.5 size-4 rounded border-slate-300 focus-visible:ring-2 dark:border-slate-600 dark:bg-slate-900 dark:focus-visible:ring-brand-400"
             {...register('consent')}
           />
           <span>
@@ -373,16 +375,16 @@ export function EnquiryForm({
           </span>
         </label>
         {errors.consent && (
-          <p id={errId('consent')} className="mt-1 text-xs text-red-600">
+          <p id={errId('consent')} className="mt-1 text-xs text-red-600 dark:text-red-400">
             {errors.consent.message as string}
           </p>
         )}
       </div>
 
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-slate-500 dark:text-slate-500">
         We use your details only to answer this enquiry — never sold, never passed on, and deleted
         on request. See our{' '}
-        <a href="/privacy" className="hover:text-brand-700 underline">
+        <a href="/privacy" className="hover:text-brand-700 dark:hover:text-brand-400 underline">
           privacy policy
         </a>
         .
@@ -414,13 +416,15 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-sm font-medium text-slate-700">
+      <label htmlFor={id} className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       {children}
-      {hint && !error && <p className="mt-1 text-xs text-slate-500">{hint}</p>}
+      {hint && !error && (
+        <p className="mt-1 text-xs text-slate-500 dark:text-slate-500">{hint}</p>
+      )}
       {error && (
-        <p id={`${id}-error`} className="mt-1 text-xs text-red-600">
+        <p id={`${id}-error`} className="mt-1 text-xs text-red-600 dark:text-red-400">
           {error}
         </p>
       )}

@@ -33,21 +33,32 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
 
   return (
     <nav aria-label="Breadcrumb" className={cn('text-sm', className)}>
-      <ol className="flex flex-wrap items-center gap-1.5 text-slate-500">
+      <ol className="flex flex-wrap items-center gap-1.5 text-slate-500 dark:text-slate-400">
         {items.map((item, i) => {
           const isLast = i === items.length - 1;
           return (
             <li key={`${item.label}-${i}`} className="flex items-center gap-1.5">
               {item.href && !isLast ? (
-                <Link href={item.href} className="hover:text-brand-700 hover:underline">
+                <Link
+                  href={item.href}
+                  className="hover:text-brand-700 dark:hover:text-brand-400 hover:underline"
+                >
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-slate-700" aria-current={isLast ? 'page' : undefined}>
+                <span
+                  className="text-slate-700 dark:text-slate-200"
+                  aria-current={isLast ? 'page' : undefined}
+                >
                   {item.label}
                 </span>
               )}
-              {!isLast && <ChevronRight aria-hidden className="size-4 shrink-0 text-slate-400" />}
+              {!isLast && (
+                <ChevronRight
+                  aria-hidden
+                  className="size-4 shrink-0 text-slate-400 dark:text-slate-600"
+                />
+              )}
             </li>
           );
         })}

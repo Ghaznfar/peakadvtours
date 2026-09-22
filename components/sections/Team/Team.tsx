@@ -2,6 +2,7 @@ import { Container } from '@/components/ui/Container';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { TeamCard } from '@/components/TeamCard';
+import { Reveal } from '@/components/animation/Reveal';
 import type { TeamMember } from '@/types/content';
 
 export interface TeamProps {
@@ -21,10 +22,10 @@ export function Team({ members }: TeamProps) {
           action={{ label: 'About us', href: '/about' }}
         />
         <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {members.map((member) => (
-            <li key={member.id}>
+          {members.map((member, i) => (
+            <Reveal as="li" key={member.id} delayMs={(i % 4) * 80}>
               <TeamCard member={member} />
-            </li>
+            </Reveal>
           ))}
         </ul>
       </Container>

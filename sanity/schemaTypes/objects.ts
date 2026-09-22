@@ -217,6 +217,43 @@ export const faq = defineType({
   preview: { select: { title: 'question' } },
 });
 
+export const heroSlide = defineType({
+  name: 'heroSlide',
+  title: 'Hero slide',
+  type: 'object',
+  fields: [
+    defineField({
+      name: 'image',
+      title: 'Image',
+      type: 'imageWithAlt',
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'eyebrow',
+      title: 'Eyebrow (short line above the title)',
+      type: 'string',
+      description: 'e.g. "All-inclusive & guided".',
+      validation: (r) => r.required().max(60),
+    }),
+    defineField({
+      name: 'tour',
+      title: 'Featured tour/trek/expedition',
+      type: 'reference',
+      to: [{ type: 'tour' }],
+      description: 'The slide’s title and "View …" button link come from this tour.',
+      validation: (r) => r.required(),
+    }),
+  ],
+  preview: {
+    select: { eyebrow: 'eyebrow', title: 'tour.title', media: 'image' },
+    prepare: ({ eyebrow, title, media }) => ({
+      title: title ?? 'Untitled slide',
+      subtitle: eyebrow,
+      media,
+    }),
+  },
+});
+
 export const objectTypes = [
   imageWithAlt,
   seo,
@@ -226,4 +263,5 @@ export const objectTypes = [
   highlight,
   infoBlock,
   faq,
+  heroSlide,
 ];

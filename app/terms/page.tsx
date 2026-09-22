@@ -60,7 +60,7 @@ export default function TermsPage() {
         <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Booking terms' }]} />
         <div className="mt-4 max-w-3xl">
           <h1 className="text-h1 mt-2">Booking terms</h1>
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-slate-600 dark:text-slate-400">
             These are placeholder booking terms provided as a starting structure. Have them
             reviewed by a qualified lawyer for your jurisdiction before this site goes live.
           </p>
@@ -69,10 +69,10 @@ export default function TermsPage() {
         <div className="mt-10 max-w-3xl space-y-8">
           {SECTIONS.map((section) => (
             <div key={section.heading}>
-              <h2 className="font-display text-lg font-semibold text-slate-900">
+              <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">
                 {section.heading}
               </h2>
-              <p className="mt-2 leading-relaxed text-slate-600">{section.body}</p>
+              <p className="mt-2 leading-relaxed text-slate-600 dark:text-slate-400">{section.body}</p>
             </div>
           ))}
         </div>

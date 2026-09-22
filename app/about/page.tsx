@@ -30,17 +30,17 @@ export default async function AboutPage() {
         <Container>
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
           <div className="mt-4 max-w-2xl">
-            <p className="text-brand-700 text-sm font-semibold tracking-wider uppercase">
+            <p className="text-brand-700 dark:text-brand-400 text-sm font-semibold tracking-wider uppercase">
               Since {siteConfig.foundedYear}
             </p>
             <h1 className="text-h1 mt-2">About {siteConfig.name}</h1>
-            <p className="mt-3 text-slate-600">{siteConfig.description}</p>
+            <p className="mt-3 text-slate-600 dark:text-slate-400">{siteConfig.description}</p>
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
             <div>
               <h2 className="font-display text-h3">How we started</h2>
-              <p className="mt-3 text-slate-600">
+              <p className="mt-3 text-slate-600 dark:text-slate-400">
                 We started with one vehicle and one rule: never sell a route we haven&rsquo;t
                 walked ourselves. Every itinerary on this site has been checked in person by our
                 own guides, across the seasons we actually run departures in.
@@ -48,7 +48,7 @@ export default async function AboutPage() {
             </div>
             <div>
               <h2 className="font-display text-h3">How we work</h2>
-              <p className="mt-3 text-slate-600">
+              <p className="mt-3 text-slate-600 dark:text-slate-400">
                 Small groups, one inclusive price and local guides who live in the regions you
                 visit. If a scheduled departure doesn&rsquo;t fit your dates or group size, our
                 planners build a custom itinerary around them instead.

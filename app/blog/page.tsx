@@ -20,18 +20,18 @@ export default async function BlogPage() {
       <Container>
         <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Blog' }]} />
         <div className="mt-4 max-w-2xl">
-          <p className="text-brand-700 text-sm font-semibold tracking-wider uppercase">
+          <p className="text-brand-700 dark:text-brand-400 text-sm font-semibold tracking-wider uppercase">
             Guides & news
           </p>
           <h1 className="text-h1 mt-2">Blog &amp; news</h1>
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-slate-600 dark:text-slate-400">
             Trip-planning guides, destination notes and booking explainers, written by the people
             who plan and guide our trips.
           </p>
         </div>
 
         {posts.length === 0 ? (
-          <p className="mt-10 rounded-card border border-slate-200 bg-slate-50 p-8 text-center text-slate-600">
+          <p className="mt-10 rounded-card border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#0d1117] p-8 text-center text-slate-600 dark:text-slate-400">
             No posts published yet — check back soon.
           </p>
         ) : (
