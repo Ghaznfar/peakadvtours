@@ -33,7 +33,7 @@ export { getCategories, getCategoryByKey } from './categories';
 export { getTestimonials } from './testimonials';
 export { getTeamMembers, getTeam } from './team';
 export { getBlogPosts, getBlogPostBySlug } from './blog';
-export { getSiteSettings } from './site';
+export { getSiteSettings, getHeroSlides } from './site';
 
 // Marketing (local)
 export { getValueProps, getStats, getCredentials } from './marketing';

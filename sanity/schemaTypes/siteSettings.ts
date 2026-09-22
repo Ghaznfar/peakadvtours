@@ -1,12 +1,13 @@
-import { defineField, defineType } from 'sanity';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 
-/** Singleton: editable site-wide settings (branding + contact + socials). */
+/** Singleton: editable site-wide settings (branding + contact + socials + homepage hero). */
 export const siteSettings = defineType({
   name: 'siteSettings',
   title: 'Site settings',
   type: 'document',
   groups: [
     { name: 'brand', title: 'Brand', default: true },
+    { name: 'hero', title: 'Homepage hero' },
     { name: 'contact', title: 'Contact' },
     { name: 'social', title: 'Social' },
   ],
@@ -21,6 +22,15 @@ export const siteSettings = defineType({
       group: 'brand',
     }),
     defineField({ name: 'logo', title: 'Logo', type: 'imageWithAlt', group: 'brand' }),
+
+    defineField({
+      name: 'heroSlides',
+      title: 'Homepage hero slides',
+      type: 'array',
+      group: 'hero',
+      of: [defineArrayMember({ type: 'heroSlide' })],
+      description: 'The rotating slider at the top of the homepage.',
+    }),
 
     defineField({ name: 'phone', title: 'Phone', type: 'string', group: 'contact' }),
     defineField({

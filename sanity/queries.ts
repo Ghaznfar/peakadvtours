@@ -127,6 +127,13 @@ export const BLOG_BY_SLUG = `*[_type == "blogPost" && slug.current == $slug][0] 
 
 export const SITE_SETTINGS = `*[_type == "siteSettings"][0] {
   name, tagline, description,
+  "heroSlides": heroSlides[] {
+    "image": image ${imageFrag},
+    eyebrow,
+    "tourTitle": tour->title,
+    "tourCategory": tour->category,
+    "tourSlug": tour->slug.current
+  },
   "contact": {
     phone, whatsapp, email, hours,
     "address": { "line1": addressLine1, "city": addressCity, "country": addressCountry }
