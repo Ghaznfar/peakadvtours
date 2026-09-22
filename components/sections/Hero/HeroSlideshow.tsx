@@ -131,7 +131,7 @@ export function HeroSlideshow({ slides, intervalMs = 6000 }: HeroSlideshowProps)
           </p>
           <h1
             key={`title-${index}`}
-            className="mt-2 text-3xl font-extrabold tracking-tight uppercase opacity-0 [animation:fade-up_0.6s_ease-out_0.15s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none] sm:text-5xl lg:text-6xl"
+            className="mt-2 text-3xl font-extrabold tracking-tight text-white uppercase opacity-0 [animation:fade-up_0.6s_ease-out_0.15s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none] sm:text-5xl lg:text-6xl"
           >
             {current.title}
           </h1>
