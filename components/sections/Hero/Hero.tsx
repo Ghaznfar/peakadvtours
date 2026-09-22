@@ -72,17 +72,26 @@ export function Hero({ eyebrow, title, subtitle, primary, secondary, chips = [] 
 
       <Container className="relative py-16 lg:py-24">
         <div className="max-w-2xl text-white">
-          <p className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-medium tracking-wider text-white uppercase ring-1 ring-white/20 backdrop-blur ring-inset">
+          <p
+            className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-medium tracking-wider text-white uppercase opacity-0 ring-1 ring-white/20 backdrop-blur [animation:fade-up_0.7s_ease-out_0.05s_forwards] ring-inset motion-reduce:opacity-100 motion-reduce:[animation:none]"
+          >
             {eyebrow}
           </p>
-          <h1 className="text-display mt-5 text-white">{title}</h1>
-          <p className="text-lead mt-5 max-w-xl text-white/90">{subtitle}</p>
+          <h1 className="text-display mt-5 text-white opacity-0 [animation:fade-up_0.7s_ease-out_0.15s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none]">
+            {title}
+          </h1>
+          <p className="text-lead mt-5 max-w-xl text-white/90 opacity-0 [animation:fade-up_0.7s_ease-out_0.25s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none]">
+            {subtitle}
+          </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col gap-3 opacity-0 [animation:fade-up_0.7s_ease-out_0.35s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none] sm:flex-row">
             <Button asChild variant="accent" size="lg">
-              <Link href={primary.href}>
+              <Link href={primary.href} className="group">
                 {primary.label}
-                <ArrowRight aria-hidden className="size-5" />
+                <ArrowRight
+                  aria-hidden
+                  className="size-5 transition-transform group-hover:translate-x-0.5"
+                />
               </Link>
             </Button>
             <Button
@@ -95,7 +104,7 @@ export function Hero({ eyebrow, title, subtitle, primary, secondary, chips = [] 
           </div>
 
           {chips.length > 0 && (
-            <ul className="mt-8 flex flex-wrap gap-2">
+            <ul className="mt-8 flex flex-wrap gap-2 opacity-0 [animation:fade-up_0.7s_ease-out_0.45s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none]">
               {chips.map((chip) => (
                 <li key={chip.href}>
                   <Link
@@ -110,7 +119,7 @@ export function Hero({ eyebrow, title, subtitle, primary, secondary, chips = [] 
           )}
 
           {/* Trust strip */}
-          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/80">
+          <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/80 opacity-0 [animation:fade-up_0.7s_ease-out_0.55s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none]">
             <li className="flex items-center gap-2">
               <Star aria-hidden className="fill-accent-400 text-accent-400 size-4" />
               4.9/5 traveller rating

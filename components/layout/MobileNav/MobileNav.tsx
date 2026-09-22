@@ -29,9 +29,11 @@ export function MobileNav() {
       </Dialog.Trigger>
 
       <Dialog.Portal>
-        <Dialog.Overlay className="data-[state=open]:animate-in fixed inset-0 z-50 bg-slate-900/50" />
+        <Dialog.Overlay
+          className="fixed inset-0 z-50 bg-slate-900/50 data-[state=closed]:[animation:overlay-fade-out_200ms_ease-in] data-[state=open]:[animation:overlay-fade-in_200ms_ease-out]"
+        />
         <Dialog.Content
-          className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white shadow-xl focus:outline-none"
+          className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white shadow-xl focus:outline-none data-[state=closed]:[animation:drawer-slide-out_250ms_ease-in] data-[state=open]:[animation:drawer-slide-in_250ms_ease-out]"
           aria-label="Site menu"
         >
           <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4">

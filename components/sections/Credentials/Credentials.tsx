@@ -1,5 +1,6 @@
 import { Container } from '@/components/ui/Container';
 import { Section } from '@/components/ui/Section';
+import { Reveal } from '@/components/animation/Reveal';
 import type { Credential } from '@/types/content';
 
 export interface CredentialsProps {
@@ -23,7 +24,7 @@ export function Credentials({ credentials }: CredentialsProps) {
         <p className="text-center text-sm font-semibold tracking-wider text-slate-500 uppercase">
           Licensed, accredited &amp; trusted
         </p>
-        <ul className="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <Reveal as="ul" className="mt-6 flex flex-wrap items-center justify-center gap-3">
           {credentials.map((c) => (
             <li key={c.id}>
               <span className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5">
@@ -37,7 +38,7 @@ export function Credentials({ credentials }: CredentialsProps) {
               </span>
             </li>
           ))}
-        </ul>
+        </Reveal>
       </Container>
     </Section>
   );

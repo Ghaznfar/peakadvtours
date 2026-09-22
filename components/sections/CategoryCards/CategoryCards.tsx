@@ -5,6 +5,7 @@ import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { formatCurrency } from '@/lib/utils/format';
 import { DynamicIcon } from '@/components/ui/icons/iconMap';
+import { Reveal } from '@/components/animation/Reveal';
 
 export interface CategoryCardVM {
   key: string;
@@ -33,9 +34,9 @@ export function CategoryCards({ categories }: CategoryCardsProps) {
           description="From relaxed cultural tours to serious high-altitude climbs — browse by type or explore every trip together."
         />
         <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((cat) => {
+          {categories.map((cat, i) => {
             return (
-              <li key={cat.key}>
+              <Reveal as="li" key={cat.key} delayMs={i * 80}>
                 <Link
                   href={`/${cat.slug}`}
                   className="group rounded-card focus-visible:ring-brand-600 flex h-full flex-col border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
@@ -71,7 +72,7 @@ export function CategoryCards({ categories }: CategoryCardsProps) {
                     </span>
                   </div>
                 </Link>
-              </li>
+              </Reveal>
             );
           })}
         </ul>

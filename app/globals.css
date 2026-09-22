@@ -130,6 +130,59 @@
 }
 
 /* ------------------------------------------------------------------ *
+ * Motion — shared keyframes.
+ * Referenced via Tailwind arbitrary values, e.g. `[animation:fade-up_0.6s_ease-out]`.
+ * Kept CSS-only (no JS animation loop) and covered by the global
+ * prefers-reduced-motion override below.
+ * ------------------------------------------------------------------ */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlay-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes drawer-slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes drawer-slide-out {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* ------------------------------------------------------------------ *
  * Motion — respect user preference (WCAG 2.3.3 / CLAUDE.md §9).
  * ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {

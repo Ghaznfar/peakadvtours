@@ -6,8 +6,9 @@ import { cn } from '@/lib/utils/cn';
 export const buttonVariants = cva(
   // Base — includes accessible focus ring and disabled handling. Min height
   // keeps tap targets >= 44px on touch (CLAUDE.md §7).
-  'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors ' +
+  'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-[color,background-color,transform] duration-150 ' +
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ' +
+    'active:scale-[0.97] motion-reduce:active:scale-100 ' +
     'disabled:pointer-events-none disabled:opacity-50 whitespace-nowrap',
   {
     variants: {

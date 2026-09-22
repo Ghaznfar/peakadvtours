@@ -5,17 +5,19 @@ import { siteConfig } from '@/site.config';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { MobileNav } from '@/components/layout/MobileNav';
+import { HeaderShell } from './HeaderShell';
 
 /**
  * Sticky site header. Server component — the desktop dropdowns are pure CSS
  * (open on hover and on keyboard focus of the trigger), so no client JS ships
- * for the desktop nav. Only the mobile drawer (`MobileNav`) is a client island.
+ * for the desktop nav. Only the mobile drawer (`MobileNav`) and the scroll-based
+ * background transition (`HeaderShell`) are client islands.
  */
 export function SiteHeader() {
   const { nav, contact, logo } = siteConfig;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <HeaderShell>
       <Container className="flex h-16 items-center justify-between gap-4">
         <Link href="/" aria-label="Home" className="flex items-center">
           <Image
@@ -89,6 +91,6 @@ export function SiteHeader() {
           <MobileNav />
         </div>
       </Container>
-    </header>
+    </HeaderShell>
   );
 }

@@ -1,10 +1,12 @@
 # PROJECT STATUS
 
-_Last updated: 2026-09-21_
+_Last updated: 2026-09-22_
 
 ## Current phase
 
-**All nav/footer-linked pages now exist — no more 404s.** `/destinations`, `/about`, `/contact`, `/blog` (+ `/blog/[slug]`), `/terms`, `/privacy`, `/booking-info`, `/corporate-retreats` and a human-readable `/sitemap` are built with original placeholder content, following the existing `lib/content/` repository + Sanity-fallback pattern. `typecheck`/`lint`/`build` green; HTTP smoke-check confirms 200s + single `<h1>` on every new route. **Live site currently reads from the client's configured Sanity project** (`eigm30ey`), so the new local placeholder fallbacks (blog, team) only render when Sanity is unconfigured or empty of that content type — this is existing, intended behavior, not new to this phase. Next: write Vitest/Playwright coverage for the new pages, then real content/testing pass.
+**Premium visual/animation upgrade (this phase, branch `ui-premium-upgrade`).** Audited the whole site's animation/perf state first (`docs/UI_ANIMATION_AUDIT.md`), got sign-off on a CSS + `IntersectionObserver`-only approach (no new animation library), then implemented: header scroll-state transition, fixed the mobile drawer's dead animation class, hero text entrance, scroll-reveal on every homepage card grid, a real gallery lightbox, and button micro-interactions. Removed one unused dependency (`styled-components`) and two unused image assets. `typecheck`/`lint`/`build` all green; smoke-tested against a clean production build. See "UI/animation upgrade" below for the full breakdown and the audit doc for before/after reasoning.
+
+Previous phase: **All nav/footer-linked pages now exist — no more 404s.** `/destinations`, `/about`, `/contact`, `/blog` (+ `/blog/[slug]`), `/terms`, `/privacy`, `/booking-info`, `/corporate-retreats` and a human-readable `/sitemap` are built with original placeholder content, following the existing `lib/content/` repository + Sanity-fallback pattern. **Live site currently reads from the client's configured Sanity project** (`eigm30ey`) — new local placeholder fallbacks only render when Sanity is unconfigured or empty of that content type. Real K2/Hunza/Skardu/Kalash/Karakoram trip + destination content has since been pushed directly into that Sanity project (see git history). Next: write Vitest/Playwright coverage for the new pages and the new `Reveal`/`Gallery`/`HeaderShell` components, then a real-content pass (testimonials/credentials/enquiry delivery still placeholder).
 
 ## Completed work
 
@@ -82,6 +84,23 @@ _Last updated: 2026-09-21_
 - **`app/sitemap.ts`:** added `/corporate-retreats` to the static route list and blog posts to the generated XML sitemap.
 - **Verification:** `typecheck`/`lint`/`build` all clean; production server HTTP smoke-check — all 9 new routes return 200 with exactly one `<h1>`.
 - **Not done in this phase:** Vitest/Playwright tests for the new pages (CLAUDE.md §10), visual QA, and populating the client's live Sanity project with real blog/team content (it currently has only test/placeholder documents, e.g. a destination titled "Destinations 2").
+
+### UI / animation upgrade (this phase, branch `ui-premium-upgrade`)
+
+- **Audit first, per the brief:** `docs/UI_ANIMATION_AUDIT.md` — read-only pass over the whole component tree before any edit. Found: no animation library installed, only 6 client components total (all correctly scoped), zero scroll-listener/`IntersectionObserver` code anywhere, reduced-motion already handled globally. Also found 3 concrete bugs/dead code: a `tailwindcss-animate` class on `MobileNav` that does nothing (plugin never installed), one unused hero image (~190KB) and one unused SVG, and an unused `styled-components` dependency.
+- **Architecture decision (confirmed with the client before implementing):** no Framer Motion/GSAP — everything built with CSS `transform`/`opacity` transitions plus two small custom primitives, matching the codebase's existing "zero client JS unless genuinely interactive" convention.
+- **New primitives:** `components/animation/Reveal/` (client, single `IntersectionObserver`, fade+translateY on enter, `prefers-reduced-motion`-aware, renders visible immediately if `IntersectionObserver` is unavailable) and `lib/hooks/useScrolled.ts` (passive scroll listener, one boolean).
+- **Header:** new `components/layout/SiteHeader/HeaderShell.tsx` — thin client wrapper using `useScrolled`, so only the header's outer shell hydrates; nav/logo/dropdowns stay server-rendered. Transparent → solid background + shadow on scroll.
+- **Mobile nav:** fixed the dead `animate-in` class; overlay and drawer now use real CSS `@keyframes` (`overlay-fade-in/out`, `drawer-slide-in/out` in `app/globals.css`) keyed off Radix's `data-state`, so both open *and* close animate.
+- **Hero:** headline/CTA/chips/trust-strip now stagger in with a `fade-up` keyframe on load (pure CSS, no JS, no delay to interactivity — buttons are clickable immediately).
+- **Scroll-reveal applied to:** `CategoryCards`, `FeaturedTrips`, `DestinationShowcase`, `WhyChooseUs`, `Stats`, `Team`, `Testimonials`, `Credentials` — each card/stat staggers in via `Reveal`, capped stagger (`i % N`) so a long grid doesn't have a multi-second cascade.
+- **Gallery lightbox:** `components/detail/Gallery.tsx` rewritten as a client component — click any thumbnail to open a full-size Radix `Dialog` viewer with prev/next, arrow-key navigation, Escape-to-close, focus trap/return (all via Radix, same proven pattern as `MobileNav`).
+- **Button micro-interactions:** shared `Button` component gets a subtle `active:scale-[0.97]` press effect (disabled under reduced motion), on top of its existing hover/focus states — applies everywhere in the app for free.
+- **Testimonials decision:** kept as a calm static grid + scroll-reveal, not a carousel (confirmed with the client) — avoids the a11y overhead of pause/prev/next/swipe for content that already fits without scrolling.
+- **Page transitions (Phase 12):** intentionally skipped. Next.js App Router doesn't have a lightweight built-in primitive for this without either heavier client routing wrappers or the still-experimental View Transitions API — not worth the risk/complexity for this stack right now.
+- **Cleanup:** removed unused `styled-components` dependency; deleted `public/images/stock/hero-mountain-sunrise.jpg` and `public/images/hero.svg` (confirmed zero references first).
+- **Verification:** `typecheck`/`lint`/`build` all clean; fresh production build smoke-tested (all routes 200, hero fade-up/header/Reveal classes confirmed present in rendered HTML).
+- **Not verified in this phase:** the gallery lightbox specifically — none of the trip documents currently in the live Sanity dataset have a populated `gallery` array yet, so it renders (inert, no crash) but hasn't been visually exercised against real images. Also no Lighthouse/Core Web Vitals run yet, and no automated tests for the new components.
 
 ## Next task
 
