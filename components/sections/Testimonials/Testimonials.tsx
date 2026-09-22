@@ -13,7 +13,7 @@ export interface TestimonialsProps {
 export function Testimonials({ testimonials }: TestimonialsProps) {
   if (testimonials.length === 0) return null;
   return (
-    <Section ariaLabel="Traveller reviews" className="bg-slate-50">
+    <Section ariaLabel="Traveller reviews" className="bg-slate-50 dark:bg-[#0d1117]">
       <Container>
         <SectionHeading
           eyebrow="What travellers say"

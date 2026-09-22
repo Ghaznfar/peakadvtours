@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 
+/* Manual dark mode: toggled via a `.dark` class on <html> (see ThemeProvider),
+ * not just `prefers-color-scheme`, so a user's explicit choice can override
+ * their OS setting. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ------------------------------------------------------------------ *
  * Design tokens (Tailwind v4 `@theme`)
  * These generate utilities (e.g. `bg-brand-600`, `text-brand-700`).
@@ -40,6 +45,53 @@
 }
 
 /* ------------------------------------------------------------------ *
+ * Theme tokens (light default; overridden under `.dark`).
+ * These are runtime-switchable CSS variables — not the same as the static
+ * `@theme` block above. Exposed as Tailwind utilities (`bg-background`,
+ * `text-foreground`, etc.) via the `@theme inline` block further down, so
+ * components consume semantic names instead of hardcoding `slate-*`/`white`.
+ * ------------------------------------------------------------------ */
+:root {
+  --background: #ffffff;
+  --foreground: var(--color-slate-900);
+  --card: #ffffff;
+  --card-foreground: var(--color-slate-900);
+  --card-elevated: #ffffff;
+  --muted: var(--color-slate-50);
+  --muted-foreground: var(--color-slate-500);
+  --border: var(--color-slate-200);
+  --ring: var(--color-brand-600);
+}
+
+/* Dark theme — deliberately not pure black: a slightly navy-tinted charcoal
+ * (echoing the brand's navy) with three surface levels (background < card <
+ * card-elevated) for visual depth, per the brand's cinematic/premium
+ * direction rather than a flat #000 swap. */
+:root.dark {
+  --background: #0a0d12;
+  --foreground: #f2f4f6;
+  --card: #10141a;
+  --card-foreground: #f2f4f6;
+  --card-elevated: #161b22;
+  --muted: #141920;
+  --muted-foreground: #9aa4af;
+  --border: #232a33;
+  --ring: var(--color-brand-400);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-elevated: var(--card-elevated);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+}
+
+/* ------------------------------------------------------------------ *
  * Base layer
  * ------------------------------------------------------------------ */
 @layer base {
@@ -51,27 +103,32 @@
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: var(--header-height);
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   body {
-    @apply bg-white font-sans text-slate-700 antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    @apply font-display font-semibold tracking-tight text-slate-900;
+    @apply font-display text-foreground font-semibold tracking-tight;
     text-wrap: balance;
   }
 
   /* Consistent, visible focus ring for keyboard users (WCAG 2.2). */
   :focus-visible {
-    @apply ring-brand-600 rounded-sm ring-2 ring-offset-2 ring-offset-white outline-none;
+    @apply ring-ring ring-offset-background rounded-sm ring-2 ring-offset-2 outline-none;
   }
 
   ::selection {
-    @apply bg-brand-600 text-white;
+    @apply bg-brand-600 text-white dark:bg-brand-400 dark:text-slate-950;
   }
 }
 

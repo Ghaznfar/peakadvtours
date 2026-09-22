@@ -12,7 +12,7 @@ export interface WhyChooseUsProps {
 /** Trust / "why book with us" section — a grid of value-proposition cards. */
 export function WhyChooseUs({ valueProps }: WhyChooseUsProps) {
   return (
-    <Section ariaLabel="Why book with us" className="bg-slate-50">
+    <Section ariaLabel="Why book with us" className="bg-slate-50 dark:bg-[#0d1117]">
       <Container>
         <SectionHeading
           eyebrow="Why book with us"

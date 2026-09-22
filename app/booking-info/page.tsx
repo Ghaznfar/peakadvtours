@@ -70,7 +70,7 @@ export default function BookingInfoPage() {
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Booking info' }]} />
           <div className="mt-4 max-w-2xl">
             <h1 className="text-h1 mt-2">Booking info</h1>
-            <p className="mt-3 text-slate-600">
+            <p className="mt-3 text-slate-600 dark:text-slate-400">
               How booking, payment and cancellations work when you travel with{' '}
               {siteConfig.name}.
             </p>
@@ -78,14 +78,14 @@ export default function BookingInfoPage() {
 
           <ol className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {STEPS.map((step, i) => (
-              <li key={step.title} className="rounded-card border border-slate-200 bg-white p-5">
-                <span className="font-display text-sm font-semibold text-slate-400">
+              <li key={step.title} className="rounded-card border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+                <span className="font-display text-sm font-semibold text-slate-400 dark:text-slate-600">
                   Step {i + 1}
                 </span>
-                <h2 className="font-display mt-2 text-base font-semibold text-slate-900">
+                <h2 className="font-display mt-2 text-base font-semibold text-slate-900 dark:text-white">
                   {step.title}
                 </h2>
-                <p className="mt-2 text-sm text-slate-600">{step.body}</p>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{step.body}</p>
               </li>
             ))}
           </ol>

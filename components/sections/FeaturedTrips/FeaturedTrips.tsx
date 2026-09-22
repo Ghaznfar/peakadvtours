@@ -13,7 +13,7 @@ export interface FeaturedTripsProps {
 export function FeaturedTrips({ trips }: FeaturedTripsProps) {
   if (trips.length === 0) return null;
   return (
-    <Section ariaLabel="Featured trips" className="bg-slate-50">
+    <Section ariaLabel="Featured trips" className="bg-slate-50 dark:bg-[#0d1117]">
       <Container>
         <SectionHeading
           eyebrow="Popular right now"

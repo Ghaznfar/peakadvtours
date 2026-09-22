@@ -18,14 +18,17 @@ export function Price({ price, locale, showFrom = true, className }: PriceProps)
   const { current, original } = formatPrice(price, locale);
   return (
     <div className={cn('flex flex-wrap items-baseline gap-x-2 gap-y-0.5', className)}>
-      {showFrom && <span className="text-xs text-slate-500">From</span>}
+      {showFrom && <span className="text-xs text-slate-500 dark:text-slate-400">From</span>}
       {original && (
-        <span className="text-sm text-slate-400 line-through" aria-label={`Was ${original}`}>
+        <span
+          className="text-sm text-slate-400 line-through dark:text-slate-500"
+          aria-label={`Was ${original}`}
+        >
           {original}
         </span>
       )}
-      <span className="text-lg font-semibold text-slate-900">{current}</span>
-      <span className="text-xs text-slate-500">/ person</span>
+      <span className="text-foreground text-lg font-semibold">{current}</span>
+      <span className="text-xs text-slate-500 dark:text-slate-400">/ person</span>
     </div>
   );
 }

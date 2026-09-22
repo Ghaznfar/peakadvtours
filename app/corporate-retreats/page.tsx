@@ -47,11 +47,11 @@ export default async function CorporateRetreatsPage() {
             items={[{ label: 'Home', href: '/' }, { label: 'Corporate retreats' }]}
           />
           <div className="mt-4 max-w-2xl">
-            <p className="text-brand-700 text-sm font-semibold tracking-wider uppercase">
+            <p className="text-brand-700 dark:text-brand-400 text-sm font-semibold tracking-wider uppercase">
               For teams and companies
             </p>
             <h1 className="text-h1 mt-2">Corporate retreats</h1>
-            <p className="mt-3 text-slate-600">
+            <p className="mt-3 text-slate-600 dark:text-slate-400">
               A team offsite planned like any other trip we run — small-group logistics, local
               guides and one inclusive price, scaled to however many people you&rsquo;re bringing.
             </p>
@@ -61,18 +61,18 @@ export default async function CorporateRetreatsPage() {
             {FEATURES.map((feature) => (
               <li
                 key={feature.title}
-                className="rounded-card border border-slate-200 bg-white p-6 shadow-sm"
+                className="rounded-card border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm"
               >
                 <span
                   aria-hidden
-                  className="bg-brand-50 text-brand-700 inline-flex size-10 items-center justify-center rounded-xl"
+                  className="bg-brand-50 text-brand-700 dark:text-brand-400 inline-flex size-10 items-center justify-center rounded-xl"
                 >
                   <feature.icon className="size-5" />
                 </span>
-                <h2 className="font-display mt-4 text-lg font-semibold text-slate-900">
+                <h2 className="font-display mt-4 text-lg font-semibold text-slate-900 dark:text-white">
                   {feature.title}
                 </h2>
-                <p className="mt-2 text-sm text-slate-600">{feature.body}</p>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{feature.body}</p>
               </li>
             ))}
           </ul>

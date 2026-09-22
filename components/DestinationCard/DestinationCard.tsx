@@ -28,7 +28,7 @@ export function DestinationCard({
     <Link
       href={`/destinations/${destination.slug}`}
       className={cn(
-        'group rounded-card focus-visible:ring-brand-600 relative flex overflow-hidden focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+        'group rounded-card focus-visible:ring-ring relative flex overflow-hidden focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
         className,
       )}
     >

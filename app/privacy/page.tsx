@@ -52,7 +52,7 @@ export default function PrivacyPage() {
         <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Privacy policy' }]} />
         <div className="mt-4 max-w-3xl">
           <h1 className="text-h1 mt-2">Privacy policy</h1>
-          <p className="mt-3 text-slate-600">
+          <p className="mt-3 text-slate-600 dark:text-slate-400">
             This is a placeholder policy provided as a starting structure. Have it reviewed by a
             qualified lawyer for your jurisdiction (e.g. GDPR, CCPA) before this site goes live.
           </p>
@@ -61,10 +61,10 @@ export default function PrivacyPage() {
         <div className="mt-10 max-w-3xl space-y-8">
           {SECTIONS.map((section) => (
             <div key={section.heading}>
-              <h2 className="font-display text-lg font-semibold text-slate-900">
+              <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">
                 {section.heading}
               </h2>
-              <p className="mt-2 leading-relaxed text-slate-600">{section.body}</p>
+              <p className="mt-2 leading-relaxed text-slate-600 dark:text-slate-400">{section.body}</p>
             </div>
           ))}
         </div>

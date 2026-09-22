@@ -84,7 +84,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
 
       <Section spacing="md" ariaLabel={`${destination.name} overview`}>
         <Container>
-          <p className="max-w-2xl text-slate-600">{destination.intro}</p>
+          <p className="max-w-2xl text-slate-600 dark:text-slate-400">{destination.intro}</p>
 
           <h2 className="text-h2 mt-10">
             {trips.length > 0 ? `Trips in ${destination.name}` : 'No trips here yet'}
@@ -99,8 +99,8 @@ export default async function DestinationDetailPage({ params }: { params: Promis
               ))}
             </ul>
           ) : (
-            <div className="rounded-card mt-6 border border-dashed border-slate-300 p-10 text-center">
-              <p className="text-slate-600">
+            <div className="rounded-card mt-6 border border-dashed border-slate-300 dark:border-slate-700 p-10 text-center">
+              <p className="text-slate-600 dark:text-slate-400">
                 We don&rsquo;t have a trip listed for {destination.name} yet.
               </p>
             </div>
