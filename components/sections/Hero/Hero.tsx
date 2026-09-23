@@ -23,7 +23,7 @@ export function Hero({ slides }: HeroProps) {
   return (
     <section
       aria-label="Introduction"
-      className="bg-brand-950 relative min-h-[34rem] overflow-hidden lg:min-h-[38rem]"
+      className="bg-brand-950 relative min-h-[36rem] overflow-hidden lg:min-h-[42rem]"
     >
       <HeroSlideshow slides={mapped} />
     </section>

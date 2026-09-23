@@ -52,6 +52,8 @@ export interface SiteConfig {
   name: string;
   legalName: string;
   tagline: string;
+  /** Short trust/positioning lines shown in the top utility bar. */
+  topBarHighlights: string[];
   description: string;
   url: string;
   logo: { src: string; alt: string };

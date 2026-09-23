@@ -14,6 +14,7 @@ export const siteConfig: SiteConfig = {
   name: 'PeakAdventure Tours',
   legalName: 'PeakAdventure Tours Ltd',
   tagline: 'Guided tours, treks and expeditions — planned by people who walk the routes.',
+  topBarHighlights: ['Guided tours, treks & expeditions', 'Licensed operator'],
   description:
     'Small-group tours, treks and mountaineering expeditions with fully-inclusive pricing, local expert guides and custom itineraries built around your dates.',
   // Set NEXT_PUBLIC_SITE_URL in your host (e.g. Vercel env vars) to your real
@@ -49,6 +50,7 @@ export const siteConfig: SiteConfig = {
   },
 
   nav: [
+    { label: 'Home', href: '/' },
     {
       label: 'Tours',
       href: '/tours',
@@ -77,7 +79,7 @@ export const siteConfig: SiteConfig = {
         },
       ],
     },
-    { label: 'Destinations', href: '/destinations' },
+    { label: 'Corporate Retreats', href: '/corporate-retreats' },
     { label: 'Customize', href: '/custom-trips' },
     { label: 'Blog', href: '/blog' },
     { label: 'About', href: '/about' },

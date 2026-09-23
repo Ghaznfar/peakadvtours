@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Inter, Sora } from 'next/font/google';
+import { Dancing_Script, Inter, Sora } from 'next/font/google';
 import { defaultMetadata } from '@/lib/seo/metadata';
 import { JsonLd, organizationSchema, websiteSchema } from '@/lib/seo/JsonLd';
 import { AnnouncementBar } from '@/components/layout/AnnouncementBar';
@@ -7,6 +7,7 @@ import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { WhatsAppButton } from '@/components/layout/WhatsAppButton';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { buildMegaMenu } from '@/lib/nav/megaMenu';
 import './globals.css';
 
 // Runs before hydration so the correct theme is applied on first paint — no
@@ -28,13 +29,23 @@ const sora = Sora({
   display: 'swap',
 });
 
+// Script accent used only for the hero eyebrow line — one weight, latin only.
+const dancingScript = Dancing_Script({
+  subsets: ['latin'],
+  weight: ['600'],
+  variable: '--font-script',
+  display: 'swap',
+});
+
 export const metadata = defaultMetadata;
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const menu = await buildMegaMenu();
+
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${sora.variable}`}
+      className={`${inter.variable} ${sora.variable} ${dancingScript.variable}`}
       // The theme init script mutates this element's class before hydration
       // (by design — see THEME_INIT_SCRIPT), which would otherwise trigger a
       // false-positive hydration warning.
@@ -54,7 +65,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </a>
 
           <AnnouncementBar />
-          <SiteHeader />
+          <SiteHeader menu={menu} />
           <main id="main-content">{children}</main>
           <SiteFooter />
           <WhatsAppButton />

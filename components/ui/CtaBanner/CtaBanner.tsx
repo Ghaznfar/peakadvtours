@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { MessageCircle } from 'lucide-react';
+import { WhatsappIcon } from '@/components/ui/icons/SocialIcons';
 import { siteConfig } from '@/site.config';
 import { cn } from '@/lib/utils/cn';
 import { buildWhatsAppUrl } from '@/lib/utils/whatsapp';
@@ -48,7 +48,7 @@ export function CtaBanner({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <MessageCircle aria-hidden className="size-5" />
+                <WhatsappIcon aria-hidden className="size-5" />
                 Chat on WhatsApp
               </a>
             </Button>

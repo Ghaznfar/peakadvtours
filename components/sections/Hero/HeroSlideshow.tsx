@@ -89,9 +89,15 @@ export function HeroSlideshow({ slides, intervalMs = 6000 }: HeroSlideshowProps)
           )}
         />
       ))}
+      {/* Legibility scrims — kept light so the photography stays vivid:
+          a left wash behind the text plus a soft bottom vignette. */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/25 to-slate-950/10"
+        className="absolute inset-0 bg-gradient-to-r from-slate-950/65 via-slate-950/20 to-transparent"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent"
       />
 
       <p aria-live="polite" className="sr-only">
@@ -105,7 +111,7 @@ export function HeroSlideshow({ slides, intervalMs = 6000 }: HeroSlideshowProps)
             type="button"
             onClick={() => goTo(index - 1)}
             aria-label="Previous slide"
-            className="absolute left-3 top-1/2 z-10 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-slate-950/40 text-white ring-1 ring-white/25 backdrop-blur transition-colors hover:bg-slate-950/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:left-6 sm:size-12"
+            className="absolute top-1/2 left-4 z-10 inline-flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/45 text-white/90 transition-colors hover:bg-slate-900/70 hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none sm:left-8 sm:size-14"
           >
             <ChevronLeft aria-hidden className="size-6" />
           </button>
@@ -113,7 +119,7 @@ export function HeroSlideshow({ slides, intervalMs = 6000 }: HeroSlideshowProps)
             type="button"
             onClick={() => goTo(index + 1)}
             aria-label="Next slide"
-            className="absolute right-3 top-1/2 z-10 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-slate-950/40 text-white ring-1 ring-white/25 backdrop-blur transition-colors hover:bg-slate-950/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:right-6 sm:size-12"
+            className="absolute top-1/2 right-4 z-10 inline-flex size-12 -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/45 text-white/90 transition-colors hover:bg-slate-900/70 hover:text-white focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none sm:right-8 sm:size-14"
           >
             <ChevronRight aria-hidden className="size-6" />
           </button>
@@ -121,36 +127,38 @@ export function HeroSlideshow({ slides, intervalMs = 6000 }: HeroSlideshowProps)
       )}
 
       {/* Slide content — short by design: eyebrow, title, one CTA */}
-      <div className="relative z-[1] flex flex-1 items-center px-6 sm:px-12 lg:px-16">
+      <div className="relative z-[1] flex flex-1 items-center px-6 pb-28 sm:px-12 lg:px-[8%]">
         <div className="max-w-2xl text-white">
           <p
             key={`eyebrow-${index}`}
-            className="font-display text-lg italic opacity-0 [animation:fade-up_0.6s_ease-out_0.05s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none]"
+            className="font-script text-2xl opacity-0 [animation:fade-up_0.6s_ease-out_0.05s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none] sm:text-3xl"
           >
             {current.eyebrow}
           </p>
           <h1
             key={`title-${index}`}
-            className="mt-2 text-3xl font-extrabold tracking-tight text-white uppercase opacity-0 [animation:fade-up_0.6s_ease-out_0.15s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none] sm:text-5xl lg:text-6xl"
+            className="mt-3 text-4xl leading-[1.05] font-extrabold tracking-tight text-white uppercase opacity-0 [animation:fade-up_0.6s_ease-out_0.15s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none] sm:text-6xl lg:text-7xl"
           >
             {current.title}
           </h1>
           <div
             key={`cta-${index}`}
-            className="mt-6 opacity-0 [animation:fade-up_0.6s_ease-out_0.25s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none]"
+            className="mt-8 opacity-0 [animation:fade-up_0.6s_ease-out_0.25s_forwards] motion-reduce:opacity-100 motion-reduce:[animation:none]"
           >
-            <Button asChild size="lg">
-              <Link href={current.cta.href} className="tracking-wide uppercase">
-                {current.cta.label}
-              </Link>
+            <Button
+              asChild
+              size="lg"
+              className="bg-brand-500 hover:bg-brand-600 rounded-sm px-10 text-sm font-bold tracking-[0.15em] text-white uppercase"
+            >
+              <Link href={current.cta.href}>{current.cta.label}</Link>
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Thumbnail filmstrip */}
+      {/* Thumbnail filmstrip — centred along the bottom edge */}
       {slides.length > 1 && (
-        <div className="relative z-[1] flex items-center gap-2 overflow-x-auto px-4 pb-4 sm:px-6">
+        <div className="absolute inset-x-0 bottom-6 z-[1] flex items-center justify-center gap-2 px-4">
           {slides.map((slide, i) => (
             <button
               key={slide.src}
@@ -159,30 +167,37 @@ export function HeroSlideshow({ slides, intervalMs = 6000 }: HeroSlideshowProps)
               aria-label={`Show slide ${i + 1} of ${slides.length}: ${slide.title}`}
               aria-current={i === index}
               className={cn(
-                'relative size-14 shrink-0 overflow-hidden rounded-md ring-2 transition-all sm:size-16',
+                'relative h-12 w-16 shrink-0 overflow-hidden rounded-xs transition-all sm:h-16 sm:w-24',
                 i === index
-                  ? 'ring-brand-400 opacity-100'
-                  : 'opacity-60 ring-transparent hover:opacity-90',
+                  ? 'ring-brand-500 opacity-100 ring-2'
+                  : 'opacity-55 hover:opacity-85',
               )}
             >
-              <Image src={slide.src} alt="" fill sizes="64px" className="object-cover" />
+              <Image src={slide.src} alt="" fill sizes="96px" className="object-cover" />
             </button>
           ))}
 
-          <button
-            type="button"
-            onClick={() => setUserPaused((p) => !p)}
-            aria-label={userPaused ? 'Play slideshow' : 'Pause slideshow'}
-            aria-pressed={userPaused}
-            className="ml-1 inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-white/25 backdrop-blur transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
-          >
-            {userPaused ? (
-              <Play aria-hidden className="size-4" />
-            ) : (
-              <Pause aria-hidden className="size-4" />
-            )}
-          </button>
         </div>
+      )}
+
+      {/* Autoplay control — hidden by design, but still reachable by keyboard
+          so the carousel keeps a real pause mechanism (CLAUDE.md §9). Same
+          sr-only/focus pattern as the layout's skip link. Autoplay also stops
+          on hover/focus and is disabled entirely under prefers-reduced-motion. */}
+      {slides.length > 1 && (
+        <button
+          type="button"
+          onClick={() => setUserPaused((p) => !p)}
+          aria-label={userPaused ? 'Play slideshow' : 'Pause slideshow'}
+          aria-pressed={userPaused}
+          className="sr-only focus:not-sr-only focus:absolute focus:right-4 focus:bottom-6 focus:z-[2] focus:inline-flex focus:size-9 focus:items-center focus:justify-center focus:rounded-full focus:bg-slate-900/70 focus:text-white focus:ring-2 focus:ring-white focus:outline-none sm:focus:right-8"
+        >
+          {userPaused ? (
+            <Play aria-hidden className="size-4" />
+          ) : (
+            <Pause aria-hidden className="size-4" />
+          )}
+        </button>
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { MessageCircle } from 'lucide-react';
+import { WhatsappIcon } from '@/components/ui/icons/SocialIcons';
 import { siteConfig } from '@/site.config';
 import type { Trip } from '@/types/content';
 import { buildWhatsAppUrl } from '@/lib/utils/whatsapp';
@@ -69,7 +69,7 @@ export function BookingPanel({ trip }: BookingPanelProps) {
         </Button>
         <Button asChild variant="whatsapp" size="lg" fullWidth>
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-            <MessageCircle aria-hidden className="size-5" />
+            <WhatsappIcon aria-hidden className="size-5" />
             Ask on WhatsApp
           </a>
         </Button>

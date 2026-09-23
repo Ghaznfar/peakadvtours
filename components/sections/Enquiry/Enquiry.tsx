@@ -1,4 +1,5 @@
-import { Clock, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
+import { Clock, Mail, MapPin, Phone } from 'lucide-react';
+import { WhatsappIcon } from '@/components/ui/icons/SocialIcons';
 import { siteConfig } from '@/site.config';
 import { buildWhatsAppUrl } from '@/lib/utils/whatsapp';
 import { Container } from '@/components/ui/Container';
@@ -100,7 +101,7 @@ export function Enquiry({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <MessageCircle aria-hidden className="size-5" />
+                  <WhatsappIcon aria-hidden className="size-5" />
                   Chat on WhatsApp
                 </a>
               </Button>
