@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { Container } from '@/components/ui/Container';
@@ -44,6 +45,7 @@ const CLOSE_DELAY_MS = 120;
  * menu imagery isn't fetched on initial page load.
  */
 export function MegaMenu({ items }: MegaMenuProps) {
+  const pathname = usePathname();
   const [openLabel, setOpenLabel] = useState<string | null>(null);
   const [mountedLabels, setMountedLabels] = useState<string[]>([]);
   const closeTimer = useRef<number | null>(null);
@@ -93,32 +95,36 @@ export function MegaMenu({ items }: MegaMenuProps) {
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOpenLabel(null);
       }}
     >
-      <ul className="flex items-center gap-1">
+      <ul className="flex items-center gap-4 xl:gap-7">
         {items.map((item) => {
           const hasPanel = Boolean(item.tiles?.length || item.links?.length);
           const isOpen = hasPanel && openLabel === item.label;
+          const isActive =
+            item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+          const highlighted = isOpen || isActive;
+
           return (
             <li key={item.href}>
               <Link
                 href={item.href}
+                aria-current={isActive ? 'page' : undefined}
                 aria-expanded={hasPanel ? isOpen : undefined}
                 onMouseEnter={() => (hasPanel ? open(item.label) : scheduleClose())}
                 onFocus={() => (hasPanel ? open(item.label) : setOpenLabel(null))}
                 className={cn(
-                  'inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors',
-                  isOpen
-                    ? 'text-brand-700 dark:text-brand-400'
-                    : 'text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white',
+                  'relative inline-flex h-16 items-center gap-1.5 text-sm font-medium transition-colors xl:text-base',
+                  'after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:transition-colors',
+                  highlighted
+                    ? 'text-brand-500 dark:text-brand-400'
+                    : 'hover:text-brand-500 dark:hover:text-brand-400 text-slate-700 dark:text-slate-300',
+                  isActive ? 'after:bg-brand-500' : 'after:bg-transparent',
                 )}
               >
                 {item.label}
                 {hasPanel && (
                   <ChevronDown
                     aria-hidden
-                    className={cn(
-                      'size-4 text-slate-400 transition-transform dark:text-slate-500',
-                      isOpen && 'rotate-180',
-                    )}
+                    className={cn('size-4 transition-transform', isOpen && 'rotate-180')}
                   />
                 )}
               </Link>

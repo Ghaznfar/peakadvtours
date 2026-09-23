@@ -193,6 +193,16 @@ export interface BlogPost {
 }
 
 /** Editable site-wide settings (mirrors `site.config.ts`; Sanity singleton). */
+/** An editable marketing page (Corporate Retreats, etc.), keyed by route slug. */
+export interface PageContent {
+  slug: string;
+  title: string;
+  eyebrow?: string;
+  intro?: string;
+  features?: Array<{ icon?: string; title: string; body?: string }>;
+  seo?: Seo;
+}
+
 /** A homepage hero slide. `ctaHref`/`ctaLabel` are derived from the linked
  * tour (category + slug) when sourced from Sanity — see `lib/content/site.ts`. */
 export interface HeroSlideEntry {

@@ -34,6 +34,7 @@ export { getTestimonials } from './testimonials';
 export { getTeamMembers, getTeam } from './team';
 export { getBlogPosts, getBlogPostBySlug } from './blog';
 export { getSiteSettings, getHeroSlides } from './site';
+export { getPageBySlug } from './pages';
 
 // Marketing (local)
 export { getValueProps, getStats, getCredentials } from './marketing';

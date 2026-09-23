@@ -125,6 +125,13 @@ export const BLOG_BY_SLUG = `*[_type == "blogPost" && slug.current == $slug][0] 
   "seo": seo{ title, description, "ogImage": ogImage ${imageFrag}, noindex }
 }`;
 
+export const PAGE_BY_SLUG = `*[_type == "page" && slug.current == $slug][0] {
+  "slug": slug.current,
+  title, eyebrow, intro,
+  "features": coalesce(features[]{ icon, title, body }, []),
+  "seo": seo{ title, description, "ogImage": ogImage ${imageFrag}, noindex }
+}`;
+
 export const SITE_SETTINGS = `*[_type == "siteSettings"][0] {
   name, tagline, description,
   "heroSlides": heroSlides[] {

@@ -6,6 +6,7 @@ import { testimonial } from './testimonial';
 import { teamMember } from './teamMember';
 import { blogPost } from './blogPost';
 import { tour } from './tour';
+import { page } from './page';
 import { siteSettings } from './siteSettings';
 
 export const schemaTypes: SchemaTypeDefinition[] = [
@@ -16,6 +17,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   testimonial,
   teamMember,
   blogPost,
+  page,
   siteSettings,
   // Objects
   ...objectTypes,
