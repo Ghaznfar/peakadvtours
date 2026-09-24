@@ -1,86 +1,136 @@
+import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import type { Trip } from '@/types/content';
 import { Container } from '@/components/ui/Container';
-import { Section } from '@/components/ui/Section';
-import { SectionHeading } from '@/components/ui/SectionHeading';
 import { formatCurrency } from '@/lib/utils/format';
-import { DynamicIcon } from '@/components/ui/icons/iconMap';
-import { Reveal } from '@/components/animation/Reveal';
 
-export interface CategoryCardVM {
-  key: string;
-  label: string;
-  pluralLabel: string;
-  slug: string;
-  intro: string;
-  icon: string;
-  count: number;
-  fromAmount?: number;
+/**
+ * The four cards are defined here rather than in the CMS, deliberately: they
+ * are site navigation, not content. Their number, order and destinations are
+ * part of the layout, so an editor changing them would change the shape of the
+ * homepage. Only the counts and "from" prices below them are live.
+ *
+ * `match` decides which trips each card counts. Festivals is a tag rather than
+ * a category, which is why this isn't simply keyed on `category`.
+ */
+interface CategoryCardDef {
+  eyebrow: string;
+  title: string;
+  href: string;
+  image: { src: string; alt: string };
+  /** Shown instead of a count when the category has no trips yet. */
+  fallback: string;
+  match: (trip: Trip) => boolean;
+}
+
+const CARDS: CategoryCardDef[] = [
+  {
+    eyebrow: 'All-inclusive',
+    title: 'Tours',
+    href: '/tours',
+    image: {
+      src: '/images/stock/trip-valley-tour.jpg',
+      alt: 'PLACEHOLDER — replace with a client photograph of a guided tour',
+    },
+    fallback: 'Guided, fully inclusive',
+    match: (t) => t.category === 'tour',
+  },
+  {
+    eyebrow: 'Porters & camps',
+    title: 'Trekking',
+    href: '/treks',
+    image: {
+      src: '/images/stock/trip-trek-hikers.jpg',
+      alt: 'PLACEHOLDER — replace with a client photograph of a trekking group',
+    },
+    fallback: 'Full camp support',
+    match: (t) => t.category === 'trek',
+  },
+  {
+    eyebrow: '6,000–8,611 m',
+    title: 'Expeditions',
+    href: '/expeditions',
+    image: {
+      src: '/images/stock/trip-expedition-climbers.jpg',
+      alt: 'PLACEHOLDER — replace with a client photograph of an expedition team',
+    },
+    fallback: 'High-altitude peaks',
+    match: (t) => t.category === 'expedition',
+  },
+  {
+    eyebrow: 'Time it right',
+    title: 'Festivals',
+    href: '/festivals',
+    image: {
+      src: '/images/stock/destination-golden-desert.jpg',
+      alt: 'PLACEHOLDER — replace with a client photograph of a festival departure',
+    },
+    fallback: 'Dates fixed to the calendar',
+    match: (t) => t.tags.includes('festival'),
+  },
+];
+
+export interface CategoryCardsProps {
+  /** Every trip, used only to count each card and find its lowest price. */
+  trips: Trip[];
   currency: string;
 }
 
-export interface CategoryCardsProps {
-  categories: CategoryCardVM[];
-}
-
-/** Tour category navigation — one card per trip category, with live counts. */
-export function CategoryCards({ categories }: CategoryCardsProps) {
+/**
+ * Four photo tiles directly under the hero, lifted so they overlap it. Counts
+ * and prices are derived from live trip data rather than written in, so a card
+ * can never advertise a number the site cannot show.
+ */
+export function CategoryCards({ trips, currency }: CategoryCardsProps) {
   return (
-    <Section ariaLabel="Browse by type">
+    <section aria-label="Browse by type" className="relative z-10 -mt-20 pb-14 lg:-mt-28">
       <Container>
-        <SectionHeading
-          eyebrow="Ways to travel"
-          title="Find the kind of trip you want"
-          description="From relaxed cultural tours to serious high-altitude climbs — browse by type or explore every trip together."
-        />
-        <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((cat, i) => {
+        <ul className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
+          {CARDS.map((card) => {
+            const matched = trips.filter(card.match);
+            const prices = matched.filter((t) => !t.priceOnRequest).map((t) => t.price.amount);
+            const from = prices.length > 0 ? Math.min(...prices) : undefined;
+
+            const subtitle =
+              matched.length === 0
+                ? card.fallback
+                : `${matched.length} ${matched.length === 1 ? 'trip' : 'trips'}` +
+                  (from === undefined ? '' : ` · from ${formatCurrency(from, currency)}`);
+
             return (
-              <Reveal as="li" key={cat.key} delayMs={i * 80}>
+              <li key={card.href}>
                 <Link
-                  href={`/${cat.slug}`}
-                  className="group rounded-card focus-visible:ring-ring bg-card flex h-full flex-col border border-slate-200 p-6 shadow-sm transition-shadow hover:shadow-md focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none dark:border-slate-800 dark:shadow-black/30 dark:hover:border-slate-700"
+                  href={card.href}
+                  className="group focus-visible:ring-ring relative flex aspect-5/4 items-end overflow-hidden rounded-xl shadow-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
-                  <div className="flex items-center justify-between">
-                    <span
-                      aria-hidden
-                      className="bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-400 inline-flex size-12 items-center justify-center rounded-xl"
-                    >
-                      <DynamicIcon name={cat.icon} className="size-6" />
+                  <Image
+                    src={card.image.src}
+                    alt={card.image.alt}
+                    fill
+                    sizes="(max-width: 1024px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
+                  />
+                  {/* Same bottom-weighted recipe as the heroes, so white text
+                      clears 4.5:1 over the caption even on a bright photo. */}
+                  <span
+                    aria-hidden
+                    className="absolute inset-0 bg-[linear-gradient(0deg,rgb(3_22_35/0.88)_0%,rgb(3_22_35/0.62)_38%,rgb(3_22_35/0.12)_72%,transparent_100%)]"
+                  />
+                  <span className="relative w-full p-5 text-white">
+                    <span className="block text-[11px] font-semibold tracking-[0.14em] uppercase">
+                      {card.eyebrow}
                     </span>
-                    <span className="text-sm text-slate-500 dark:text-slate-400">
-                      {cat.count} trips
+                    <span className="mt-1 block text-[clamp(20px,2.2vw,30px)] leading-tight font-extrabold tracking-[0.01em] uppercase">
+                      {card.title}
                     </span>
-                  </div>
-                  <h3 className="font-display mt-4 text-xl font-semibold text-slate-900 dark:text-white">
-                    {cat.pluralLabel}
-                  </h3>
-                  <p className="mt-1 flex-1 text-sm text-slate-600 dark:text-slate-400">
-                    {cat.intro}
-                  </p>
-                  <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-800">
-                    {typeof cat.fromAmount === 'number' && (
-                      <span className="text-sm text-slate-500 dark:text-slate-400">
-                        From{' '}
-                        <span className="font-semibold text-slate-900 dark:text-white">
-                          {formatCurrency(cat.fromAmount, cat.currency)}
-                        </span>
-                      </span>
-                    )}
-                    <span className="text-brand-700 dark:text-brand-400 inline-flex items-center gap-1 text-sm font-medium">
-                      Explore
-                      <ArrowRight
-                        aria-hidden
-                        className="size-4 transition-transform group-hover:translate-x-0.5"
-                      />
-                    </span>
-                  </div>
+                    <span className="mt-1.5 block text-[15px] text-white/85">{subtitle}</span>
+                  </span>
                 </Link>
-              </Reveal>
+              </li>
             );
           })}
         </ul>
       </Container>
-    </Section>
+    </section>
   );
 }

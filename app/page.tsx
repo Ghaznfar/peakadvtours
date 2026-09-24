@@ -12,10 +12,9 @@ import {
   getValueProps,
 } from '@/lib/content';
 import { siteConfig } from '@/site.config';
-import type { TripCategory } from '@/types/content';
 import { CtaBanner } from '@/components/ui/CtaBanner';
 import { Hero } from '@/components/sections/Hero';
-import { CategoryCards, type CategoryCardVM } from '@/components/sections/CategoryCards';
+import { CategoryCards } from '@/components/sections/CategoryCards';
 import { FeaturedTrips } from '@/components/sections/FeaturedTrips';
 import { FindYourTrip } from '@/components/sections/FindYourTrip';
 import { DestinationShowcase } from '@/components/sections/DestinationShowcase';
@@ -25,12 +24,6 @@ import { Team } from '@/components/sections/Team';
 import { Testimonials } from '@/components/sections/Testimonials';
 import { Credentials } from '@/components/sections/Credentials';
 import { Enquiry } from '@/components/sections/Enquiry';
-
-const CATEGORY_ICON: Record<TripCategory, string> = {
-  tour: 'compass',
-  trek: 'footprints',
-  expedition: 'mountain-snow',
-};
 
 /** Homepage — composes the marketing sections from the content repository. */
 export default async function HomePage() {
@@ -61,22 +54,6 @@ export default async function HomePage() {
   ]);
 
   // Derive category cards (counts + "from" price) from the trips themselves.
-  const categoryVMs: CategoryCardVM[] = categories.map((cat) => {
-    const catTrips = allTrips.filter((t) => t.category === cat.key);
-    const prices = catTrips.filter((t) => !t.priceOnRequest).map((t) => t.price.amount);
-    return {
-      key: cat.key,
-      label: cat.label,
-      pluralLabel: cat.pluralLabel,
-      slug: cat.slug,
-      intro: cat.intro,
-      icon: CATEGORY_ICON[cat.key],
-      count: catTrips.length,
-      fromAmount: prices.length > 0 ? Math.min(...prices) : undefined,
-      currency: siteConfig.defaultCurrency,
-    };
-  });
-
   const destinationOptions = [
     ...categories.map((c) => ({ value: c.key, label: c.pluralLabel })),
     ...destinations.map((d) => ({ value: d.slug, label: d.name })),
@@ -86,7 +63,7 @@ export default async function HomePage() {
     <>
       <Hero slides={heroSlides} />
 
-      <CategoryCards categories={categoryVMs} />
+      <CategoryCards trips={allTrips} currency={siteConfig.defaultCurrency} />
 
       <FeaturedTrips trips={featuredTrips} />
 
