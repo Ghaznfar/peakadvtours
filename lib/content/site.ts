@@ -20,10 +20,6 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 type RawHeroSlide = {
   image: HeroSlideEntry['image'];
   eyebrow: string;
-  /** Typed directly on the slide; wins over the linked trip's title. */
-  title?: string;
-  ctaLabel?: string;
-  ctaHref?: string;
   tourTitle?: string;
   tourCategory?: 'tour' | 'trek' | 'expedition';
   tourSlug?: string;
@@ -31,11 +27,10 @@ type RawHeroSlide = {
 
 /**
  * Homepage hero slides — edited in Sanity Studio ("Site settings" → "Homepage
- * hero slides"), never in code. A slide needs a photo, a short eyebrow line
- * and a headline. The headline and button can either be typed on the slide or
- * inherited from a linked trip — typed values win, so a slide works with no
- * trips in the dataset at all. Falls back to local placeholder slides only
- * when Sanity is unconfigured or no usable slide exists.
+ * hero slides"), never in code. Each slide's title/CTA are derived from its
+ * linked tour, so the client only ever picks a photo, writes one short line,
+ * and chooses which trip to feature. Falls back to local placeholder slides
+ * when Sanity is unconfigured or none are set yet.
  */
 export async function getHeroSlides(): Promise<HeroSlideEntry[]> {
   if (!isSanityConfigured) return localHeroSlides;
@@ -44,28 +39,22 @@ export async function getHeroSlides(): Promise<HeroSlideEntry[]> {
   const raw = settings?.heroSlides ?? [];
 
   const slides = raw
-    // A slide needs a picture and a headline. The headline may be typed on the
-    // slide or inherited from a linked trip; everything else has a sensible
-    // default, so a slide with neither is skipped rather than rendered blank.
-    .filter((s) => Boolean(s.image?.src && (s.title || s.tourTitle)))
-    .map((s) => {
-      const linkedHref =
-        s.tourCategory && s.tourSlug
-          ? `/${CATEGORY_SLUG[s.tourCategory]}/${s.tourSlug}`
-          : undefined;
-      const linkedLabel = s.tourCategory
-        ? `View ${CATEGORY_LABEL[s.tourCategory].toLowerCase()}`
-        : undefined;
-
-      return {
-        image: s.image,
-        eyebrow: s.eyebrow,
-        // Typed values win, so an editor can override a linked trip's wording.
-        title: s.title ?? (s.tourTitle as string),
-        ctaLabel: s.ctaLabel ?? linkedLabel ?? 'Explore trips',
-        ctaHref: s.ctaHref ?? linkedHref ?? '/trips',
-      };
-    });
+    .filter(
+      (
+        s,
+      ): s is RawHeroSlide & {
+        tourTitle: string;
+        tourCategory: 'tour' | 'trek' | 'expedition';
+        tourSlug: string;
+      } => Boolean(s.tourTitle && s.tourCategory && s.tourSlug),
+    )
+    .map((s) => ({
+      image: s.image,
+      eyebrow: s.eyebrow,
+      title: s.tourTitle,
+      ctaLabel: `View ${CATEGORY_LABEL[s.tourCategory].toLowerCase()}`,
+      ctaHref: `/${CATEGORY_SLUG[s.tourCategory]}/${s.tourSlug}`,
+    }));
 
   return slides.length > 0 ? slides : localHeroSlides;
 }

@@ -6,3 +6,4 @@ export { TripCardSkeleton } from './TripCardSkeleton';
 // and expeditions, so both names resolve to one implementation.
 export { TripCard as TourCard } from './TripCard';
 export type { TripCardProps as TourCardProps } from './TripCard';
+export { CustomTripCard } from './CustomTripCard';

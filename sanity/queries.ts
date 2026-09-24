@@ -139,9 +139,6 @@ export const SITE_SETTINGS = `*[_type == "siteSettings"][0] {
   "heroSlides": heroSlides[] {
     "image": image ${imageFrag},
     eyebrow,
-    title,
-    ctaLabel,
-    ctaHref,
     "tourTitle": tour->title,
     "tourCategory": tour->category,
     "tourSlug": tour->slug.current

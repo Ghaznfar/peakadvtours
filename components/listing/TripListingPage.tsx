@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/Button';
 import { PageHero } from '@/components/ui/PageHero';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { CtaBanner } from '@/components/ui/CtaBanner';
-import { TripCard } from '@/components/TripCard';
+import { TripCard, CustomTripCard } from '@/components/TripCard';
 import { TripFilterControls } from '@/components/TripListing';
 import { JsonLd } from '@/lib/seo/JsonLd';
 
@@ -129,6 +129,16 @@ export function TripListingPage({
                       <TripCard trip={trip} priority={i < 3} />
                     </li>
                   ))}
+                  {/* Closing promo card. Deliberately not a CMS document: it has
+                      no duration or price (both of which a trip requires), its
+                      button goes to the enquiry funnel rather than a detail
+                      page, and as a trip it would inflate every trip count on
+                      the site. Only shown on the last page of results. */}
+                  {!hasMore && (
+                    <li>
+                      <CustomTripCard />
+                    </li>
+                  )}
                 </ul>
 
                 {hasMore && (
