@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Trip } from '@/types/content';
 import { Container } from '@/components/ui/Container';
+import { Section } from '@/components/ui/Section';
 import { formatCurrency } from '@/lib/utils/format';
 
 /**
@@ -77,13 +78,14 @@ export interface CategoryCardsProps {
 }
 
 /**
- * Four photo tiles directly under the hero, lifted so they overlap it. Counts
- * and prices are derived from live trip data rather than written in, so a card
- * can never advertise a number the site cannot show.
+ * Four photo tiles in their own section below the hero. Deliberately does NOT
+ * overlap the hero — the slider keeps its full height and nothing sits on top
+ * of it. Counts and prices are derived from live trip data rather than written
+ * in, so a card can never advertise a number the site cannot show.
  */
 export function CategoryCards({ trips, currency }: CategoryCardsProps) {
   return (
-    <section aria-label="Browse by type" className="relative z-10 -mt-20 pb-14 lg:-mt-28">
+    <Section ariaLabel="Browse by type">
       <Container>
         <ul className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
           {CARDS.map((card) => {
@@ -131,6 +133,6 @@ export function CategoryCards({ trips, currency }: CategoryCardsProps) {
           })}
         </ul>
       </Container>
-    </section>
+    </Section>
   );
 }
