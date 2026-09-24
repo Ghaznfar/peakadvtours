@@ -22,15 +22,18 @@ export function SiteHeader({ menu }: SiteHeaderProps) {
 
   return (
     <HeaderShell>
-      <Container className="flex h-16 items-center justify-between gap-4">
-        <Link href="/" aria-label="Home" className="flex items-center">
+      <Container size="nav" className="flex min-h-[74px] items-center justify-between gap-[18px]">
+        <Link href="/" aria-label="Home" className="flex flex-none items-center">
+          {/* 48px, not the reference's 34px: theirs is a wide wordmark that
+              reads at that height, ours is a square mark that would look lost.
+              Leaves 13px of breathing room inside the 74px bar. */}
           <Image
             src={logo.src}
             alt={logo.alt}
-            width={56}
-            height={56}
+            width={96}
+            height={96}
             priority
-            className="size-14 rounded-full object-cover"
+            className="size-12 rounded-full object-cover"
           />
         </Link>
 

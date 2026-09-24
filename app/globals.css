@@ -129,7 +129,7 @@
   }
 
   ::selection {
-    @apply bg-brand-600 text-white dark:bg-brand-400 dark:text-slate-950;
+    @apply bg-brand-600 dark:bg-brand-400 text-white dark:text-slate-950;
   }
 }
 

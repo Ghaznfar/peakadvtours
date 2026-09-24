@@ -30,9 +30,7 @@ export function MobileNav() {
       </Dialog.Trigger>
 
       <Dialog.Portal>
-        <Dialog.Overlay
-          className="fixed inset-0 z-50 bg-slate-900/50 data-[state=closed]:[animation:overlay-fade-out_200ms_ease-in] data-[state=open]:[animation:overlay-fade-in_200ms_ease-out]"
-        />
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-slate-900/50 data-[state=closed]:[animation:overlay-fade-out_200ms_ease-in] data-[state=open]:[animation:overlay-fade-in_200ms_ease-out]" />
         <Dialog.Content
           className="bg-card fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col shadow-xl focus:outline-none data-[state=closed]:[animation:drawer-slide-out_250ms_ease-in] data-[state=open]:[animation:drawer-slide-in_250ms_ease-out]"
           aria-label="Site menu"
@@ -61,7 +59,7 @@ export function MobileNav() {
                 item.children ? (
                   <li key={item.href}>
                     <details className="group rounded-lg">
-                      <summary className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50 [&::-webkit-details-marker]:hidden dark:text-slate-100 dark:hover:bg-slate-800">
+                      <summary className="flex cursor-pointer items-center justify-between rounded-lg px-3 py-3 text-base font-medium text-slate-800 hover:bg-slate-50 dark:text-slate-100 dark:hover:bg-slate-800 [&::-webkit-details-marker]:hidden">
                         {item.label}
                         <span
                           aria-hidden

@@ -2,6 +2,7 @@ import { getCategories, getDestinations } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { siteConfig } from '@/site.config';
 import { Container } from '@/components/ui/Container';
+import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Enquiry } from '@/components/sections/Enquiry';
@@ -22,15 +23,20 @@ export default async function ContactPage() {
 
   return (
     <>
+      <PageHero
+        eyebrow="We're here to help"
+        title="Contact us"
+        heroImage={{
+          src: '/images/stock/destination-harbour-coast.jpg',
+          alt: 'PLACEHOLDER — replace with a client photograph',
+        }}
+      />
+
       <Section spacing="sm" ariaLabel="Contact">
         <Container>
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Contact' }]} />
           <div className="mt-4 max-w-2xl">
-            <p className="text-brand-700 dark:text-brand-400 text-sm font-semibold tracking-wider uppercase">
-              We&rsquo;re here to help
-            </p>
-            <h1 className="text-h1 mt-2">Contact us</h1>
-            <p className="mt-3 text-slate-600 dark:text-slate-400">
+            <p className="text-slate-600 dark:text-slate-400">
               Call, WhatsApp or send the form below — a trip planner replies personally, usually
               within one business day.
             </p>

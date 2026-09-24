@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getCategories, getDestinations, getPageBySlug, getTripsByTag } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { Container } from '@/components/ui/Container';
+import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { SectionHeading } from '@/components/ui/SectionHeading';
@@ -44,20 +45,21 @@ export default async function CorporateRetreatsPage() {
 
   return (
     <>
+      <PageHero
+        eyebrow={page.eyebrow}
+        title={page.title}
+        heroImage={{
+          src: '/images/stock/destination-lakes-district.jpg',
+          alt: 'PLACEHOLDER — replace with a client photograph of a company group trip',
+        }}
+      />
+
       <Section spacing="sm" ariaLabel={page.title}>
         <Container>
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: page.title }]} />
-          <div className="mt-4 max-w-2xl">
-            {page.eyebrow && (
-              <p className="text-brand-700 dark:text-brand-400 text-sm font-semibold tracking-wider uppercase">
-                {page.eyebrow}
-              </p>
-            )}
-            <h1 className="text-h1 mt-2">{page.title}</h1>
-            {page.intro && (
-              <p className="mt-3 text-slate-600 dark:text-slate-400">{page.intro}</p>
-            )}
-          </div>
+          {page.intro && (
+            <p className="mt-4 max-w-2xl text-slate-600 dark:text-slate-400">{page.intro}</p>
+          )}
 
           {page.features && page.features.length > 0 && (
             <ul className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

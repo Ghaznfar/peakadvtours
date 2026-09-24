@@ -2,6 +2,7 @@ import { getCredentials, getStats, getTeamMembers, getValueProps } from '@/lib/c
 import { buildMetadata } from '@/lib/seo/metadata';
 import { siteConfig } from '@/site.config';
 import { Container } from '@/components/ui/Container';
+import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { CtaBanner } from '@/components/ui/CtaBanner';
@@ -26,24 +27,29 @@ export default async function AboutPage() {
 
   return (
     <>
+      <PageHero
+        eyebrow={`Since ${siteConfig.foundedYear}`}
+        title={`About ${siteConfig.name}`}
+        heroImage={{
+          src: '/images/stock/destination-lakes-district.jpg',
+          alt: 'PLACEHOLDER — replace with a client photograph of the team or an office',
+        }}
+      />
+
       <Section spacing="sm" ariaLabel="About">
         <Container>
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
           <div className="mt-4 max-w-2xl">
-            <p className="text-brand-700 dark:text-brand-400 text-sm font-semibold tracking-wider uppercase">
-              Since {siteConfig.foundedYear}
-            </p>
-            <h1 className="text-h1 mt-2">About {siteConfig.name}</h1>
-            <p className="mt-3 text-slate-600 dark:text-slate-400">{siteConfig.description}</p>
+            <p className="text-slate-600 dark:text-slate-400">{siteConfig.description}</p>
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
             <div>
               <h2 className="font-display text-h3">How we started</h2>
               <p className="mt-3 text-slate-600 dark:text-slate-400">
-                We started with one vehicle and one rule: never sell a route we haven&rsquo;t
-                walked ourselves. Every itinerary on this site has been checked in person by our
-                own guides, across the seasons we actually run departures in.
+                We started with one vehicle and one rule: never sell a route we haven&rsquo;t walked
+                ourselves. Every itinerary on this site has been checked in person by our own
+                guides, across the seasons we actually run departures in.
               </p>
             </div>
             <div>

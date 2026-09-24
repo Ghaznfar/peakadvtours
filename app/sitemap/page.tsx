@@ -3,6 +3,7 @@ import { getDestinations, getAllTrips } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { tripPath } from '@/lib/trips/href';
 import { Container } from '@/components/ui/Container';
+import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
@@ -55,33 +56,39 @@ export default async function SitemapPage() {
   ];
 
   return (
-    <Section spacing="sm" ariaLabel="Sitemap">
-      <Container>
-        <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Sitemap' }]} />
-        <h1 className="text-h1 mt-4">Sitemap</h1>
-        <p className="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">
-          Every page on this site, grouped by section.
-        </p>
+    <>
+      <PageHero eyebrow="Everything, in one list" title="Sitemap" />
 
-        <div className="mt-10 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
-          {groups.map((group) => (
-            <div key={group.heading}>
-              <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">
-                {group.heading}
-              </h2>
-              <ul className="mt-3 space-y-2">
-                {group.links.map((link) => (
-                  <li key={link.href}>
-                    <Link href={link.href} className="text-brand-700 dark:text-brand-400 text-sm hover:underline">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </Container>
-    </Section>
+      <Section spacing="sm" ariaLabel="Sitemap">
+        <Container>
+          <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Sitemap' }]} />
+          <p className="mt-4 max-w-2xl text-slate-600 dark:text-slate-400">
+            Every page on this site, grouped by section.
+          </p>
+
+          <div className="mt-10 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+            {groups.map((group) => (
+              <div key={group.heading}>
+                <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">
+                  {group.heading}
+                </h2>
+                <ul className="mt-3 space-y-2">
+                  {group.links.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-brand-700 dark:text-brand-400 text-sm hover:underline"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    </>
   );
 }

@@ -5,7 +5,10 @@ const sizeMap = {
   sm: 'max-w-3xl',
   md: 'max-w-5xl',
   lg: 'max-w-6xl',
-  xl: 'max-w-7xl',
+  /** Page content width. */
+  xl: 'max-w-[1180px]',
+  /** Header/nav width — wider than page content so the nav breathes. */
+  nav: 'max-w-[1360px]',
   full: 'max-w-none',
 } as const;
 

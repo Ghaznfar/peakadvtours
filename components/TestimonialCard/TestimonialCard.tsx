@@ -29,7 +29,9 @@ export function TestimonialCard({ testimonial, className }: TestimonialCardProps
               aria-hidden
               className={cn(
                 'size-4',
-                i < rating ? 'fill-accent-500 text-accent-500' : 'text-slate-300 dark:text-slate-700',
+                i < rating
+                  ? 'fill-accent-500 text-accent-500'
+                  : 'text-slate-300 dark:text-slate-700',
               )}
             />
           ))}

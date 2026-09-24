@@ -23,7 +23,13 @@ export default async function ExpeditionsPage({
   return (
     <TripListingPage
       eyebrow="Big mountains"
-      title="Expeditions"
+      title="Expeditions in Pakistan"
+      heroImage={{
+        src: '/images/stock/trip-expedition-climbers.jpg',
+        alt: 'PLACEHOLDER — replace with a client photograph of an expedition team',
+      }}
+      sectionEyebrow="Above base camp"
+      sectionTitle="Peak Expeditions 2026-27"
       description="High-altitude peak climbs with an experienced expedition team, full logistics and support above base camp."
       breadcrumbLabel="Expeditions"
       basePath="/expeditions"

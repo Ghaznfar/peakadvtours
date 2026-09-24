@@ -21,7 +21,7 @@ export function Disclosure({ summary, children, defaultOpen = false, className }
       open={defaultOpen}
       className={cn('group border-b border-slate-200 dark:border-slate-800', className)}
     >
-      <summary className="focus-visible:ring-ring flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-left font-medium text-slate-900 focus-visible:ring-2 focus-visible:outline-none [&::-webkit-details-marker]:hidden dark:text-slate-100">
+      <summary className="focus-visible:ring-ring flex cursor-pointer list-none items-center justify-between gap-4 py-4 text-left font-medium text-slate-900 focus-visible:ring-2 focus-visible:outline-none dark:text-slate-100 [&::-webkit-details-marker]:hidden">
         <span>{summary}</span>
         <ChevronDown
           aria-hidden

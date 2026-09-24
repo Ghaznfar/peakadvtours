@@ -39,8 +39,14 @@ export async function getHeroSlides(): Promise<HeroSlideEntry[]> {
   const raw = settings?.heroSlides ?? [];
 
   const slides = raw
-    .filter((s): s is RawHeroSlide & { tourTitle: string; tourCategory: 'tour' | 'trek' | 'expedition'; tourSlug: string } =>
-      Boolean(s.tourTitle && s.tourCategory && s.tourSlug),
+    .filter(
+      (
+        s,
+      ): s is RawHeroSlide & {
+        tourTitle: string;
+        tourCategory: 'tour' | 'trek' | 'expedition';
+        tourSlug: string;
+      } => Boolean(s.tourTitle && s.tourCategory && s.tourSlug),
     )
     .map((s) => ({
       image: s.image,

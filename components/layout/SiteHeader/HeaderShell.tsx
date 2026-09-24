@@ -1,29 +1,23 @@
-'use client';
-
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils/cn';
-import { useScrolled } from '@/lib/hooks/useScrolled';
 
 export interface HeaderShellProps {
   children: ReactNode;
+  className?: string;
 }
 
 /**
- * Thin client wrapper around the header element so the scroll-based
- * background/shadow transition can hydrate without making the whole header
- * (nav links, logo, etc.) a client component. Everything passed as
- * `children` stays server-rendered.
+ * Sticky header chrome: a solid surface with a soft drop shadow at every
+ * scroll position. Previously this faded from transparent to white on scroll,
+ * which needed a client island; the header now reads as a fixed bar over the
+ * hero instead, so this is a plain server component.
  */
-export function HeaderShell({ children }: HeaderShellProps) {
-  const scrolled = useScrolled();
-
+export function HeaderShell({ children, className }: HeaderShellProps) {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 border-b transition-[background-color,box-shadow,border-color] duration-300',
-        scrolled
-          ? 'border-slate-200 bg-white/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-white/85 dark:border-slate-800 dark:bg-slate-950/90 dark:shadow-black/40 dark:supports-[backdrop-filter]:bg-slate-950/80'
-          : 'border-transparent bg-white/70 backdrop-blur-sm dark:bg-slate-950/40',
+        'bg-card sticky top-0 z-40 shadow-[0_2px_8px_rgb(0_0_0/0.08)] dark:shadow-black/40',
+        className,
       )}
     >
       {children}

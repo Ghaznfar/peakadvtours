@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { siteConfig } from '@/site.config';
-import type { Destination, Trip } from '@/types/content';
+import type { Destination, ImageRef, Trip } from '@/types/content';
 import {
   PAGE_SIZE,
   filterAndSortTrips,
@@ -13,14 +13,25 @@ import { Container } from '@/components/ui/Container';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Button } from '@/components/ui/Button';
+import { PageHero } from '@/components/ui/PageHero';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 import { CtaBanner } from '@/components/ui/CtaBanner';
 import { TripCard } from '@/components/TripCard';
 import { TripFilterControls } from '@/components/TripListing';
 import { JsonLd } from '@/lib/seo/JsonLd';
 
 export interface TripListingPageProps {
+  /** Script-font line in the page banner (e.g. "Boots on"). */
   eyebrow?: string;
+  /** Banner <h1> — fixed per route, not from the CMS. */
   title: string;
+  /** Banner photograph. Falls back to a flat brand panel when absent. */
+  heroImage?: ImageRef;
+  /** Script-font line above the grid heading (e.g. "The Karakoram classics"). */
+  sectionEyebrow?: string;
+  /** <h2> above the grid — fixed per route, not from the CMS. */
+  sectionTitle: string;
+  /** Intro paragraph under the grid heading. */
   description: string;
   /** Full set for this page (already scoped by category/tag). */
   trips: Trip[];
@@ -42,6 +53,9 @@ export interface TripListingPageProps {
 export function TripListingPage({
   eyebrow,
   title,
+  heroImage,
+  sectionEyebrow,
+  sectionTitle,
   description,
   trips,
   destinations,
@@ -83,20 +97,22 @@ export function TripListingPage({
 
   return (
     <>
-      <Section spacing="sm" ariaLabel={title}>
+      <PageHero eyebrow={eyebrow} title={title} heroImage={heroImage} />
+
+      <Section spacing="sm" ariaLabel={sectionTitle}>
         <Container>
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: breadcrumbLabel }]} />
-          <div className="mt-4 max-w-2xl">
-            {eyebrow && (
-              <p className="text-brand-700 text-sm font-semibold tracking-wider uppercase">
-                {eyebrow}
-              </p>
-            )}
-            <h1 className="text-h1 mt-2">{title}</h1>
-            <p className="mt-3 text-slate-600">{description}</p>
-          </div>
 
-          <div className="mt-8">
+          <SectionHeading
+            variant="display"
+            align="center"
+            eyebrow={sectionEyebrow}
+            title={sectionTitle}
+            description={description}
+            className="mt-6"
+          />
+
+          <div className="mt-10">
             <TripFilterControls
               query={query}
               resultCount={results.length}
@@ -107,7 +123,7 @@ export function TripListingPage({
 
             {results.length > 0 ? (
               <>
-                <ul className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <ul className="mt-8 grid grid-cols-1 gap-[26px] md:grid-cols-2 lg:grid-cols-3">
                   {shown.map((trip, i) => (
                     <li key={trip.slug}>
                       <TripCard trip={trip} priority={i < 3} />

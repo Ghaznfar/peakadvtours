@@ -51,7 +51,10 @@ export function Gallery({ images }: GalleryProps) {
         ))}
       </ul>
 
-      <Dialog.Root open={current !== undefined} onOpenChange={(open) => !open && setOpenIndex(null)}>
+      <Dialog.Root
+        open={current !== undefined}
+        onOpenChange={(open) => !open && setOpenIndex(null)}
+      >
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-[60] bg-slate-950/90 data-[state=closed]:[animation:overlay-fade-out_200ms_ease-in] data-[state=open]:[animation:overlay-fade-in_200ms_ease-out]" />
           <Dialog.Content

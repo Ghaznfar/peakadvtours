@@ -22,8 +22,14 @@ export default async function FestivalsPage({
   ]);
   return (
     <TripListingPage
-      eyebrow="Seasonal"
+      eyebrow="Dates fixed to the calendar"
       title="Festival Tours"
+      heroImage={{
+        src: '/images/stock/destination-golden-desert.jpg',
+        alt: 'PLACEHOLDER — replace with a client photograph of a festival departure',
+      }}
+      sectionEyebrow="Weeks you cannot move"
+      sectionTitle="Festival Departures 2026-27"
       description="Departures timed to seasonal festivals and cultural gatherings — book early, dates are fixed to the events."
       breadcrumbLabel="Festivals"
       basePath="/festivals"

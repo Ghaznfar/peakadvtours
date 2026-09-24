@@ -18,8 +18,14 @@ export default async function TreksPage({ searchParams }: { searchParams: Promis
   ]);
   return (
     <TripListingPage
-      eyebrow="On foot"
-      title="Treks"
+      eyebrow="Boots on"
+      title="Trekking in Pakistan"
+      heroImage={{
+        src: '/images/stock/trip-trek-hikers.jpg',
+        alt: 'PLACEHOLDER — replace with a client photograph of a trekking group',
+      }}
+      sectionEyebrow="The Karakoram classics"
+      sectionTitle="Best Treks in Pakistan 2026-27"
       description="Multi-day guided treks with full camp support — from gentle valley walks to serious high-altitude routes."
       breadcrumbLabel="Treks"
       basePath="/treks"

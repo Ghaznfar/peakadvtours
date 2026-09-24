@@ -1,6 +1,7 @@
 import { getDestinations } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { Container } from '@/components/ui/Container';
+import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { CtaBanner } from '@/components/ui/CtaBanner';
@@ -18,18 +19,21 @@ export default async function DestinationsPage() {
 
   return (
     <>
+      <PageHero
+        eyebrow="Where we go"
+        title="Explore our destinations"
+        heroImage={{
+          src: '/images/stock/destination-highland-region.jpg',
+          alt: 'PLACEHOLDER — replace with a client photograph of a signature region',
+        }}
+      />
+
       <Section spacing="sm" ariaLabel="Destinations">
         <Container>
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Destinations' }]} />
-          <div className="mt-4 max-w-2xl">
-            <p className="text-brand-700 dark:text-brand-400 text-sm font-semibold tracking-wider uppercase">
-              Where we go
-            </p>
-            <h1 className="text-h1 mt-2">Explore our destinations</h1>
-            <p className="mt-3 text-slate-600 dark:text-slate-400">
-              Regions we know first-hand, each with its own tours, treks and seasons.
-            </p>
-          </div>
+          <p className="mt-4 max-w-2xl text-slate-600 dark:text-slate-400">
+            Regions we know first-hand, each with its own tours, treks and seasons.
+          </p>
 
           {destinations.length > 0 ? (
             <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -45,7 +49,7 @@ export default async function DestinationsPage() {
               ))}
             </ul>
           ) : (
-            <div className="rounded-card mt-8 border border-dashed border-slate-300 dark:border-slate-700 p-12 text-center">
+            <div className="rounded-card mt-8 border border-dashed border-slate-300 p-12 text-center dark:border-slate-700">
               <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">
                 Destinations coming soon
               </h2>

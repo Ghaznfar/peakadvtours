@@ -19,7 +19,13 @@ export default async function ToursPage({ searchParams }: { searchParams: Promis
   return (
     <TripListingPage
       eyebrow="Ways to travel"
-      title="Tours"
+      title="Tours in Pakistan"
+      heroImage={{
+        src: '/images/stock/trip-valley-tour.jpg',
+        alt: 'PLACEHOLDER — replace with a client photograph of a guided valley tour',
+      }}
+      sectionEyebrow="The classic routes"
+      sectionTitle="Best Tours in Pakistan 2026-27"
       description="Guided, fully-inclusive tour packages at a comfortable pace — culture, scenery and hospitality without the trekking."
       breadcrumbLabel="Tours"
       basePath="/tours"

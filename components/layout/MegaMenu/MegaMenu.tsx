@@ -95,16 +95,17 @@ export function MegaMenu({ items }: MegaMenuProps) {
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOpenLabel(null);
       }}
     >
-      <ul className="flex items-center gap-4 xl:gap-7">
+      {/* Spacing between items comes from each <li>'s horizontal padding, so the
+          active underline sits under the label only — not under the gap. */}
+      <ul className="flex items-center">
         {items.map((item) => {
           const hasPanel = Boolean(item.tiles?.length || item.links?.length);
           const isOpen = hasPanel && openLabel === item.label;
-          const isActive =
-            item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+          const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
           const highlighted = isOpen || isActive;
 
           return (
-            <li key={item.href}>
+            <li key={item.href} className="px-[clamp(9px,1.25vw,20px)]">
               <Link
                 href={item.href}
                 aria-current={isActive ? 'page' : undefined}
@@ -112,7 +113,7 @@ export function MegaMenu({ items }: MegaMenuProps) {
                 onMouseEnter={() => (hasPanel ? open(item.label) : scheduleClose())}
                 onFocus={() => (hasPanel ? open(item.label) : setOpenLabel(null))}
                 className={cn(
-                  'relative inline-flex h-16 items-center gap-1.5 text-sm font-medium transition-colors xl:text-base',
+                  'relative inline-flex items-center gap-[7px] py-[25px] text-[clamp(13px,1.02vw,16px)] font-normal whitespace-nowrap transition-colors',
                   'after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:transition-colors',
                   highlighted
                     ? 'text-brand-500 dark:text-brand-400'
@@ -124,7 +125,13 @@ export function MegaMenu({ items }: MegaMenuProps) {
                 {hasPanel && (
                   <ChevronDown
                     aria-hidden
-                    className={cn('size-4 transition-transform', isOpen && 'rotate-180')}
+                    className={cn(
+                      // Square, not the reference's 9x6: theirs is a filled
+                      // triangle drawn in a 10:6 viewBox, ours is a stroked
+                      // chevron that distorts if the aspect ratio is forced.
+                      'size-[18px] shrink-0 transition-transform duration-150',
+                      isOpen && 'rotate-180',
+                    )}
                   />
                 )}
               </Link>

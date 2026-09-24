@@ -99,7 +99,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
               ))}
             </ul>
           ) : (
-            <div className="rounded-card mt-6 border border-dashed border-slate-300 dark:border-slate-700 p-10 text-center">
+            <div className="rounded-card mt-6 border border-dashed border-slate-300 p-10 text-center dark:border-slate-700">
               <p className="text-slate-600 dark:text-slate-400">
                 We don&rsquo;t have a trip listed for {destination.name} yet.
               </p>

@@ -42,7 +42,10 @@ export function BlogCard({ post, priority = false, className }: BlogCardProps) {
         <p className="line-clamp-3 text-sm text-slate-600 dark:text-slate-400">{post.excerpt}</p>
         <span className="text-brand-700 dark:text-brand-400 mt-auto inline-flex items-center gap-1 text-sm font-medium">
           Read more
-          <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />
+          <ArrowRight
+            aria-hidden
+            className="size-4 transition-transform group-hover:translate-x-0.5"
+          />
         </span>
       </div>
     </Link>

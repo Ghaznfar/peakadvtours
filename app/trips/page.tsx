@@ -18,8 +18,14 @@ export default async function TripsPage({ searchParams }: { searchParams: Promis
   ]);
   return (
     <TripListingPage
-      eyebrow="Everything"
+      eyebrow="Everything we run"
       title="Find your trip"
+      heroImage={{
+        src: '/images/stock/destination-highland-region.jpg',
+        alt: 'PLACEHOLDER — replace with a client photograph of a highland landscape',
+      }}
+      sectionEyebrow="Tours, treks and expeditions"
+      sectionTitle="Every Trip in One Place"
       description="Every tour, trek and expedition in one place — filter, sort and search to find the right one."
       breadcrumbLabel="All trips"
       basePath="/trips"

@@ -17,11 +17,7 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<Params>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getBlogPostBySlug(slug);
   if (!post) return buildMetadata({ title: 'Post not found', noindex: true });
@@ -51,9 +47,13 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
           <div className="mt-4 max-w-3xl">
             <div className="flex items-center gap-2">
               <Badge>{post.category}</Badge>
-              <span className="text-sm text-slate-500 dark:text-slate-500">{formatDate(post.publishedAt)}</span>
+              <span className="text-sm text-slate-500 dark:text-slate-500">
+                {formatDate(post.publishedAt)}
+              </span>
               {post.readingTimeMin && (
-                <span className="text-sm text-slate-500 dark:text-slate-500">· {post.readingTimeMin} min read</span>
+                <span className="text-sm text-slate-500 dark:text-slate-500">
+                  · {post.readingTimeMin} min read
+                </span>
               )}
             </div>
             <h1 className="text-h1 mt-3">{post.title}</h1>
@@ -66,7 +66,7 @@ export default async function BlogPostPage({ params }: { params: Promise<Params>
 
           {post.body && (
             <div
-              className="[&_h2]:font-display [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-slate-900 [&_p]:mt-4 [&_p]:leading-relaxed [&_p]:text-slate-600 mt-10 max-w-3xl"
+              className="[&_h2]:font-display mt-10 max-w-3xl [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-slate-900 [&_p]:mt-4 [&_p]:leading-relaxed [&_p]:text-slate-600"
               // Body is our own local/CMS placeholder HTML — never raw user input.
               dangerouslySetInnerHTML={{ __html: post.body }}
             />

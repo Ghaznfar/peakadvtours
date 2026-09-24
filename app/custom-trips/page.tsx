@@ -2,6 +2,7 @@ import { CalendarClock, MessagesSquare, Route } from 'lucide-react';
 import { getCategories, getDestinations, getTripBySlug } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { Container } from '@/components/ui/Container';
+import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Enquiry } from '@/components/sections/Enquiry';
@@ -50,15 +51,20 @@ export default async function CustomTripsPage({ searchParams }: CustomTripsPageP
 
   return (
     <>
+      <PageHero
+        eyebrow="Your dates, your route"
+        title="Design your own trip"
+        heroImage={{
+          src: '/images/stock/trip-valley-tour.jpg',
+          alt: 'PLACEHOLDER — replace with a client photograph',
+        }}
+      />
+
       <Section spacing="sm" ariaLabel="Custom trips">
         <Container>
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Custom trips' }]} />
           <div className="mt-4 max-w-2xl">
-            <p className="text-brand-700 dark:text-brand-400 text-sm font-semibold tracking-wider uppercase">
-              Your dates, your route
-            </p>
-            <h1 className="text-h1 mt-2">Design your own trip</h1>
-            <p className="mt-3 text-slate-600 dark:text-slate-400">
+            <p className="text-slate-600 dark:text-slate-400">
               Nothing off-the-shelf fits? Tell us where you want to go and we build a custom
               day-by-day itinerary around your dates, with the full price per person — no deposit to
               see one.
@@ -75,7 +81,7 @@ export default async function CustomTripsPage({ searchParams }: CustomTripsPageP
             {STEPS.map((step, i) => (
               <li
                 key={step.title}
-                className="rounded-card border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm"
+                className="rounded-card border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900"
               >
                 <div className="flex items-center gap-3">
                   <span

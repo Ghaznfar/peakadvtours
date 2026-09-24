@@ -1,6 +1,7 @@
 import { buildMetadata } from '@/lib/seo/metadata';
 import { siteConfig } from '@/site.config';
 import { Container } from '@/components/ui/Container';
+import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
@@ -55,28 +56,33 @@ const SECTIONS = [
 
 export default function TermsPage() {
   return (
-    <Section spacing="sm" ariaLabel="Booking terms">
-      <Container>
-        <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Booking terms' }]} />
-        <div className="mt-4 max-w-3xl">
-          <h1 className="text-h1 mt-2">Booking terms</h1>
-          <p className="mt-3 text-slate-600 dark:text-slate-400">
-            These are placeholder booking terms provided as a starting structure. Have them
-            reviewed by a qualified lawyer for your jurisdiction before this site goes live.
-          </p>
-        </div>
+    <>
+      <PageHero eyebrow="The small print" title="Booking terms" />
 
-        <div className="mt-10 max-w-3xl space-y-8">
-          {SECTIONS.map((section) => (
-            <div key={section.heading}>
-              <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">
-                {section.heading}
-              </h2>
-              <p className="mt-2 leading-relaxed text-slate-600 dark:text-slate-400">{section.body}</p>
-            </div>
-          ))}
-        </div>
-      </Container>
-    </Section>
+      <Section spacing="sm" ariaLabel="Booking terms">
+        <Container>
+          <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Booking terms' }]} />
+          <div className="mt-4 max-w-3xl">
+            <p className="text-slate-600 dark:text-slate-400">
+              These are placeholder booking terms provided as a starting structure. Have them
+              reviewed by a qualified lawyer for your jurisdiction before this site goes live.
+            </p>
+          </div>
+
+          <div className="mt-10 max-w-3xl space-y-8">
+            {SECTIONS.map((section) => (
+              <div key={section.heading}>
+                <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">
+                  {section.heading}
+                </h2>
+                <p className="mt-2 leading-relaxed text-slate-600 dark:text-slate-400">
+                  {section.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    </>
   );
 }

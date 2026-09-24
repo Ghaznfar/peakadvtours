@@ -126,7 +126,7 @@ export function EnquiryForm({
     return (
       <div
         className={cn(
-          'rounded-card border-brand-200 bg-brand-50 flex flex-col items-center border p-8 text-center dark:border-brand-900 dark:bg-brand-950/60',
+          'rounded-card border-brand-200 bg-brand-50 dark:border-brand-900 dark:bg-brand-950/60 flex flex-col items-center border p-8 text-center',
           className,
         )}
         role="status"
@@ -366,7 +366,7 @@ export function EnquiryForm({
             type="checkbox"
             aria-invalid={Boolean(errors.consent)}
             aria-describedby={describedBy('consent')}
-            className="focus-visible:ring-brand-600 text-brand-600 mt-0.5 size-4 rounded border-slate-300 focus-visible:ring-2 dark:border-slate-600 dark:bg-slate-900 dark:focus-visible:ring-brand-400"
+            className="focus-visible:ring-brand-600 text-brand-600 dark:focus-visible:ring-brand-400 mt-0.5 size-4 rounded border-slate-300 focus-visible:ring-2 dark:border-slate-600 dark:bg-slate-900"
             {...register('consent')}
           />
           <span>
@@ -416,13 +416,14 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
+      <label
+        htmlFor={id}
+        className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300"
+      >
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       {children}
-      {hint && !error && (
-        <p className="mt-1 text-xs text-slate-500 dark:text-slate-500">{hint}</p>
-      )}
+      {hint && !error && <p className="mt-1 text-xs text-slate-500 dark:text-slate-500">{hint}</p>}
       {error && (
         <p id={`${id}-error`} className="mt-1 text-xs text-red-600 dark:text-red-400">
           {error}

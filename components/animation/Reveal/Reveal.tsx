@@ -21,9 +21,7 @@ export interface RevealProps {
  */
 export function Reveal({ children, as: Tag = 'div', delayMs = 0, className }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(
-    () => typeof IntersectionObserver === 'undefined',
-  );
+  const [visible, setVisible] = useState(() => typeof IntersectionObserver === 'undefined');
 
   useEffect(() => {
     const node = ref.current;
