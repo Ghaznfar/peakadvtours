@@ -46,6 +46,9 @@ function mapTour(raw: Trip): Trip {
     season: raw.season ?? [],
     heroImage: ensureImage(raw.heroImage),
     gallery: (raw.gallery ?? []).map(ensureImage).filter((i) => i.src),
+    // Left undefined when unset (not run through ensureImage) so the detail
+    // page can tell "no image chosen" from "image chosen" and fall back itself.
+    routeMap: raw.routeMap?.src ? raw.routeMap : undefined,
     // Drop half-filled pills so a card never renders an icon with no text.
     cardFacts: (raw.cardFacts ?? []).filter((f) => f?.icon && f?.label),
     updatedAt: raw.updatedAt || new Date().toISOString().slice(0, 10),

@@ -265,6 +265,14 @@ export const tour = defineType({
       group: 'media',
       of: [defineArrayMember({ type: 'imageWithAlt' })],
     }),
+    defineField({
+      name: 'routeMap',
+      title: 'Route map / location image',
+      type: 'imageWithAlt',
+      group: 'media',
+      description:
+        'Shown under the “Where you’ll go” heading on the trip page — a route map, or a wide photo of the region. Falls back to a placeholder graphic when empty.',
+    }),
 
     // Relationships
     defineField({

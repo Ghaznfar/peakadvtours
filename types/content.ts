@@ -77,6 +77,8 @@ export interface Trip {
   description?: string;
   heroImage: ImageRef;
   gallery?: ImageRef[];
+  /** Shown under "Where you'll go" — a route map or a wide regional photo. */
+  routeMap?: ImageRef;
 
   durationDays: number;
   startCity: string;

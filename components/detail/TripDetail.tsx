@@ -247,13 +247,17 @@ export function TripDetail({
                 </h2>
                 <div className="rounded-card mt-6 overflow-hidden border border-slate-200">
                   <div className="relative">
+                    {/* Editable in Sanity: Tour → Media → "Route map / location
+                        image". Falls back to the placeholder graphic when unset. */}
                     <OptimizedImage
-                      image={{
-                        src: '/images/placeholder-trip.svg',
-                        alt: 'Illustrative location graphic — replace with a real route map',
-                        width: 1200,
-                        height: 500,
-                      }}
+                      image={
+                        trip.routeMap ?? {
+                          src: '/images/placeholder-trip.svg',
+                          alt: 'Illustrative location graphic — add a route map in the CMS',
+                          width: 1200,
+                          height: 500,
+                        }
+                      }
                       fill
                       aspectRatio="21 / 9"
                       sizes="(max-width: 1024px) 100vw, 66vw"
