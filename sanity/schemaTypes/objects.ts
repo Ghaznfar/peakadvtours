@@ -240,14 +240,43 @@ export const heroSlide = defineType({
       title: 'Featured tour/trek/expedition',
       type: 'reference',
       to: [{ type: 'tour' }],
-      description: 'The slide’s title and "View …" button link come from this tour.',
-      validation: (r) => r.required(),
+      description:
+        'Optional. When set, the slide’s title and button are taken from this trip and the two fields below can be left empty.',
+    }),
+    defineField({
+      name: 'title',
+      title: 'Headline',
+      type: 'string',
+      description: 'Only needed when no trip is linked above — it overrides the trip’s title.',
+      validation: (r) =>
+        r.custom((value, context) => {
+          const parent = context.parent as { tour?: unknown } | undefined;
+          if (!value && !parent?.tour) return 'Add a headline, or link a trip to supply one.';
+          return true;
+        }),
+    }),
+    defineField({
+      name: 'ctaLabel',
+      title: 'Button label',
+      type: 'string',
+      description: 'Defaults to "View tour"/"View trek"/"View expedition" when a trip is linked.',
+      validation: (r) => r.max(30),
+    }),
+    defineField({
+      name: 'ctaHref',
+      title: 'Button link',
+      type: 'string',
+      description: 'A path such as /tours or /contact. Only needed when no trip is linked.',
+      validation: (r) =>
+        r.custom((value?: string) =>
+          !value || value.startsWith('/') ? true : 'Use a path starting with "/".',
+        ),
     }),
   ],
   preview: {
-    select: { eyebrow: 'eyebrow', title: 'tour.title', media: 'image' },
-    prepare: ({ eyebrow, title, media }) => ({
-      title: title ?? 'Untitled slide',
+    select: { eyebrow: 'eyebrow', manual: 'title', tourTitle: 'tour.title', media: 'image' },
+    prepare: ({ eyebrow, manual, tourTitle, media }) => ({
+      title: manual ?? tourTitle ?? 'Untitled slide',
       subtitle: eyebrow,
       media,
     }),

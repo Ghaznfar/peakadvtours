@@ -41,3 +41,6 @@ next-env.d.ts
 
 # vercel
 .vercel/
+
+# Local Sanity dataset backups (large, contain client content)
+.backups/
