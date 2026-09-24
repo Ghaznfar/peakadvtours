@@ -60,7 +60,11 @@ export function PageHero({ eyebrow, title, heroImage }: PageHeroProps) {
             {eyebrow}
           </span>
         )}
-        <h1 className="text-[clamp(26px,3.6vw,40px)] font-extrabold tracking-[0.02em] uppercase [text-shadow:0_2px_12px_rgb(0_0_0/0.5)]">
+        {/* `text-white` must be set on the element, not inherited: the base
+            layer applies `text-foreground` directly to every h1-h4
+            (app/globals.css), and a direct declaration always beats
+            inheritance from the wrapper. */}
+        <h1 className="text-[clamp(26px,3.6vw,40px)] font-extrabold tracking-[0.02em] text-white uppercase [text-shadow:0_2px_12px_rgb(0_0_0/0.5)]">
           {title}
         </h1>
       </Container>
