@@ -14,6 +14,7 @@ import type { Trip, Difficulty, Season } from '@/types/content';
 import { tripPath } from '@/lib/trips/href';
 import { Button } from '@/components/ui/Button';
 import { OptimizedImage } from '@/components/ui/OptimizedImage';
+import { resolveIcon } from '@/components/ui/icons/iconMap';
 
 const DIFFICULTY_LABEL: Record<Difficulty, string> = {
   easy: 'Easy',
@@ -35,11 +36,11 @@ interface CardTag {
 }
 
 /**
- * Build the pill row from the trip's structured fields rather than its free-text
- * `tags`, so every card shows the same facts in the same order with a matching
- * icon. Anything not set on the trip is simply omitted.
+ * Fallback pills, derived from the trip's structured fields, used only when an
+ * editor hasn't set `cardFacts` in the CMS. Keeps older trips looking right
+ * without forcing someone to fill the pills in before a card renders.
  */
-function buildTags(trip: Trip): CardTag[] {
+function derivedTags(trip: Trip): CardTag[] {
   const tags: CardTag[] = [];
 
   const route =
@@ -94,7 +95,12 @@ export interface TripCardProps {
  */
 export function TripCard({ trip, imageSizes, priority = false, className }: TripCardProps) {
   const href = tripPath(trip);
-  const tags = buildTags(trip);
+  // CMS-authored pills win; the derived set is only a fallback for trips that
+  // haven't had `cardFacts` filled in yet.
+  const tags: CardTag[] =
+    trip.cardFacts && trip.cardFacts.length > 0
+      ? trip.cardFacts.map((f) => ({ icon: resolveIcon(f.icon), label: f.label }))
+      : derivedTags(trip);
 
   return (
     <article
@@ -147,9 +153,11 @@ export function TripCard({ trip, imageSizes, priority = false, className }: Trip
 
         {tags.length > 0 && (
           <ul className="mt-auto flex flex-wrap gap-1.5 pt-1.5">
-            {tags.map(({ icon: Icon, label }) => (
+            {/* Index in the key: CMS pill text is free-form, so two pills on
+                one card can legitimately repeat a label. */}
+            {tags.map(({ icon: Icon, label }, i) => (
               <li
-                key={label}
+                key={`${i}-${label}`}
                 className="inline-flex items-center gap-[5px] rounded-[3px] border border-slate-200 bg-slate-50 px-[9px] py-1 text-[11.5px] font-bold text-slate-700 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300"
               >
                 <Icon aria-hidden className="size-3.5 shrink-0" />

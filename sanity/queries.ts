@@ -34,6 +34,7 @@ const tourProjection = `{
   "season": coalesce(season, []),
   seasonNote,
   accommodationNote,
+  "cardFacts": coalesce(cardFacts[]{icon, label}, []),
   "price": {
     "amount": coalesce(price.amount, 0),
     "currency": coalesce(price.currency, "USD"),
@@ -64,11 +65,11 @@ const tourProjection = `{
   "updatedAt": coalesce(_updatedAt, "")
 }`;
 
-export const TOURS_ALL = `*[_type == "tour"] | order(featured desc, title asc) ${tourProjection}`;
+export const TOURS_ALL = `*[_type == "tour"] | order(orderRank asc, title asc) ${tourProjection}`;
 export const TOUR_BY_SLUG = `*[_type == "tour" && slug.current == $slug][0] ${tourProjection}`;
-export const TOURS_BY_CATEGORY = `*[_type == "tour" && category == $category] | order(featured desc, title asc) ${tourProjection}`;
-export const TOURS_FEATURED = `*[_type == "tour" && featured == true] | order(title asc) ${tourProjection}`;
-export const TOURS_BY_TAG = `*[_type == "tour" && $tag in tags] | order(featured desc, title asc) ${tourProjection}`;
+export const TOURS_BY_CATEGORY = `*[_type == "tour" && category == $category] | order(orderRank asc, title asc) ${tourProjection}`;
+export const TOURS_FEATURED = `*[_type == "tour" && featured == true] | order(orderRank asc, title asc) ${tourProjection}`;
+export const TOURS_BY_TAG = `*[_type == "tour" && $tag in tags] | order(orderRank asc, title asc) ${tourProjection}`;
 export const TOUR_SLUGS_BY_CATEGORY = `*[_type == "tour" && category == $category].slug.current`;
 export const TOURS_RELATED = `*[_type == "tour" && slug.current in $slugs] ${tourProjection}`;
 

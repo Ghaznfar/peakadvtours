@@ -46,6 +46,8 @@ function mapTour(raw: Trip): Trip {
     season: raw.season ?? [],
     heroImage: ensureImage(raw.heroImage),
     gallery: (raw.gallery ?? []).map(ensureImage).filter((i) => i.src),
+    // Drop half-filled pills so a card never renders an icon with no text.
+    cardFacts: (raw.cardFacts ?? []).filter((f) => f?.icon && f?.label),
     updatedAt: raw.updatedAt || new Date().toISOString().slice(0, 10),
   };
 }

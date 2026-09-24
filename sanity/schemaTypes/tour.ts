@@ -1,14 +1,21 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
+import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list';
 
 /**
  * Tour = the unified trip document (tours, treks, expeditions; festivals are
- * tours tagged "festival"). Fields are grouped so the Studio is approachable
- * for a non-technical editor.
+ * tours tagged "festival"; corporate retreats are tours tagged "corporate").
+ * Fields are grouped so the Studio is approachable for a non-technical editor.
+ *
+ * Deliberately ONE document type, not four (CLAUDE.md §4). The Studio splits
+ * it into four drag-to-reorder lists in `sanity/structure.ts`, which gives the
+ * separate-sections editing experience without four near-identical schemas,
+ * four sets of queries and four templates to keep in sync.
  */
 export const tour = defineType({
   name: 'tour',
   title: 'Tour / Trek / Expedition',
   type: 'document',
+  orderings: [orderRankOrdering],
   groups: [
     { name: 'main', title: 'Main', default: true },
     { name: 'details', title: 'Details' },
@@ -17,6 +24,9 @@ export const tour = defineType({
     { name: 'seo', title: 'SEO' },
   ],
   fields: [
+    // Hidden field written by the drag-to-reorder lists; `TOURS_*` queries
+    // sort on it, so the order set in Studio is the order on the site.
+    orderRankField({ type: 'tour' }),
     defineField({
       name: 'title',
       title: 'Title',
@@ -159,6 +169,16 @@ export const tour = defineType({
       type: 'text',
       rows: 2,
       group: 'details',
+    }),
+    defineField({
+      name: 'cardFacts',
+      title: 'Card facts (pills)',
+      type: 'array',
+      group: 'details',
+      of: [defineArrayMember({ type: 'tripFact' })],
+      description:
+        'The labelled pills shown on this trip’s card, in the order listed. Leave empty to fall back to pills derived from the fields above.',
+      validation: (r) => r.max(8),
     }),
 
     // Commercial

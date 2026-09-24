@@ -13,7 +13,43 @@ const ICON_KEYS = [
   'mountain',
   'mountain-snow',
   'footprints',
+  'clock',
+  'pin',
+  'bed',
+  'calendar',
 ];
+
+/**
+ * One pill on a trip card: a chosen icon plus free text. Deliberately free
+ * text rather than derived from `durationDays`/`difficulty` etc, so an editor
+ * can write "10 days across two valleys" instead of "10 days, Islamabad to
+ * Islamabad" — the phrasing is part of the selling, not just the spec.
+ */
+export const tripFact = defineType({
+  name: 'tripFact',
+  title: 'Card fact',
+  type: 'object',
+  fields: [
+    defineField({
+      name: 'icon',
+      title: 'Icon',
+      type: 'string',
+      options: { list: ICON_KEYS.map((v) => ({ title: v, value: v })) },
+      initialValue: 'clock',
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'label',
+      title: 'Text',
+      type: 'string',
+      description: 'e.g. "10 days across two valleys", "Hotels and lakeside resorts".',
+      validation: (r) => r.required().max(60),
+    }),
+  ],
+  preview: {
+    select: { title: 'label', subtitle: 'icon' },
+  },
+});
 
 /** Image with required-ish alt text + hotspot cropping for good art direction. */
 export const imageWithAlt = defineType({
@@ -286,6 +322,7 @@ export const heroSlide = defineType({
 export const objectTypes = [
   imageWithAlt,
   seo,
+  tripFact,
   priceType,
   itineraryDay,
   departure,

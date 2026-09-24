@@ -1,9 +1,13 @@
 import { createElement } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import {
+  Bed,
+  CalendarDays,
+  Clock,
   Compass,
   Footprints,
   Headset,
+  MapPin,
   MapPinned,
   Mountain,
   MountainSnow,
@@ -28,7 +32,15 @@ export const ICON_MAP: Record<string, LucideIcon> = {
   mountain: Mountain,
   'mountain-snow': MountainSnow,
   footprints: Footprints,
+  // Added for trip-card fact pills (duration, region, lodging, season).
+  clock: Clock,
+  pin: MapPin,
+  bed: Bed,
+  calendar: CalendarDays,
 };
+
+/** Every key above, for building Sanity's icon dropdowns from one source. */
+export const ICON_KEYS = Object.keys(ICON_MAP);
 
 /** Resolve an icon key to a component, falling back to a neutral default. */
 export function resolveIcon(key: string): LucideIcon {

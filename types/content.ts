@@ -58,6 +58,13 @@ export interface Seo {
   keywords?: string[];
 }
 
+/** One labelled pill on a trip card: an icon key plus its text. */
+export interface TripFact {
+  /** Key into `ICON_MAP` (components/ui/icons/iconMap). */
+  icon: string;
+  label: string;
+}
+
 export interface Trip {
   slug: string;
   title: string;
@@ -82,6 +89,12 @@ export interface Trip {
   season: Season[];
   seasonNote?: string;
   accommodationNote?: string;
+  /**
+   * Labelled pills on the trip card, edited in the CMS. Free text by design so
+   * the wording can sell ("10 days across two valleys") rather than restate the
+   * spec. When empty, `TripCard` derives pills from the structured fields.
+   */
+  cardFacts?: TripFact[];
 
   price: Price;
   earlyBird?: boolean;
