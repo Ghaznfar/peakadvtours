@@ -17,7 +17,6 @@ import { PageHero } from '@/components/ui/PageHero';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { CtaBanner } from '@/components/ui/CtaBanner';
 import { TripCard, CustomTripCard } from '@/components/TripCard';
-import { TripFilterControls } from '@/components/TripListing';
 import { JsonLd } from '@/lib/seo/JsonLd';
 
 export interface TripListingPageProps {
@@ -36,7 +35,6 @@ export interface TripListingPageProps {
   /** Full set for this page (already scoped by category/tag). */
   trips: Trip[];
   destinations: Destination[];
-  showTypeFilter?: boolean;
   breadcrumbLabel: string;
   /** Canonical path for this listing (e.g. "/tours") — used for clear/reset. */
   basePath: string;
@@ -45,10 +43,13 @@ export interface TripListingPageProps {
 }
 
 /**
- * Server shell shared by every listing route. Filtering, sorting, search and
- * pagination all run on the server from the URL query, so results are rendered
- * into the HTML (crawlable) and shared/refreshed/direct URLs show the right
- * results immediately. The interactive controls are a thin client component.
+ * Server shell shared by every listing route. Sorting, filtering and pagination
+ * all run on the server from the URL query, so results are rendered into the
+ * HTML (crawlable) and a shared or refreshed URL shows the right results
+ * immediately.
+ *
+ * There is no filter UI here by design — it lives only on the homepage. The
+ * query is still honoured so hand-built and shared links keep working.
  */
 export function TripListingPage({
   eyebrow,
@@ -59,23 +60,24 @@ export function TripListingPage({
   description,
   trips,
   destinations,
-  showTypeFilter = false,
   breadcrumbLabel,
   basePath,
   searchParams,
 }: TripListingPageProps) {
+  // The filter UI lives only on the homepage; these listings show everything.
+  // The query is still parsed so a shared or hand-built URL like
+  // `/tours?effort=easy&sort=price-asc` keeps working, and so pagination does.
   const query = parseTripQuery(searchParams);
   const page = parsePage(searchParams);
 
   const destinationNames = Object.fromEntries(destinations.map((d) => [d.slug, d.name]));
-  const present = new Set(trips.flatMap((t) => t.destinationSlugs));
-  const destinationOptions = destinations
-    .filter((d) => present.has(d.slug))
-    .map((d) => ({ slug: d.slug, name: d.name }));
-
   const results = filterAndSortTrips(trips, query, destinationNames);
   const shown = results.slice(0, page * PAGE_SIZE);
   const hasMore = shown.length < results.length;
+
+  // True when the URL actually narrowed the list — decides which empty state
+  // to show, since "clear your filters" is nonsense without a filter UI.
+  const isNarrowed = serializeTripQuery(query).toString().length > 0;
 
   // Build the "load more" href: same query, next page.
   const nextParams = serializeTripQuery(query);
@@ -113,14 +115,6 @@ export function TripListingPage({
           />
 
           <div className="mt-10">
-            <TripFilterControls
-              query={query}
-              resultCount={results.length}
-              destinationOptions={destinationOptions}
-              showTypeFilter={showTypeFilter}
-              basePath={basePath}
-            />
-
             {results.length > 0 ? (
               <>
                 <ul className="mt-8 grid grid-cols-1 gap-[26px] md:grid-cols-2 lg:grid-cols-3">
@@ -153,20 +147,26 @@ export function TripListingPage({
                 )}
               </>
             ) : (
-              <div className="rounded-card mt-8 border border-dashed border-slate-300 p-12 text-center">
-                <h2 className="font-display text-lg font-semibold text-slate-900">
-                  No trips match
+              /* Two different empty states: a narrowed URL can be widened, but
+                 with no filter UI the usual case is simply "nothing here yet",
+                 where offering to clear filters would only confuse. */
+              <div className="rounded-card mt-8 border border-dashed border-slate-300 p-12 text-center dark:border-slate-700">
+                <h2 className="font-display text-lg font-semibold text-slate-900 dark:text-white">
+                  {isNarrowed ? 'No trips match' : 'Nothing here just yet'}
                 </h2>
-                <p className="mt-2 text-sm text-slate-600">
-                  Try removing a filter, or tell us what you&rsquo;re looking for and we&rsquo;ll
-                  build it.
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                  {isNarrowed
+                    ? 'Try widening your search, or tell us what you’re looking for and we’ll build it.'
+                    : 'We’re adding trips to this page. In the meantime, tell us what you’re looking for and we’ll build it around your dates.'}
                 </p>
                 <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
-                  <Button asChild variant="outline">
-                    <Link href={basePath} scroll={false}>
-                      Clear filters
-                    </Link>
-                  </Button>
+                  {isNarrowed && (
+                    <Button asChild variant="outline">
+                      <Link href={basePath} scroll={false}>
+                        Show all
+                      </Link>
+                    </Button>
+                  )}
                   <Button asChild>
                     <Link href="/custom-trips">Plan a custom trip</Link>
                   </Button>

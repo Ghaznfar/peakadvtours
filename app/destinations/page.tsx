@@ -2,6 +2,7 @@ import { getDestinations } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { Container } from '@/components/ui/Container';
 import { PageHero } from '@/components/ui/PageHero';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { CtaBanner } from '@/components/ui/CtaBanner';
@@ -31,9 +32,14 @@ export default async function DestinationsPage() {
       <Section spacing="sm" ariaLabel="Destinations">
         <Container>
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Destinations' }]} />
-          <p className="mt-4 max-w-2xl text-slate-600 dark:text-slate-400">
-            Regions we know first-hand, each with its own tours, treks and seasons.
-          </p>
+          <SectionHeading
+            variant="display"
+            align="center"
+            eyebrow="Know the ground"
+            title="Regions We Travel"
+            description="Regions we know first-hand, each with its own tours, treks and seasons."
+            className="mt-6"
+          />
 
           {destinations.length > 0 ? (
             <ul className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

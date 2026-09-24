@@ -6,7 +6,7 @@ import type { ParamsInput } from '@/lib/trips/filters';
 export const metadata = buildMetadata({
   title: 'Festival Tours',
   description:
-    'Departures timed to seasonal festivals and cultural gatherings across our regions. Filter by destination, season and length.',
+    'Departures timed to seasonal festivals and cultural gatherings across our regions — dates are fixed to the events, so book early.',
   path: '/festivals',
 });
 
@@ -36,7 +36,6 @@ export default async function FestivalsPage({
       trips={trips}
       destinations={destinations}
       searchParams={sp}
-      showTypeFilter
     />
   );
 }

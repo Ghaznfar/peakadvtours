@@ -6,7 +6,7 @@ import type { ParamsInput } from '@/lib/trips/filters';
 export const metadata = buildMetadata({
   title: 'Tours',
   description:
-    'Guided, fully-inclusive tour packages at a comfortable pace. Filter by destination, difficulty, season and length.',
+    'Guided, fully-inclusive tour packages at a comfortable pace — culture, scenery and hospitality across northern Pakistan, without the trekking.',
   path: '/tours',
 });
 

@@ -6,7 +6,7 @@ import type { ParamsInput } from '@/lib/trips/filters';
 export const metadata = buildMetadata({
   title: 'Find your trip',
   description:
-    'Every tour, trek and expedition in one place. Filter by type, destination, difficulty, season and length.',
+    'Every tour, trek and expedition we run, in one place — from short valley tours to 8,000 m expeditions in the Karakoram.',
   path: '/trips',
 });
 
@@ -26,13 +26,12 @@ export default async function TripsPage({ searchParams }: { searchParams: Promis
       }}
       sectionEyebrow="Tours, treks and expeditions"
       sectionTitle="Every Trip in One Place"
-      description="Every tour, trek and expedition in one place — filter, sort and search to find the right one."
+      description="Every tour, trek and expedition we run, in one place — from short valley tours to high-altitude expeditions."
       breadcrumbLabel="All trips"
       basePath="/trips"
       trips={trips}
       destinations={destinations}
       searchParams={sp}
-      showTypeFilter
     />
   );
 }

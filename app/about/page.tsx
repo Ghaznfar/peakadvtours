@@ -3,6 +3,7 @@ import { buildMetadata } from '@/lib/seo/metadata';
 import { siteConfig } from '@/site.config';
 import { Container } from '@/components/ui/Container';
 import { PageHero } from '@/components/ui/PageHero';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { CtaBanner } from '@/components/ui/CtaBanner';
@@ -31,17 +32,22 @@ export default async function AboutPage() {
         eyebrow={`Since ${siteConfig.foundedYear}`}
         title={`About ${siteConfig.name}`}
         heroImage={{
-          src: '/images/stock/destination-lakes-district.jpg',
-          alt: 'PLACEHOLDER — replace with a client photograph of the team or an office',
+          src: '/images/banners/bannerpost.avif',
+          alt: 'Autumn foliage framing a snow-capped peak, with golden poplars along the valley floor',
         }}
       />
 
       <Section spacing="sm" ariaLabel="About">
         <Container>
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'About' }]} />
-          <div className="mt-4 max-w-2xl">
-            <p className="text-slate-600 dark:text-slate-400">{siteConfig.description}</p>
-          </div>
+          <SectionHeading
+            variant="display"
+            align="center"
+            eyebrow="Our story"
+            title="Planned by People Who Know the Roads"
+            description={siteConfig.description}
+            className="mt-6"
+          />
 
           <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
             <div>

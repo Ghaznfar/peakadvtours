@@ -3,14 +3,15 @@ import { getCategories, getDestinations, getTripBySlug } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { Container } from '@/components/ui/Container';
 import { PageHero } from '@/components/ui/PageHero';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Enquiry } from '@/components/sections/Enquiry';
 
 export const metadata = buildMetadata({
-  title: 'Custom Trips',
+  title: 'Customize Your Tour',
   description:
-    'Nothing off-the-shelf fits? Send your dates, group size and budget and we build a custom day-by-day itinerary — no deposit to see one.',
+    'Tell us your dates, route and budget and we build a custom day-by-day itinerary with the full per-person price — no deposit to see one.',
   path: '/custom-trips',
 });
 
@@ -52,23 +53,41 @@ export default async function CustomTripsPage({ searchParams }: CustomTripsPageP
   return (
     <>
       <PageHero
-        eyebrow="Your dates, your route"
-        title="Design your own trip"
+        eyebrow="Your dates, your route, your budget"
+        title="Customize Your Tour"
         heroImage={{
-          src: '/images/stock/trip-valley-tour.jpg',
-          alt: 'PLACEHOLDER — replace with a client photograph',
+          src: '/images/banners/bannerpost.avif',
+          alt: 'Autumn foliage framing a snow-capped peak, with golden poplars along the valley floor',
         }}
       />
 
       <Section spacing="sm" ariaLabel="Custom trips">
         <Container>
           <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Custom trips' }]} />
+          <SectionHeading
+            variant="display"
+            align="center"
+            eyebrow="Tailor made"
+            title="Tell Us the Trip You Want"
+            description={
+              <>
+                <p>
+                  Every fixed departure we publish started as somebody&rsquo;s private trip. If the
+                  dates do not work, the route is not quite right, or you want to spend four days in
+                  Hunza instead of two, this is the form that fixes it — and it costs nothing to
+                  find out what it would come to.
+                </p>
+                <p>
+                  Only your name, email and WhatsApp number are required. Everything else sharpens
+                  the reply: a start date lets us check the passes are open, a passport country
+                  decides the permits, a party size sets the per-person price, and a budget — even a
+                  rough one — gets you one honest itinerary instead of three hedged ones.
+                </p>
+              </>
+            }
+            className="mt-6"
+          />
           <div className="mt-4 max-w-2xl">
-            <p className="text-slate-600 dark:text-slate-400">
-              Nothing off-the-shelf fits? Tell us where you want to go and we build a custom
-              day-by-day itinerary around your dates, with the full price per person — no deposit to
-              see one.
-            </p>
             {contextTrip && (
               <p className="bg-brand-50 text-brand-800 dark:text-brand-400 mt-4 inline-block rounded-lg px-4 py-2 text-sm">
                 Enquiring about <span className="font-semibold">{contextTrip.title}</span> — mention

@@ -16,6 +16,39 @@ _Last updated: 2026-09-24_
 
 **10 tours imported from a sheet (client instruction).** Added `content/tours.csv` (the editable sheet) and `scripts/import-tours.mjs` (CSV → Sanity, `createOrReplace` keyed on slug so re-running updates rather than duplicates; supports `--dry`). All 10 tours from the client's screenshots are live, with prices, durations, difficulty, seasons, group sizes and accommodation notes. Images deliberately **not** set — upload in Studio for hotspot cropping and alt text; `ensureImage()` falls back to the placeholder meanwhile.
 
+**Real banner image on the institutional pages (client-supplied).** Client's `bannerpost.avif` (1672×941, 432 KB) copied to `public/images/banners/` and used on `/about`, `/contact`, `/blog` and `/custom-trips`. Written alt: *"Autumn foliage framing a snow-capped peak, with golden poplars along the valley floor"* — described from the image itself rather than guessing, and deliberately **not** naming a specific peak, which could not be verified. These four were the last `PLACEHOLDER`-alt banners outside the listings. Verified in the built HTML: `bannerpost.avif` present on all three static pages, no stock file left behind.
+
+**Left on stock placeholders:** the listing banners (`/tours`, `/treks`, `/expeditions`, `/festivals`, `/corporate-retreats`, `/trips`) and `/destinations`, because their current images are at least category-appropriate (trekkers, climbers) where a single shared autumn photo would not be. Their alt text still says `PLACEHOLDER`.
+
+**Filter bar removed from every listing page (client request).** The search/sort/difficulty/season/length bar now appears **only on the homepage**. Confirmed first that these are two different components — the homepage uses `components/TripFilter` (self-contained, no navigation), the listings used `components/TripListing/TripFilterControls` — so removing one could not affect the other. Verified in the built homepage afterwards: "Any season" and "Recommended" still render.
+
+Removed the controls from `TripListingPage` along with the now-dead `destinationOptions` list and the `showTypeFilter` prop (and its use on `/trips` and `/festivals`). **Kept** `parseTripQuery`/`filterAndSortTrips`/pagination, so a shared or hand-built URL like `/tours?effort=easy&sort=price-asc` still works and "Load more" is unaffected.
+
+**Three follow-ons that would otherwise have been left wrong:**
+1. All five listing **meta descriptions** promised "Filter by destination, difficulty, season…" — search snippets would have advertised a feature the page no longer has. Rewritten.
+2. `/trips`' on-page description said "filter, sort and search to find the right one". Rewritten.
+3. The **empty state** said "Try removing a filter" with a "Clear filters" button. With no filter UI that is nonsense — and `/corporate-retreats` hits it today, having zero `corporate`-tagged trips. Now branches on a new `isNarrowed` flag: a genuinely narrowed URL still offers "Show all", while the ordinary case reads "Nothing here just yet".
+
+`components/TripListing/TripFilterControls.tsx` is now unreferenced. Left in place rather than deleted in case filters are wanted back on a listing.
+
+**Blog + Contact copy (client-supplied).** `/blog` is now banner eyebrow "Written by the people who drive the roads" → h1 "Pakistan Travel Guides" → two intro paragraphs. The client supplied only two heading lines for this page (no section eyebrow/title), so the intro renders as a centred block styled to match a display heading's description rather than inventing a second heading. `/contact` takes the full four-part structure plus a new **Head office** card built from `site.config.ts` — address, both numbers, WhatsApp, both emails and hours — so those details cannot drift out of step with the header, footer and enquiry form. Page titles updated on both.
+
+**Two edits made to the supplied copy, both deliberate:**
+1. **"Contact Elham Asia" → `Contact ${siteConfig.name}`** ("Contact PeakAdventure Tours"). The supplied line carried the *reference operator's* brand name, which would have put a competitor's company name on the client's own contact page.
+2. **"between 9am and 11pm Pakistan time" → "during office hours".** `siteConfig.contact.hours` is **9am – 9pm**, and the Head office card directly below states that — the page would have contradicted itself two paragraphs apart. If 9am–11pm is correct, update `site.config.ts` and the copy can be restored verbatim.
+
+**Known gap:** the blog intro references "the best time to visit Pakistan", "the honest answer on safety", "the visa guide" and "the packing list" as if they were links. Those posts do not exist (zero `blogPost` documents), so they are plain text; only `/tours`, `/treks` and `/expeditions` are linked. Wire them up once the posts exist.
+
+**Customize page copy + multi-paragraph headings (client copy).** `/custom-trips` (nav label "Customize") now carries the client's supplied copy in their sequence: banner eyebrow "Your dates, your route, your budget" → h1 "Customize Your Tour" → script eyebrow "Tailor made" → h2 "Tell Us the Trip You Want" → two intro paragraphs. Page metadata title/description updated to match, since the old ones still said "Custom Trips".
+
+**`SectionHeading.description` widened from `string` to `ReactNode`** to carry the two paragraphs. Both variants now render a `<div className="space-y-3">` wrapper and only wrap in `<p>` when the value is a string — passing JSX into the old `<p>` would have nested `<p>` inside `<p>`, which is invalid HTML that React silently reflows. Existing string callers are unaffected.
+
+**All content pages unified on one pattern (client request).** Client asked why `/corporate-retreats` behaved differently from the listings and wanted every page to work the same way.
+
+**`/corporate-retreats` converted to `TripListingPage`.** It was a bespoke landing page that read its eyebrow/title/intro/features from a Sanity `page` document rather than from props — so editing the route file did nothing, which is what the client hit. Worse, the `page` document had been deleted in the earlier content cleanup, so `getPageBySlug` was silently falling through to `lib/content/pages.data.ts` and the copy was coming from a **third** source, editable in neither the CMS nor the route file. Now takes hardcoded props exactly like `/tours`, `/treks` and `/expeditions`, and gains their filters, "load more", closing promo card and `ItemList` JSON-LD. **Dropped:** the icon feature-card grid and the inline `Enquiry` form (the shared `CtaBanner` covers the CTA). Say so if the enquiry form should come back on this route.
+
+**Display heading added to the five institutional pages.** `/about`, `/contact`, `/blog`, `/custom-trips` and `/destinations` had a plain intro paragraph where the listings have a centred `SectionHeading variant="display"` (script eyebrow, uppercase h2, brand rule). All five now use it, so every page below the banner opens the same way. Audited after: all six pages hardcoded, all six with a display heading, none reading copy from a `page` document.
+
 **Hero slide schema reverted; slider unblocked and republished (client-reported).** Client reported being unable to publish slider content in Studio. Two causes, only one of which was visible from the code:
 
 1. **My validation rule blocked every slide.** The earlier "self-contained slides" change made `tour` optional and added `title`/`ctaLabel`/`ctaHref` with a custom rule requiring a headline *or* a linked trip. With no trips linked, all six slides showed errors and Studio disables Publish on any validation error. Reverted `heroSlide` (`sanity/schemaTypes/objects.ts`), the `SITE_SETTINGS` projection and `getHeroSlides` (`lib/content/site.ts`) to their pre-`06b255b` state, taken from git rather than rewritten from memory. A slide is once again image + eyebrow + required tour reference — nothing more.

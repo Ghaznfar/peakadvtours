@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
@@ -5,7 +6,12 @@ import { cn } from '@/lib/utils/cn';
 export interface SectionHeadingProps {
   eyebrow?: string;
   title: string;
-  description?: string;
+  /**
+   * A string renders as one paragraph. Pass JSX (several `<p>`s) for a longer
+   * intro — it is wrapped in a spaced container rather than a `<p>`, so the
+   * markup stays valid.
+   */
+  description?: ReactNode;
   /** Optional "view all" style link shown beside the heading. */
   action?: { label: string; href: string };
   /** Center the heading block (used for full-width marketing sections). */
@@ -50,14 +56,14 @@ export function SectionHeading({
           className={cn('bg-brand-500 mt-3.5 block h-[3px] w-14', centered ? 'mx-auto' : 'mr-auto')}
         />
         {description && (
-          <p
+          <div
             className={cn(
-              'mt-3 max-w-[66ch] text-[14.5px] text-slate-600 dark:text-slate-400',
+              'mt-3 max-w-[66ch] space-y-3 text-[14.5px] text-slate-600 dark:text-slate-400',
               centered && 'mx-auto',
             )}
           >
-            {description}
-          </p>
+            {typeof description === 'string' ? <p>{description}</p> : description}
+          </div>
         )}
       </div>
     );
@@ -78,7 +84,11 @@ export function SectionHeading({
           </p>
         )}
         <Heading className="text-h2 mt-2">{title}</Heading>
-        {description && <p className="mt-3 text-slate-600 dark:text-slate-400">{description}</p>}
+        {description && (
+          <div className="mt-3 space-y-3 text-slate-600 dark:text-slate-400">
+            {typeof description === 'string' ? <p>{description}</p> : description}
+          </div>
+        )}
       </div>
       {action && (
         <Link
