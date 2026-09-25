@@ -34,6 +34,17 @@ export interface TripListingPageProps {
   description: string;
   /** Full set for this page (already scoped by category/tag). */
   trips: Trip[];
+  /**
+   * An optional second, separately-headed grid below the main one — used where
+   * a page covers two distinct groups (Pakistan treks vs Nepal treks), which a
+   * single list would blur together.
+   */
+  secondary?: {
+    eyebrow?: string;
+    title: string;
+    description?: string;
+    trips: Trip[];
+  };
   destinations: Destination[];
   breadcrumbLabel: string;
   /** Canonical path for this listing (e.g. "/tours") — used for clear/reset. */
@@ -59,6 +70,7 @@ export function TripListingPage({
   sectionTitle,
   description,
   trips,
+  secondary,
   destinations,
   breadcrumbLabel,
   basePath,
@@ -176,6 +188,30 @@ export function TripListingPage({
           </div>
         </Container>
       </Section>
+
+      {secondary && secondary.trips.length > 0 && (
+        <Section ariaLabel={secondary.title} className="bg-slate-50 dark:bg-[#0d1117]">
+          <Container>
+            <SectionHeading
+              variant="display"
+              align="center"
+              eyebrow={secondary.eyebrow}
+              title={secondary.title}
+              description={secondary.description}
+            />
+            <ul className="mt-10 grid grid-cols-1 gap-[26px] md:grid-cols-2 lg:grid-cols-3">
+              {secondary.trips.map((trip) => (
+                <li key={trip.slug}>
+                  <TripCard
+                    trip={trip}
+                    imageSizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  />
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </Section>
+      )}
 
       <CtaBanner
         heading="Can't find the right trip?"
