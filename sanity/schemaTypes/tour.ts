@@ -266,6 +266,16 @@ export const tour = defineType({
       of: [defineArrayMember({ type: 'imageWithAlt' })],
     }),
     defineField({
+      name: 'routeWaypoints',
+      title: 'Route stops (map)',
+      type: 'array',
+      group: 'media',
+      of: [defineArrayMember({ type: 'routeWaypoint' })],
+      description:
+        'Numbered stops in travel order — first is the start, last the finish. Two or more draws the interactive route map; leave empty to fall back to the static image below.',
+      validation: (r) => r.max(30),
+    }),
+    defineField({
       name: 'routeMap',
       title: 'Route map / location image',
       type: 'imageWithAlt',

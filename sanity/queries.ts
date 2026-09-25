@@ -24,6 +24,7 @@ const tourProjection = `{
   "heroImage": heroImage ${imageFrag},
   "gallery": coalesce(gallery[] ${imageFrag}, []),
   "routeMap": routeMap ${imageFrag},
+  "routeWaypoints": coalesce(routeWaypoints[]{name, lat, lng, note}, []),
   durationDays,
   startCity,
   endCity,

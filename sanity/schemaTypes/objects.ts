@@ -253,6 +253,55 @@ export const faq = defineType({
   preview: { select: { title: 'question' } },
 });
 
+/**
+ * One numbered stop on a trip's route map. Order in the array is travel order:
+ * the first is the start, the last the finish, everything between a stop.
+ * Coordinates are plain numbers rather than Sanity's `geopoint` so they can be
+ * pasted straight from Google Maps without the Mapbox-backed input.
+ */
+export const routeWaypoint = defineType({
+  name: 'routeWaypoint',
+  title: 'Route stop',
+  type: 'object',
+  fields: [
+    defineField({
+      name: 'name',
+      title: 'Place',
+      type: 'string',
+      description: 'e.g. "Karimabad", "Khunjerab Pass".',
+      validation: (r) => r.required().max(60),
+    }),
+    defineField({
+      name: 'lat',
+      title: 'Latitude',
+      type: 'number',
+      description: 'Between -90 and 90. Right-click a spot in Google Maps to copy it.',
+      validation: (r) => r.required().min(-90).max(90),
+    }),
+    defineField({
+      name: 'lng',
+      title: 'Longitude',
+      type: 'number',
+      description: 'Between -180 and 180.',
+      validation: (r) => r.required().min(-180).max(180),
+    }),
+    defineField({
+      name: 'note',
+      title: 'Note (optional)',
+      type: 'string',
+      description: 'Shown in the marker popup, e.g. "Day 4 — 102 km, 3 hours".',
+      validation: (r) => r.max(120),
+    }),
+  ],
+  preview: {
+    select: { title: 'name', lat: 'lat', lng: 'lng' },
+    prepare: ({ title, lat, lng }) => ({
+      title: title ?? 'Stop',
+      subtitle: lat != null && lng != null ? `${lat}, ${lng}` : 'No coordinates',
+    }),
+  },
+});
+
 export const heroSlide = defineType({
   name: 'heroSlide',
   title: 'Hero slide',
@@ -294,6 +343,7 @@ export const objectTypes = [
   imageWithAlt,
   seo,
   tripFact,
+  routeWaypoint,
   priceType,
   itineraryDay,
   departure,

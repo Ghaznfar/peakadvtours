@@ -1,4 +1,4 @@
-import { Check, MapPin, X } from 'lucide-react';
+import { Check, MapPin, Route, X } from 'lucide-react';
 import type { Trip } from '@/types/content';
 import { CATEGORY_LABEL, categoryPath } from '@/lib/trips/href';
 import { touristTripSchema, faqSchema } from '@/lib/seo/tripJsonLd';
@@ -16,6 +16,7 @@ import { QuickFacts } from './QuickFacts';
 import { BookingPanel } from './BookingPanel';
 import { Departures } from './Departures';
 import { Gallery } from './Gallery';
+import { RouteMap } from './RouteMap';
 import { StickyMobileCta } from './StickyMobileCta';
 
 const MEAL_LABEL: Record<string, string> = { B: 'Breakfast', L: 'Lunch', D: 'Dinner' };
@@ -39,6 +40,7 @@ export function TripDetail({
   destinationNames,
   destinationOptions,
 }: TripDetailProps) {
+  const hasRoute = (trip.routeWaypoints?.length ?? 0) >= 2;
   const location = trip.destinationSlugs.map((s) => destinationNames[s] ?? s).join(', ');
 
   return (
@@ -245,25 +247,36 @@ export function TripDetail({
                 <h2 id="location-h" className="text-h2">
                   Where you&rsquo;ll go
                 </h2>
-                <div className="rounded-card mt-6 overflow-hidden border border-slate-200">
-                  <div className="relative">
-                    {/* Editable in Sanity: Tour → Media → "Route map / location
-                        image". Falls back to the placeholder graphic when unset. */}
-                    <OptimizedImage
-                      image={
-                        trip.routeMap ?? {
-                          src: '/images/placeholder-trip.svg',
-                          alt: 'Illustrative location graphic — add a route map in the CMS',
-                          width: 1200,
-                          height: 500,
+                <div className="rounded-card mt-6 overflow-hidden border border-slate-200 dark:border-slate-800">
+                  {hasRoute ? (
+                    <>
+                      <RouteMap waypoints={trip.routeWaypoints ?? []} />
+                      <p className="flex items-start gap-2 border-t border-slate-200 p-4 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
+                        <Route aria-hidden className="text-brand-600 mt-0.5 size-4 shrink-0" />
+                        The road as it runs, numbered in travel order. Driving times are in the
+                        day-by-day below.
+                      </p>
+                    </>
+                  ) : (
+                    <div className="relative">
+                      {/* No waypoints set: fall back to the static route image
+                          (Tour → Media), then to the placeholder graphic. */}
+                      <OptimizedImage
+                        image={
+                          trip.routeMap ?? {
+                            src: '/images/placeholder-trip.svg',
+                            alt: 'Illustrative location graphic — add route stops in the CMS',
+                            width: 1200,
+                            height: 500,
+                          }
                         }
-                      }
-                      fill
-                      aspectRatio="21 / 9"
-                      sizes="(max-width: 1024px) 100vw, 66vw"
-                    />
-                  </div>
-                  <dl className="grid grid-cols-1 gap-3 p-5 text-sm sm:grid-cols-3">
+                        fill
+                        aspectRatio="21 / 9"
+                        sizes="(max-width: 1024px) 100vw, 66vw"
+                      />
+                    </div>
+                  )}
+                  <dl className="grid grid-cols-1 gap-3 border-t border-slate-200 p-5 text-sm sm:grid-cols-3 dark:border-slate-800">
                     <div>
                       <dt className="text-slate-500">Start</dt>
                       <dd className="font-medium text-slate-900">{trip.startCity}</dd>

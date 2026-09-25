@@ -58,6 +58,14 @@ export interface Seo {
   keywords?: string[];
 }
 
+/** One numbered stop on a trip's route map, in travel order. */
+export interface RouteWaypoint {
+  name: string;
+  lat: number;
+  lng: number;
+  note?: string;
+}
+
 /** One labelled pill on a trip card: an icon key plus its text. */
 export interface TripFact {
   /** Key into `ICON_MAP` (components/ui/icons/iconMap). */
@@ -79,6 +87,8 @@ export interface Trip {
   gallery?: ImageRef[];
   /** Shown under "Where you'll go" — a route map or a wide regional photo. */
   routeMap?: ImageRef;
+  /** Ordered stops; two or more draws the interactive map instead. */
+  routeWaypoints?: RouteWaypoint[];
 
   durationDays: number;
   startCity: string;
