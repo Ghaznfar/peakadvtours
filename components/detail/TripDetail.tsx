@@ -23,6 +23,8 @@ const MEAL_LABEL: Record<string, string> = { B: 'Breakfast', L: 'Lunch', D: 'Din
 
 export interface TripDetailProps {
   trip: Trip;
+  /** Passed straight through to the enquiry band. */
+  credentials?: Array<{ id: string; name: string; abbr?: string }>;
   relatedTrips: Trip[];
   destinationNames: Record<string, string>;
   destinationOptions: { value: string; label: string }[];
@@ -36,6 +38,7 @@ export interface TripDetailProps {
  */
 export function TripDetail({
   trip,
+  credentials,
   relatedTrips,
   destinationNames,
   destinationOptions,
@@ -378,6 +381,7 @@ export function TripDetail({
         source={`trip-detail:${trip.slug}`}
         eyebrow="Enquire"
         title={`Enquire about the ${trip.title}`}
+        credentials={credentials}
       />
 
       {/* Final CTA */}

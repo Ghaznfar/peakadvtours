@@ -1,12 +1,13 @@
 import { CalendarClock, MessagesSquare, Route } from 'lucide-react';
-import { getCategories, getDestinations, getTripBySlug } from '@/lib/content';
+import { getCategories, getCredentials, getDestinations, getTripBySlug } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { Container } from '@/components/ui/Container';
 import { PageHero } from '@/components/ui/PageHero';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { Enquiry } from '@/components/sections/Enquiry';
+import { Credentials } from '@/components/sections/Credentials';
+import { TripBuilder } from '@/components/TripBuilder';
 
 export const metadata = buildMetadata({
   title: 'Customize Your Tour',
@@ -15,7 +16,8 @@ export const metadata = buildMetadata({
   path: '/custom-trips',
 });
 
-const STEPS = [
+/** What happens once the brief is sent — shown below the builder, not above it. */
+const WHAT_HAPPENS_NEXT = [
   {
     icon: MessagesSquare,
     title: 'A planner reads it',
@@ -39,9 +41,10 @@ interface CustomTripsPageProps {
 
 export default async function CustomTripsPage({ searchParams }: CustomTripsPageProps) {
   const { trip: tripSlug } = await searchParams;
-  const [categories, destinations, contextTrip] = await Promise.all([
+  const [categories, destinations, credentials, contextTrip] = await Promise.all([
     getCategories(),
     getDestinations(),
+    getCredentials(),
     tripSlug ? getTripBySlug(tripSlug) : Promise.resolve(undefined),
   ]);
 
@@ -95,11 +98,46 @@ export default async function CustomTripsPage({ searchParams }: CustomTripsPageP
               </p>
             )}
           </div>
+        </Container>
+      </Section>
 
+      <Section
+        spacing="md"
+        id="builder"
+        ariaLabel="Build your trip"
+        className="bg-slate-50/70 dark:bg-slate-950/40"
+      >
+        <Container>
+          <SectionHeading
+            variant="display"
+            align="center"
+            eyebrow="Four short steps"
+            title="Build Your Trip"
+            description="Answer what you know and skip what you don't — the summary beside the form fills in as you go, and a planner turns it into a costed day-by-day itinerary."
+          />
+          <TripBuilder
+            className="mt-10"
+            destinationOptions={destinationOptions}
+            defaultDestination={contextTrip?.destinationSlugs[0]}
+            tripSlug={contextTrip?.slug}
+            tripTitle={contextTrip?.title}
+            source={contextTrip ? `custom-trips:${contextTrip.slug}` : 'custom-trips'}
+          />
+        </Container>
+      </Section>
+
+      <Section spacing="md" ariaLabel="What happens next">
+        <Container>
+          <SectionHeading
+            variant="display"
+            align="center"
+            eyebrow="After you send it"
+            title="What Happens Next"
+          />
           <ol className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {STEPS.map((step, i) => (
+            {WHAT_HAPPENS_NEXT.map((item, i) => (
               <li
-                key={step.title}
+                key={item.title}
                 className="rounded-card border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900"
               >
                 <div className="flex items-center gap-3">
@@ -107,29 +145,23 @@ export default async function CustomTripsPage({ searchParams }: CustomTripsPageP
                     aria-hidden
                     className="bg-brand-50 text-brand-700 dark:text-brand-400 inline-flex size-10 items-center justify-center rounded-xl"
                   >
-                    <step.icon className="size-5" />
+                    <item.icon className="size-5" />
                   </span>
                   <span className="font-display text-sm font-semibold text-slate-400 dark:text-slate-600">
-                    Step {i + 1}
+                    {i + 1}
                   </span>
                 </div>
-                <h2 className="font-display mt-4 text-lg font-semibold text-slate-900 dark:text-white">
-                  {step.title}
-                </h2>
-                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{step.body}</p>
+                <h3 className="font-display mt-4 text-lg font-semibold text-slate-900 dark:text-white">
+                  {item.title}
+                </h3>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{item.body}</p>
               </li>
             ))}
           </ol>
         </Container>
       </Section>
 
-      <Enquiry
-        destinationOptions={destinationOptions}
-        defaultDestination={contextTrip?.destinationSlugs[0]}
-        tripSlug={contextTrip?.slug}
-        tripTitle={contextTrip?.title}
-        source={contextTrip ? `custom-trips:${contextTrip.slug}` : 'custom-trips'}
-      />
+      <Credentials credentials={credentials} />
     </>
   );
 }

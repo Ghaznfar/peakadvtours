@@ -1,6 +1,12 @@
 import { notFound } from 'next/navigation';
 import type { TripCategory } from '@/types/content';
-import { getCategories, getDestinations, getRelatedTrips, getTripBySlug } from '@/lib/content';
+import {
+  getCategories,
+  getCredentials,
+  getDestinations,
+  getRelatedTrips,
+  getTripBySlug,
+} from '@/lib/content';
 import { TripDetail } from './TripDetail';
 
 export interface TripDetailPageProps {
@@ -18,10 +24,11 @@ export async function TripDetailPage({ category, params }: TripDetailPageProps) 
   const trip = await getTripBySlug(slug);
   if (!trip || trip.category !== category) notFound();
 
-  const [related, destinations, categories] = await Promise.all([
+  const [related, destinations, categories, credentials] = await Promise.all([
     getRelatedTrips(trip, 3),
     getDestinations(),
     getCategories(),
+    getCredentials(),
   ]);
 
   const destinationNames = Object.fromEntries(destinations.map((d) => [d.slug, d.name]));
@@ -32,6 +39,7 @@ export async function TripDetailPage({ category, params }: TripDetailPageProps) 
 
   return (
     <TripDetail
+      credentials={credentials}
       trip={trip}
       relatedTrips={related}
       destinationNames={destinationNames}

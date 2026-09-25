@@ -1,5 +1,11 @@
 import 'server-only';
-import type { EnquiryInput } from './schema';
+import {
+  DURATION_OPTIONS,
+  FLEXIBILITY_OPTIONS,
+  TRIP_TYPE_OPTIONS,
+  labelFor,
+  type EnquiryInput,
+} from './schema';
 
 /**
  * Enquiry delivery architecture.
@@ -37,6 +43,10 @@ export interface EnquiryRecord {
   hotel?: string;
   budget?: string;
   message?: string;
+  /** Trip-builder answers (/custom-trips), stored as the wording the visitor saw. */
+  tripTypes?: string[];
+  duration?: string;
+  flexibility?: string;
   tripSlug?: string;
   tripTitle?: string;
   source?: string;
@@ -57,7 +67,10 @@ function summaryLines(r: EnquiryRecord): string {
     r.country ? `Country: ${r.country}` : '',
     r.destination ? `Destination: ${r.destination}` : '',
     r.tripTitle ? `Trip: ${r.tripTitle} (${r.tripSlug ?? ''})` : '',
+    r.tripTypes?.length ? `Trip type: ${r.tripTypes.join(', ')}` : '',
     r.startDate ? `Preferred start: ${r.startDate}` : '',
+    r.flexibility ? `Date flexibility: ${r.flexibility}` : '',
+    r.duration ? `Length: ${r.duration}` : '',
     `Travellers: ${r.adults} adult(s), ${r.children} child(ren)`,
     r.hotel ? `Hotel: ${r.hotel}` : '',
     r.budget ? `Budget: ${r.budget}` : '',
@@ -141,6 +154,11 @@ export function toRecord(input: EnquiryInput, meta: { ip?: string }): EnquiryRec
     hotel: clean(input.hotel),
     budget: clean(input.budget),
     message: clean(input.message),
+    tripTypes: input.tripTypes?.length
+      ? input.tripTypes.map((v) => labelFor(TRIP_TYPE_OPTIONS, v) ?? v)
+      : undefined,
+    duration: labelFor(DURATION_OPTIONS, clean(input.duration)),
+    flexibility: labelFor(FLEXIBILITY_OPTIONS, clean(input.flexibility)),
     tripSlug: clean(input.tripSlug),
     tripTitle: clean(input.tripTitle),
     source: clean(input.source),

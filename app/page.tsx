@@ -88,7 +88,7 @@ export default async function HomePage() {
 
       <Credentials credentials={credentials} />
 
-      <Enquiry destinationOptions={destinationOptions} source="home" />
+      <Enquiry destinationOptions={destinationOptions} source="home" credentials={credentials} />
     </>
   );
 }

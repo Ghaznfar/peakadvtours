@@ -1,6 +1,6 @@
 # PROJECT STATUS
 
-_Last updated: 2026-09-24_
+_Last updated: 2026-09-25_
 
 ## Current phase
 
@@ -34,7 +34,15 @@ _Last updated: 2026-09-24_
 
 **`/custom-trips` step cards** now carry the client's copy ("A planner reads it" / "You get a costed day-by-day" / "You change it as often as you like").
 
-**Remaining templates (1), in the client's requested order:** `/treks` already matches (card grid + Nepal section); `/custom-trips` still needs the multi-step form (Who's travelling / How many / When / The trip itself) with the sticky "Your trip so far" summary panel — the largest remaining piece, and a client component with live state. The corporate "thumbnail strip" turned out to be the mega-menu panel open in the screenshot, not a page element, so nothing was needed there. A shared "Plan your trip" enquiry band appears on every reference page — the existing `Enquiry` section is close but not identical.
+**`/custom-trips` multi-step builder — the layout pass is now complete (7 of 7 templates).** New `components/TripBuilder/` replaces the flat enquiry form on that page with the four steps from the client's screenshot — **Who's travelling → How many of you → When and for how long → The trip itself** — beside a sticky **"Your trip so far"** panel that fills in live as answers are given (name, country, travellers, stay, dates, length, trip type, destination, budget). Numbered progress rail at the top; visited steps are clickable to go back, future ones are disabled.
+
+**It posts to the same `/api/enquiry` endpoint and validates with the same Zod schema as `EnquiryForm`** (CLAUDE.md §4 — one shared schema, client and server). The schema gained three **optional** fields so the plain form stays valid without them: `tripTypes` (multi-select), `duration`, `flexibility`, each with its option list (`TRIP_TYPE_OPTIONS`, `DURATION_OPTIONS`, `FLEXIBILITY_OPTIONS`) defined next to the schema so the chips a visitor can pick and the values the server accepts cannot drift. `EnquiryRecord`/`toRecord`/`summaryLines` carry them through to delivery, stored as the **wording the visitor saw** ("10 – 14 days", not "10-14") via a new `labelFor` helper — verified end-to-end against a running production server: `POST /api/enquiry` returned `{"ok":true}` and the log channel printed `Trip type: Trekking, Photography / Date flexibility: Give or take a few days / Length: 10 – 14 days`.
+
+Details worth keeping: steps validate on **Continue** (`trigger` over that step's field list) so nobody reaches the end and is bounced back; the field lists on `STEPS` drive both that validation and the "jump back" behaviour, so adding a field means editing one place. Two paths return a visitor to the owning step rather than failing silently — an `onInvalid` handler (an earlier answer edited or autofilled into an invalid state) and server `fieldErrors`. `useWatch({ control })` rather than `watch()`, which the React Compiler refuses to memoize. Traveller counts get ±44px stepper buttons with the number input still editable and labelled.
+
+The page's three "A planner reads it" cards **moved below the builder and lost their "Step 1/2/3" labels** — two separate numbered sequences on one page read as one broken sequence. They are now a "What Happens Next" section, and their headings dropped `h2`→`h3` since they sit under a section heading. `Credentials` closes the page. Verified in the built HTML: exactly one `<h1>`, step 1 renders its four fields and a Continue button (no submit), and the summary panel shows its empty state.
+
+The corporate "thumbnail strip" turned out to be the mega-menu panel open in the screenshot, not a page element, so nothing was needed there.
 
 **Social icons resized and unified (client follow-up).** Footer circles were 48px, which wrapped the seven onto two lines; they are now **36px** and the brand column widened from 1/5 to 2/6 of the grid so all seven sit on one row. The **top bar now uses the same coloured circles** at 28px instead of plain monochrome glyphs.
 
@@ -274,10 +282,13 @@ Previous phase: **All nav/footer-linked pages now exist — no more 404s.** `/de
 
 ## Next task
 
+**Content, not layout.** The seven-template layout pass is done. What is left is data: the other 23 trips have no waypoints, and `description`/`highlights`/`itinerary`/`included`/`excluded`/`goodToKnow`/`departures` are empty on all but the Gilgit-Baltistan tour; `/blog` has zero posts so its five-section grouping has never been seen with real data. Also outstanding: `price.unit` is still set on 24 Sanity documents (the client stopped the cleanup mid-way), Site settings' social fields exist but nothing reads them, and `sanityFetch` has no retry — one clean build failed with `Error occurred prerendering page "/about"` and passed on rerun, which would break a deploy.
+
 **Testing pass:** add Vitest coverage for `BlogCard` + the blog repository functions, `ThemeProvider`/`ThemeToggle`, and Playwright coverage for the institutional pages (nav → page → form/FAQ interaction) and theme toggle (persistence across reload, system-preference respect), per CLAUDE.md §10. Then a real-content pass once the client supplies copy/photos/team bios.
 
 ## Known issues / follow-ups
 
+- **`TripBuilder` has no test and no browser QA.** There is no test runner installed in this repo at all (no Vitest, no Playwright), so the component was verified by typecheck/lint/build, by reading the server-rendered step 1 out of the built HTML, and by posting a full trip-builder payload to the live API. **Client-side stepping — Continue/Back, chip toggles, the live summary, focus moving to each step heading — has not been exercised in a browser.** It is the most stateful component on the site and should be first in line when the test pass lands.
 - **No automated tests yet for the institutional pages** (`/about`, `/contact`, `/blog`, `/terms`, `/privacy`, `/booking-info`, `/corporate-retreats`, `/sitemap`) — verified via typecheck/lint/build + HTTP smoke-check only, same as prior phases before their test pass.
 - **Legal pages (`/terms`, `/privacy`) contain original placeholder text with explicit `PLACEHOLDER` markers** for jurisdiction-specific clauses (cancellation scale, governing law, payment methods, cookie tools) — must be reviewed by a qualified lawyer before launch, not just filled in.
 - **Visual responsive QA pending:** no browser tooling this session, so desktop/tablet/mobile were verified structurally (HTML/semantics/overflow scan + mobile-first classes) rather than by screenshot. Recommend a visual pass at 375 / 768 / 1440px before launch.
