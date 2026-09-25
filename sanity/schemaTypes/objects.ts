@@ -139,6 +139,12 @@ export const itineraryDay = defineType({
       description:
         'Optional — a day whose title says it all (e.g. "Arrival in Islamabad") can be left blank.',
     }),
+    defineField({
+      name: 'image',
+      title: 'Photo',
+      type: 'imageWithAlt',
+      description: 'Optional — shown above this day’s text on the trip page.',
+    }),
     defineField({ name: 'altitudeM', title: 'Altitude (m)', type: 'number' }),
     defineField({ name: 'hours', title: 'Hours (approx.)', type: 'number' }),
     defineField({

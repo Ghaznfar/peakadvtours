@@ -53,6 +53,10 @@ function mapTour(raw: Trip): Trip {
     routeWaypoints: (raw.routeWaypoints ?? []).filter(
       (w) => typeof w?.lat === 'number' && typeof w?.lng === 'number' && w.name,
     ),
+    itinerary: (raw.itinerary ?? []).map((d) => ({
+      ...d,
+      image: d.image?.src ? d.image : undefined,
+    })),
     // Drop half-filled pills so a card never renders an icon with no text.
     cardFacts: (raw.cardFacts ?? []).filter((f) => f?.icon && f?.label),
     updatedAt: raw.updatedAt || new Date().toISOString().slice(0, 10),

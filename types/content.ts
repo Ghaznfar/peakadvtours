@@ -30,6 +30,8 @@ export interface ItineraryDay {
   title: string;
   /** Optional: a day whose title says it all needs no body. */
   description?: string;
+  /** Optional photo shown above the day's text. */
+  image?: ImageRef;
   altitudeM?: number;
   hours?: number;
   meals?: Array<'B' | 'L' | 'D'>;

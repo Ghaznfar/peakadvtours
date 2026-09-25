@@ -48,7 +48,10 @@ const tourProjection = `{
   depositPercent,
   badge,
   "highlights": coalesce(highlights, []),
-  "itinerary": coalesce(itinerary, []),
+  "itinerary": coalesce(itinerary[]{
+    day, title, description, altitudeM, hours, meals, accommodation,
+    "image": image ${imageFrag}
+  }, []),
   "included": coalesce(included, []),
   "excluded": coalesce(excluded, []),
   "goodToKnow": coalesce(goodToKnow, []),

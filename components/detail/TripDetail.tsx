@@ -216,6 +216,15 @@ export function TripDetail({
                           </span>
                         }
                       >
+                        {day.image && (
+                          <OptimizedImage
+                            image={day.image}
+                            fill
+                            aspectRatio="16 / 10"
+                            sizes="(max-width: 1024px) 100vw, 60vw"
+                            wrapperClassName="rounded-card mb-4 max-w-2xl"
+                          />
+                        )}
                         {day.description && <p>{day.description}</p>}
                         <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
                           {typeof day.altitudeM === 'number' && (
