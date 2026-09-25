@@ -3,7 +3,7 @@
  * These are consumed via the `lib/content` repository, never read raw by UI.
  */
 
-export type TripCategory = 'tour' | 'trek' | 'expedition';
+export type TripCategory = 'tour' | 'trek' | 'expedition' | 'corporate';
 export type Difficulty = 'easy' | 'moderate' | 'strenuous' | 'technical';
 export type Effort = 'easy' | 'moderate' | 'serious';
 export type Season = 'spring' | 'summer' | 'autumn' | 'winter';

@@ -1,5 +1,5 @@
 import { siteConfig } from '@/site.config';
-import { getBlogPosts, getTripsByCategory, getTripsByTag } from '@/lib/content';
+import { getBlogPosts, getTripsByCategory } from '@/lib/content';
 import { tripPath } from '@/lib/trips/href';
 import type { Trip, TripCategory } from '@/types/content';
 import type { MegaMenuItem, MegaMenuTile } from '@/components/layout/MegaMenu';
@@ -14,8 +14,6 @@ const CATEGORY_BY_HREF: Record<string, TripCategory> = {
 const MAX_TILES = 12;
 
 /** Corporate retreats is a curated view of tagged trips (SITE_ARCHITECTURE §1). */
-const CORPORATE_TAG = 'corporate';
-
 function tripTiles(trips: Trip[]): MegaMenuTile[] {
   return trips.slice(0, MAX_TILES).map((trip) => ({
     title: trip.title,
@@ -36,7 +34,7 @@ export async function buildMegaMenu(): Promise<MegaMenuItem[]> {
     getTripsByCategory('tour'),
     getTripsByCategory('trek'),
     getTripsByCategory('expedition'),
-    getTripsByTag(CORPORATE_TAG),
+    getTripsByCategory('corporate'),
     getBlogPosts(),
   ]);
 
@@ -44,6 +42,7 @@ export async function buildMegaMenu(): Promise<MegaMenuItem[]> {
     tour: tripTiles(tours),
     trek: tripTiles(treks),
     expedition: tripTiles(expeditions),
+    corporate: tripTiles(retreats),
   };
 
   const blogTiles: MegaMenuTile[] = posts.slice(0, MAX_TILES).map((post) => ({

@@ -5,6 +5,7 @@ export const CATEGORY_SLUG: Record<TripCategory, string> = {
   tour: 'tours',
   trek: 'treks',
   expedition: 'expeditions',
+  corporate: 'corporate-retreats',
 };
 
 /** Human label for a category (singular). */
@@ -12,6 +13,7 @@ export const CATEGORY_LABEL: Record<TripCategory, string> = {
   tour: 'Tour',
   trek: 'Trek',
   expedition: 'Expedition',
+  corporate: 'Corporate retreat',
 };
 
 /** Path to a trip's detail page, scoped under its category (e.g. /treks/x). */

@@ -54,7 +54,7 @@ export const structure: StructureResolver = (S, context) =>
         type: 'tour',
         title: 'Corporate retreats',
         id: 'orderable-corporate',
-        filter: '"corporate" in tags',
+        filter: 'category == "corporate"',
         S,
         context,
       }),

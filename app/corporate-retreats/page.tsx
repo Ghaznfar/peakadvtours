@@ -1,10 +1,7 @@
-import { getDestinations, getTripsByTag } from '@/lib/content';
+import { getDestinations, getTripsByCategory } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { TripListingPage } from '@/components/listing/TripListingPage';
 import type { ParamsInput } from '@/lib/trips/filters';
-
-/** Retreat packages are trips tagged "corporate" (SITE_ARCHITECTURE §1). */
-const CORPORATE_TAG = 'corporate';
 
 export const metadata = buildMetadata({
   title: 'Corporate Retreats',
@@ -19,7 +16,7 @@ export default async function CorporateRetreatsPage({
   searchParams: Promise<ParamsInput>;
 }) {
   const [trips, destinations, sp] = await Promise.all([
-    getTripsByTag(CORPORATE_TAG),
+    getTripsByCategory('corporate'),
     getDestinations(),
     searchParams,
   ]);

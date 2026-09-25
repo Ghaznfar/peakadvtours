@@ -35,18 +35,19 @@ export interface TripListingPageProps {
   /** Full set for this page (already scoped by category/tag). */
   trips: Trip[];
   /**
-   * An optional second, separately-headed grid below the main one — used where
-   * a page covers two distinct groups (Pakistan treks vs Nepal treks), which a
-   * single list would blur together.
+   * Further separately-headed grids below the main one, in order. Used where a
+   * page covers distinct groups a single list would blur together — Pakistan
+   * treks vs Nepal, or expeditions by altitude band. Empty groups are dropped,
+   * and alternate bands are tinted so the sections read apart.
    */
-  secondary?: {
+  extraGroups?: Array<{
     /** Anchor id, so the section can be linked to (e.g. /treks#nepal). */
     id?: string;
     eyebrow?: string;
     title: string;
     description?: string;
     trips: Trip[];
-  };
+  }>;
   destinations: Destination[];
   breadcrumbLabel: string;
   /** Canonical path for this listing (e.g. "/tours") — used for clear/reset. */
@@ -72,7 +73,7 @@ export function TripListingPage({
   sectionTitle,
   description,
   trips,
-  secondary,
+  extraGroups = [],
   destinations,
   breadcrumbLabel,
   basePath,
@@ -191,33 +192,36 @@ export function TripListingPage({
         </Container>
       </Section>
 
-      {secondary && secondary.trips.length > 0 && (
-        <Section
-          id={secondary.id}
-          ariaLabel={secondary.title}
-          className="bg-slate-50 dark:bg-[#0d1117]"
-        >
-          <Container>
-            <SectionHeading
-              variant="display"
-              align="center"
-              eyebrow={secondary.eyebrow}
-              title={secondary.title}
-              description={secondary.description}
-            />
-            <ul className="mt-10 grid grid-cols-1 gap-[26px] md:grid-cols-2 lg:grid-cols-3">
-              {secondary.trips.map((trip) => (
-                <li key={trip.slug}>
-                  <TripCard
-                    trip={trip}
-                    imageSizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                  />
-                </li>
-              ))}
-            </ul>
-          </Container>
-        </Section>
-      )}
+      {extraGroups
+        .filter((g) => g.trips.length > 0)
+        .map((group, i) => (
+          <Section
+            key={group.title}
+            id={group.id}
+            ariaLabel={group.title}
+            className={i % 2 === 0 ? 'bg-slate-50 dark:bg-[#0d1117]' : undefined}
+          >
+            <Container>
+              <SectionHeading
+                variant="display"
+                align="center"
+                eyebrow={group.eyebrow}
+                title={group.title}
+                description={group.description}
+              />
+              <ul className="mt-10 grid grid-cols-1 gap-[26px] md:grid-cols-2 lg:grid-cols-3">
+                {group.trips.map((trip) => (
+                  <li key={trip.slug}>
+                    <TripCard
+                      trip={trip}
+                      imageSizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    />
+                  </li>
+                ))}
+              </ul>
+            </Container>
+          </Section>
+        ))}
 
       <CtaBanner
         heading="Can't find the right trip?"

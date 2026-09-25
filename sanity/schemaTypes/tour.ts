@@ -53,6 +53,7 @@ export const tour = defineType({
           { title: 'Tour', value: 'tour' },
           { title: 'Trek', value: 'trek' },
           { title: 'Expedition', value: 'expedition' },
+          { title: 'Corporate retreat', value: 'corporate' },
         ],
         layout: 'radio',
       },

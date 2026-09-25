@@ -7,3 +7,6 @@ export { TripCardSkeleton } from './TripCardSkeleton';
 export { TripCard as TourCard } from './TripCard';
 export type { TripCardProps as TourCardProps } from './TripCard';
 export { CustomTripCard } from './CustomTripCard';
+export { TripRow } from './TripRow';
+export type { TripRowProps } from './TripRow';
+export { CustomTripRow } from './CustomTripRow';

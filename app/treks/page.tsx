@@ -39,14 +39,16 @@ export default async function TreksPage({ searchParams }: { searchParams: Promis
       breadcrumbLabel="Treks"
       basePath="/treks"
       trips={trips}
-      secondary={{
-        id: 'nepal',
-        eyebrow: 'Teahouse trails',
-        title: 'Trekking in Nepal',
-        description:
-          'Everest, Annapurna and Manaslu with our partner crews in Kathmandu — lodges booked, permits arranged, guides throughout.',
-        trips: nepalTreks,
-      }}
+      extraGroups={[
+        {
+          id: 'nepal',
+          eyebrow: 'Teahouse trails',
+          title: 'Trekking in Nepal',
+          description:
+            'Everest, Annapurna and Manaslu with our partner crews in Kathmandu — lodges booked, permits arranged, guides throughout.',
+          trips: nepalTreks,
+        },
+      ]}
       destinations={destinations}
       searchParams={sp}
     />
