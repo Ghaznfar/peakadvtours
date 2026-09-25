@@ -1,5 +1,5 @@
 import { Clock, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
-import { getCategories, getDestinations } from '@/lib/content';
+import { getCategories, getCredentials, getDestinations } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { siteConfig } from '@/site.config';
 import { Container } from '@/components/ui/Container';
@@ -16,7 +16,11 @@ export const metadata = buildMetadata({
 });
 
 export default async function ContactPage() {
-  const [categories, destinations] = await Promise.all([getCategories(), getDestinations()]);
+  const [categories, destinations, credentials] = await Promise.all([
+    getCategories(),
+    getDestinations(),
+    getCredentials(),
+  ]);
 
   const { contact } = siteConfig;
   const { address } = contact;
@@ -180,6 +184,7 @@ export default async function ContactPage() {
       <Enquiry
         destinationOptions={destinationOptions}
         source="contact"
+        credentials={credentials}
         eyebrow="Get in touch"
         title="Send us your trip details"
       />
