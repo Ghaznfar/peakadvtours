@@ -40,6 +40,7 @@ export default async function TreksPage({ searchParams }: { searchParams: Promis
       basePath="/treks"
       trips={trips}
       secondary={{
+        id: 'nepal',
         eyebrow: 'Teahouse trails',
         title: 'Trekking in Nepal',
         description:

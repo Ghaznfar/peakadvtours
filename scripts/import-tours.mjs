@@ -141,11 +141,14 @@ function toDocument(row, index) {
       amount === undefined
         ? undefined
         : compact({
+            // No `unit` here: the app's `Price` type has one, but the GROQ
+            // projection synthesises it ("unit": "per_person"). Writing it to
+            // the document adds a field `priceType` does not define, which
+            // Studio flags as "Unknown field found".
             _type: 'priceType',
             amount,
             currency: str(row.priceCurrency) ?? 'USD',
             originalAmount: num(row.priceOriginalAmount),
-            unit: 'per_person',
           }),
     priceOnRequest: amount === undefined ? true : undefined,
     earlyBird: bool(row.earlyBird) || undefined,

@@ -1,102 +1,73 @@
-import type { ComponentType } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Mail, MapPin, Phone } from 'lucide-react';
+import { Clock, Mail, MapPin, Phone } from 'lucide-react';
 import { siteConfig } from '@/site.config';
 import { Container } from '@/components/ui/Container';
-import {
-  FacebookIcon,
-  InstagramIcon,
-  TiktokIcon,
-  XIcon,
-  YoutubeIcon,
-} from '@/components/ui/icons/SocialIcons';
+import { SocialRow } from '@/components/ui/SocialRow';
 
-type IconType = ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
-
-const SOCIAL_ICONS: Partial<Record<keyof typeof siteConfig.social, IconType>> = {
-  facebook: FacebookIcon,
-  instagram: InstagramIcon,
-  youtube: YoutubeIcon,
-  tiktok: TiktokIcon,
-  x: XIcon,
-};
-
-/** Site footer — every value is sourced from `siteConfig`. Server component. */
+/**
+ * Site footer — every value comes from `siteConfig`, so nothing here needs
+ * editing when the client's details change. Always dark, independent of the
+ * page theme, matching the client's reference design.
+ *
+ * Social circles come from the shared `SocialRow`, so the top bar and footer
+ * cannot drift apart in colour, order or content.
+ */
 export function SiteFooter() {
-  const { footer, contact, social, name, legalName, foundedYear, logo } = siteConfig;
+  const { footer, contact, legalName, foundedYear, logo } = siteConfig;
   const year = new Date().getFullYear();
 
-  const socialEntries = (Object.keys(SOCIAL_ICONS) as Array<keyof typeof social>)
-    .map((key) => ({ key, href: social[key], Icon: SOCIAL_ICONS[key] }))
-    .filter((entry): entry is { key: keyof typeof social; href: string; Icon: IconType } =>
-      Boolean(entry.href && entry.Icon),
-    );
-
   return (
-    <footer className="border-t border-slate-200 bg-slate-50 text-slate-600 dark:border-slate-800 dark:bg-[#0d1117] dark:text-slate-400">
-      <Container className="grid gap-10 py-12 md:grid-cols-2 lg:grid-cols-5 lg:py-16">
-        {/* Brand + socials */}
-        <div className="lg:col-span-2">
-          <div className="font-display flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white">
-            <Image
-              src={logo.src}
-              alt={logo.alt}
-              width={64}
-              height={64}
-              className="size-16 rounded-full object-cover"
-            />
-          </div>
-          <p className="mt-4 max-w-sm text-sm">{footer.about}</p>
-          {socialEntries.length > 0 && (
-            <ul className="mt-5 flex gap-2">
-              {socialEntries.map(({ key, href, Icon }) => (
-                <li key={key}>
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${name} on ${key}`}
-                    className="hover:border-brand-600 hover:text-brand-700 dark:hover:border-brand-400 dark:hover:text-brand-400 inline-flex size-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
-                  >
-                    <Icon aria-hidden className="size-5" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
+    <footer className="bg-[#2c3e50] text-slate-300">
+      <Container className="grid gap-x-8 gap-y-10 py-14 sm:grid-cols-2 lg:grid-cols-6 lg:py-16">
+        {/* Brand, blurb and socials */}
+        <div className="sm:col-span-2 lg:col-span-2">
+          <Image
+            src={logo.src}
+            alt={logo.alt}
+            width={112}
+            height={112}
+            className="size-14 rounded-full object-cover"
+          />
+          <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate-300">{footer.about}</p>
+
+          <SocialRow size="md" className="mt-6" />
         </div>
 
         {/* Link columns */}
         {footer.columns.map((column) => (
           <nav key={column.heading} aria-label={column.heading}>
-            <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
+            <h2 className="text-sm font-bold tracking-[0.08em] text-white uppercase">
               {column.heading}
             </h2>
-            <ul className="mt-4 flex flex-col gap-2 text-sm">
+            <ul className="mt-5 flex flex-col gap-3 text-sm">
+              {/* An entry with no href yet renders as plain text rather than a
+                  link to nowhere, so the column reads correctly while the
+                  client fills the destinations in. */}
               {column.links.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="hover:text-brand-700 dark:hover:text-brand-400 hover:underline"
-                  >
-                    {link.label}
-                  </Link>
+                <li key={link.label}>
+                  {link.href ? (
+                    <Link
+                      href={link.href}
+                      className="text-slate-300 transition-colors hover:text-white"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <span className="text-slate-400">{link.label}</span>
+                  )}
                 </li>
               ))}
             </ul>
           </nav>
         ))}
 
-        {/* Contact */}
+        {/* Head office */}
         <div>
-          <h2 className="text-sm font-semibold text-slate-900 dark:text-white">Head office</h2>
-          <address className="mt-4 flex flex-col gap-3 text-sm not-italic">
-            <span className="flex items-start gap-2">
-              <MapPin
-                aria-hidden
-                className="text-brand-600 dark:text-brand-400 mt-0.5 size-4 shrink-0"
-              />
+          <h2 className="text-sm font-bold tracking-[0.08em] text-white uppercase">Head office</h2>
+          <address className="mt-5 flex flex-col gap-3 text-sm not-italic">
+            <span className="flex items-start gap-2.5">
+              <MapPin aria-hidden className="mt-0.5 size-4 shrink-0 text-slate-400" />
               <span>
                 {contact.address.line1}
                 <br />
@@ -105,57 +76,44 @@ export function SiteFooter() {
             </span>
             <a
               href={`tel:${contact.phone.replace(/[^\d+]/g, '')}`}
-              className="hover:text-brand-700 dark:hover:text-brand-400 flex items-center gap-2"
+              className="flex items-center gap-2.5 transition-colors hover:text-white"
             >
-              <Phone aria-hidden className="text-brand-600 dark:text-brand-400 size-4 shrink-0" />
+              <Phone aria-hidden className="size-4 shrink-0 text-slate-400" />
               {contact.phone}
             </a>
-            {contact.phoneSecondary && (
-              <a
-                href={`tel:${contact.phoneSecondary.replace(/[^\d+]/g, '')}`}
-                className="hover:text-brand-700 dark:hover:text-brand-400 flex items-center gap-2"
-              >
-                <Phone aria-hidden className="size-4 shrink-0 text-transparent" />
-                {contact.phoneSecondary}
-              </a>
-            )}
             <a
               href={`mailto:${contact.email}`}
-              className="hover:text-brand-700 dark:hover:text-brand-400 flex items-center gap-2"
+              className="flex items-center gap-2.5 transition-colors hover:text-white"
             >
-              <Mail aria-hidden className="text-brand-600 dark:text-brand-400 size-4 shrink-0" />
+              <Mail aria-hidden className="size-4 shrink-0 text-slate-400" />
               {contact.email}
             </a>
-            {contact.emailSecondary && (
-              <a
-                href={`mailto:${contact.emailSecondary}`}
-                className="hover:text-brand-700 dark:hover:text-brand-400 flex items-center gap-2"
-              >
-                <Mail aria-hidden className="size-4 shrink-0 text-transparent" />
-                {contact.emailSecondary}
-              </a>
-            )}
-            <span className="text-slate-500 dark:text-slate-500">{contact.hours}</span>
+            <span className="flex items-center gap-2.5">
+              <Clock aria-hidden className="size-4 shrink-0 text-slate-400" />
+              {contact.hours}
+            </span>
           </address>
         </div>
       </Container>
 
-      <div className="border-t border-slate-200 dark:border-slate-800">
-        <Container className="flex flex-col items-center justify-between gap-2 py-6 text-xs text-slate-500 sm:flex-row dark:text-slate-500">
+      <div className="border-t border-white/10">
+        <Container className="flex flex-col items-center justify-between gap-3 py-6 text-sm text-slate-400 sm:flex-row">
           <p>
-            © {foundedYear}–{year} {legalName}. All rights reserved.
+            © {legalName} {foundedYear}–{String(year).slice(-2)} All Rights Reserved
           </p>
-          <ul className="flex gap-4">
-            <li>
-              <Link href="/terms" className="hover:text-brand-700 dark:hover:text-brand-400">
-                Booking terms
-              </Link>
-            </li>
-            <li>
-              <Link href="/privacy" className="hover:text-brand-700 dark:hover:text-brand-400">
-                Privacy
-              </Link>
-            </li>
+          <ul className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            {[
+              { label: 'Booking terms', href: '/terms' },
+              { label: 'Privacy', href: '/privacy' },
+              { label: 'Booking info', href: '/booking-info' },
+            ].map((link, i, arr) => (
+              <li key={link.href} className="flex items-center gap-2">
+                <Link href={link.href} className="transition-colors hover:text-white">
+                  {link.label}
+                </Link>
+                {i < arr.length - 1 && <span aria-hidden>·</span>}
+              </li>
+            ))}
           </ul>
         </Container>
       </div>

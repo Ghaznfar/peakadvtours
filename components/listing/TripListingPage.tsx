@@ -40,6 +40,8 @@ export interface TripListingPageProps {
    * single list would blur together.
    */
   secondary?: {
+    /** Anchor id, so the section can be linked to (e.g. /treks#nepal). */
+    id?: string;
     eyebrow?: string;
     title: string;
     description?: string;
@@ -190,7 +192,11 @@ export function TripListingPage({
       </Section>
 
       {secondary && secondary.trips.length > 0 && (
-        <Section ariaLabel={secondary.title} className="bg-slate-50 dark:bg-[#0d1117]">
+        <Section
+          id={secondary.id}
+          ariaLabel={secondary.title}
+          className="bg-slate-50 dark:bg-[#0d1117]"
+        >
           <Container>
             <SectionHeading
               variant="display"
