@@ -131,6 +131,73 @@ export function TripDetail({
                 </section>
               )}
 
+              {/* No visible heading by client request — the map speaks for
+                  itself. `aria-label` keeps the landmark named for screen
+                  readers, which a bare <section> would otherwise lose. */}
+              <section aria-label="Where you'll go">
+                <div className="rounded-card overflow-hidden border border-slate-200 dark:border-slate-800">
+                  {hasRoute ? (
+                    <>
+                      <RouteMap waypoints={trip.routeWaypoints ?? []} />
+                      <p className="flex items-start gap-2 border-t border-slate-200 p-4 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
+                        <Route aria-hidden className="text-brand-600 mt-0.5 size-4 shrink-0" />
+                        The road as it runs, numbered in travel order. Driving times are in the
+                        day-by-day below.
+                      </p>
+                    </>
+                  ) : (
+                    <div className="relative">
+                      {/* No waypoints set: fall back to the static route image
+                          (Tour → Media), then to the placeholder graphic. */}
+                      <OptimizedImage
+                        image={
+                          trip.routeMap ?? {
+                            src: '/images/placeholder-trip.svg',
+                            alt: 'Illustrative location graphic — add route stops in the CMS',
+                            width: 1200,
+                            height: 500,
+                          }
+                        }
+                        fill
+                        aspectRatio="21 / 9"
+                        sizes="(max-width: 1024px) 100vw, 66vw"
+                      />
+                    </div>
+                  )}
+                  <dl className="grid grid-cols-1 gap-3 border-t border-slate-200 p-5 text-sm sm:grid-cols-3 dark:border-slate-800">
+                    <div>
+                      <dt className="text-slate-500">Start</dt>
+                      <dd className="font-medium text-slate-900">{trip.startCity}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-slate-500">End</dt>
+                      <dd className="font-medium text-slate-900">{trip.endCity}</dd>
+                    </div>
+                    {location && (
+                      <div>
+                        <dt className="text-slate-500">Regions</dt>
+                        <dd className="font-medium text-slate-900">{location}</dd>
+                      </div>
+                    )}
+                  </dl>
+                </div>
+              </section>
+
+              {/* Departures & pricing */}
+              {trip.departures && trip.departures.length > 0 && (
+                <section aria-labelledby="departures-h">
+                  <h2 id="departures-h" className="text-h2">
+                    Departure dates &amp; pricing
+                  </h2>
+                  <p className="mt-2 text-sm text-slate-500">
+                    Prices are per person, twin share. Private departures on request.
+                  </p>
+                  <div className="mt-4">
+                    <Departures departures={trip.departures} tripSlug={trip.slug} />
+                  </div>
+                </section>
+              )}
+
               {/* Itinerary */}
               {trip.itinerary && trip.itinerary.length > 0 && (
                 <section aria-labelledby="itinerary-h">
@@ -149,7 +216,7 @@ export function TripDetail({
                           </span>
                         }
                       >
-                        <p>{day.description}</p>
+                        {day.description && <p>{day.description}</p>}
                         <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
                           {typeof day.altitudeM === 'number' && (
                             <li>Altitude: {day.altitudeM.toLocaleString()} m</li>
@@ -215,21 +282,6 @@ export function TripDetail({
                 </section>
               )}
 
-              {/* Departures & pricing */}
-              {trip.departures && trip.departures.length > 0 && (
-                <section aria-labelledby="departures-h">
-                  <h2 id="departures-h" className="text-h2">
-                    Departure dates &amp; pricing
-                  </h2>
-                  <p className="mt-2 text-sm text-slate-500">
-                    Prices are per person, twin share. Private departures on request.
-                  </p>
-                  <div className="mt-4">
-                    <Departures departures={trip.departures} tripSlug={trip.slug} />
-                  </div>
-                </section>
-              )}
-
               {/* Gallery */}
               {trip.gallery && trip.gallery.length > 0 && (
                 <section aria-labelledby="gallery-h">
@@ -243,58 +295,6 @@ export function TripDetail({
               )}
 
               {/* Location */}
-              <section aria-labelledby="location-h">
-                <h2 id="location-h" className="text-h2">
-                  Where you&rsquo;ll go
-                </h2>
-                <div className="rounded-card mt-6 overflow-hidden border border-slate-200 dark:border-slate-800">
-                  {hasRoute ? (
-                    <>
-                      <RouteMap waypoints={trip.routeWaypoints ?? []} />
-                      <p className="flex items-start gap-2 border-t border-slate-200 p-4 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
-                        <Route aria-hidden className="text-brand-600 mt-0.5 size-4 shrink-0" />
-                        The road as it runs, numbered in travel order. Driving times are in the
-                        day-by-day below.
-                      </p>
-                    </>
-                  ) : (
-                    <div className="relative">
-                      {/* No waypoints set: fall back to the static route image
-                          (Tour → Media), then to the placeholder graphic. */}
-                      <OptimizedImage
-                        image={
-                          trip.routeMap ?? {
-                            src: '/images/placeholder-trip.svg',
-                            alt: 'Illustrative location graphic — add route stops in the CMS',
-                            width: 1200,
-                            height: 500,
-                          }
-                        }
-                        fill
-                        aspectRatio="21 / 9"
-                        sizes="(max-width: 1024px) 100vw, 66vw"
-                      />
-                    </div>
-                  )}
-                  <dl className="grid grid-cols-1 gap-3 border-t border-slate-200 p-5 text-sm sm:grid-cols-3 dark:border-slate-800">
-                    <div>
-                      <dt className="text-slate-500">Start</dt>
-                      <dd className="font-medium text-slate-900">{trip.startCity}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-slate-500">End</dt>
-                      <dd className="font-medium text-slate-900">{trip.endCity}</dd>
-                    </div>
-                    {location && (
-                      <div>
-                        <dt className="text-slate-500">Regions</dt>
-                        <dd className="font-medium text-slate-900">{location}</dd>
-                      </div>
-                    )}
-                  </dl>
-                </div>
-              </section>
-
               {/* Important information */}
               {trip.goodToKnow && trip.goodToKnow.length > 0 && (
                 <section aria-labelledby="info-h">

@@ -28,7 +28,8 @@ export interface Price {
 export interface ItineraryDay {
   day: number;
   title: string;
-  description: string;
+  /** Optional: a day whose title says it all needs no body. */
+  description?: string;
   altitudeM?: number;
   hours?: number;
   meals?: Array<'B' | 'L' | 'D'>;

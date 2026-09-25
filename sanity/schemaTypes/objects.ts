@@ -136,7 +136,8 @@ export const itineraryDay = defineType({
       title: 'Description',
       type: 'text',
       rows: 3,
-      validation: (r) => r.required(),
+      description:
+        'Optional — a day whose title says it all (e.g. "Arrival in Islamabad") can be left blank.',
     }),
     defineField({ name: 'altitudeM', title: 'Altitude (m)', type: 'number' }),
     defineField({ name: 'hours', title: 'Hours (approx.)', type: 'number' }),
