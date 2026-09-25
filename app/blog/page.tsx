@@ -15,8 +15,55 @@ export const metadata = buildMetadata({
   path: '/blog',
 });
 
+/**
+ * The five sections, in reading order: where to go, then how to get there,
+ * then the harder trips, then the practical detail, then news. Keys match the
+ * `category` options on the `blogPost` schema, so a post lands in its section
+ * automatically. A section with no posts is skipped.
+ */
+const SECTIONS: Array<{ key: string; title: string; intro: string }> = [
+  {
+    key: 'guide',
+    title: 'Destination guides',
+    intro:
+      'The long reads. The question each answered for us — where to go, when, and what the trip is actually like.',
+  },
+  {
+    key: 'route',
+    title: 'Routes & road conditions',
+    intro:
+      'What the Karakoram Highway and the side valleys are doing right now, and what that means for a drive.',
+  },
+  {
+    key: 'trekking',
+    title: 'Trekking & high altitude',
+    intro:
+      'Choosing a trek, training for one, and what the altitude asks of you before you commit to either.',
+  },
+  {
+    key: 'planning',
+    title: 'Planning & practical advice',
+    intro:
+      'Visas, deposits, packing, connectivity and the small things that decide whether a trip runs smoothly.',
+  },
+  {
+    key: 'news',
+    title: 'News & insights',
+    intro: 'What is changing in Pakistani tourism, from the people watching it change.',
+  },
+];
+
 export default async function BlogPage() {
   const posts = await getBlogPosts();
+
+  const grouped = SECTIONS.map((section) => ({
+    ...section,
+    posts: posts.filter((p) => p.category === section.key),
+  })).filter((section) => section.posts.length > 0);
+
+  // Anything whose category is unset or no longer in the list would otherwise
+  // vanish from the page entirely — collect it rather than lose it.
+  const uncategorised = posts.filter((p) => !SECTIONS.some((s) => s.key === p.category));
 
   return (
     <>
@@ -63,19 +110,40 @@ export default async function BlogPage() {
             </p>
           </div>
 
-          {posts.length === 0 ? (
+          {posts.length === 0 && (
             <p className="rounded-card mt-10 border border-slate-200 bg-slate-50 p-8 text-center text-slate-600 dark:border-slate-800 dark:bg-[#0d1117] dark:text-slate-400">
-              No posts published yet — check back soon.
+              No guides published yet — check back soon.
             </p>
-          ) : (
-            <ul className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {posts.map((post, i) => (
-                <li key={post.slug}>
-                  <BlogCard post={post} priority={i === 0} />
-                </li>
-              ))}
-            </ul>
           )}
+
+          {[
+            ...grouped,
+            ...(uncategorised.length > 0
+              ? [{ key: 'other', title: 'More guides', intro: '', posts: uncategorised }]
+              : []),
+          ].map((section, si) => (
+            <section key={section.key} aria-labelledby={`${section.key}-h`} className="mt-14">
+              <h2
+                id={`${section.key}-h`}
+                className="text-[clamp(20px,2.4vw,26px)] font-extrabold tracking-[0.04em] text-slate-900 uppercase dark:text-slate-50"
+              >
+                {section.title}
+              </h2>
+              <span aria-hidden className="bg-brand-500 mt-3 block h-[3px] w-14" />
+              {section.intro && (
+                <p className="mt-3 max-w-[70ch] text-[14.5px] text-slate-600 dark:text-slate-400">
+                  {section.intro}
+                </p>
+              )}
+              <ul className="mt-7 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {section.posts.map((post, i) => (
+                  <li key={post.slug}>
+                    <BlogCard post={post} priority={si === 0 && i === 0} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
         </Container>
       </Section>
     </>

@@ -20,6 +20,9 @@ export default async function ContactPage() {
 
   const { contact } = siteConfig;
   const { address } = contact;
+  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    [address.line1, address.city, address.country].filter(Boolean).join(', '),
+  )}`;
 
   const destinationOptions = [
     ...categories.map((c) => ({ value: c.key, label: c.pluralLabel })),
@@ -52,7 +55,7 @@ export default async function ContactPage() {
           {/* Office details come from site.config so the address, numbers and
               hours cannot drift out of step with the header, footer and
               enquiry form. */}
-          <div className="rounded-card bg-card mx-auto mt-10 max-w-2xl border border-slate-200 p-6 sm:p-8 dark:border-slate-800">
+          <div className="mx-auto mt-10 max-w-2xl">
             <h3 className="font-display text-lg font-semibold text-slate-900 dark:text-white">
               Head office
             </h3>
@@ -144,6 +147,32 @@ export default async function ContactPage() {
                 </div>
               </div>
             </dl>
+
+            <h3 className="font-display mt-10 text-lg font-semibold text-slate-900 dark:text-white">
+              While you are travelling
+            </h3>
+            <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">
+              Every trip carries a 24-hour line, given to you with your final documents and answered
+              outside office hours as well. It is for people who are on the road with us — for
+              everything before departure, the numbers above are the right ones.
+            </p>
+
+            <h3 className="font-display mt-10 text-lg font-semibold text-slate-900 dark:text-white">
+              Visiting the office
+            </h3>
+            <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">
+              Visitors are welcome, though a message first means the planner who knows your trip is
+              at their desk when you arrive.{' '}
+              <a
+                href={mapsHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand-600 hover:text-brand-700 dark:text-brand-400 font-medium underline"
+              >
+                Find the office on Google Maps
+              </a>
+              .
+            </p>
           </div>
         </Container>
       </Section>

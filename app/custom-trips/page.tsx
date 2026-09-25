@@ -18,18 +18,18 @@ export const metadata = buildMetadata({
 const STEPS = [
   {
     icon: MessagesSquare,
-    title: 'Tell us the essentials',
-    body: 'Your dates, group size, budget and the regions or activities you have in mind.',
+    title: 'A planner reads it',
+    body: 'Not a call centre and not an auto-responder. The person who writes your itinerary is the person who answers.',
   },
   {
     icon: Route,
-    title: 'We design the route',
-    body: 'A trip planner writes a day-by-day itinerary with the full per-person cost — nothing hidden.',
+    title: 'You get a costed day-by-day',
+    body: 'Internal flights, hotels with breakfast, permits and guide, priced per person — with what is not included written down.',
   },
   {
     icon: CalendarClock,
-    title: 'Refine and confirm',
-    body: 'Adjust anything until it fits, then hold your place with a small deposit.',
+    title: 'You change it as often as you like',
+    body: 'Reply to the email and it gets rewritten. Nothing is booked and nothing is owed until you say yes.',
   },
 ];
 
