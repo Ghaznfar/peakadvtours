@@ -25,6 +25,7 @@ import { Team } from '@/components/sections/Team';
 import { Testimonials } from '@/components/sections/Testimonials';
 import { Credentials } from '@/components/sections/Credentials';
 import { Enquiry } from '@/components/sections/Enquiry';
+import { TripMap } from '@/components/sections/TripMap';
 
 /** Homepage — composes the marketing sections from the content repository. */
 export default async function HomePage() {
@@ -72,6 +73,8 @@ export default async function HomePage() {
       <FeaturedTrips trips={featuredTrips} />
 
       <FindYourTrip trips={allTrips} />
+
+      <TripMap trips={allTrips} />
 
       <DestinationShowcase destinations={featuredDestinations} />
 
