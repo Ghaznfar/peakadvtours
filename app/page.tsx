@@ -44,7 +44,8 @@ export default async function HomePage() {
     getHeroSlides(),
     getCategories(),
     getAllTrips(),
-    getFeaturedTrips(6),
+    // Unlimited: the section shows three and reveals the rest behind "Read more".
+    getFeaturedTrips(),
     getDestinations(),
     getFeaturedDestinations(4),
     getValueProps(),

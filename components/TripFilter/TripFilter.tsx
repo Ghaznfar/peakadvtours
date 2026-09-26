@@ -1,8 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import Link from 'next/link';
-import { SlidersHorizontal } from 'lucide-react';
+import { ChevronDown, ChevronUp, SlidersHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import type { Effort, Season, Trip, TripCategory } from '@/types/content';
 import { TripCard } from '@/components/TripCard';
@@ -49,13 +48,12 @@ const selectClasses =
 export interface TripFilterProps {
   trips: Trip[];
   /**
-   * Cap how many cards the grid renders (the homepage shows 6). Filtering and
-   * sorting still run over every trip — only the grid is trimmed, and a link to
-   * `moreHref` appears when there is more to see. Unset renders every match.
+   * Cap how many cards the grid renders before "See all trips" (the homepage
+   * shows 6). Filtering and sorting still run over every trip — only the grid
+   * is trimmed, and expanding happens in place rather than navigating away.
+   * Unset renders every match with no button.
    */
   maxVisible?: number;
-  /** Where "see all trips" points when the grid is capped. */
-  moreHref?: string;
   className?: string;
 }
 
@@ -64,11 +62,14 @@ export interface TripFilterProps {
  * over trips embedded at build time — no network. On the dedicated /trips page
  * (later phase) this state also syncs to the URL; here it is local.
  */
-export function TripFilter({ trips, maxVisible, moreHref = '/trips', className }: TripFilterProps) {
+export function TripFilter({ trips, maxVisible, className }: TripFilterProps) {
   const [type, setType] = useState<TypeFilter>('all');
   const [effort, setEffort] = useState<EffortFilter>('any');
   const [season, setSeason] = useState<SeasonFilter>('any');
   const [sort, setSort] = useState<SortKey>('recommended');
+  // Expands the grid in place. The homepage never sends anyone to /trips for
+  // this — the whole list opens where they are.
+  const [showAll, setShowAll] = useState(false);
 
   const results = useMemo(() => {
     const filtered = trips.filter((t) => {
@@ -101,8 +102,9 @@ export function TripFilter({ trips, maxVisible, moreHref = '/trips', className }
   }, [trips, type, effort, season, sort]);
 
   // The grid is trimmed, never the results: the count below the controls and
-  // the "see all" link both need to know how many actually matched.
-  const visible = maxVisible ? results.slice(0, maxVisible) : results;
+  // the expand button both need to know how many actually matched.
+  const isCollapsed = Boolean(maxVisible) && !showAll;
+  const visible = isCollapsed ? results.slice(0, maxVisible) : results;
   const hasMore = visible.length < results.length;
 
   const resetFilters = () => {
@@ -212,11 +214,24 @@ export function TripFilter({ trips, maxVisible, moreHref = '/trips', className }
               </li>
             ))}
           </ul>
-          {hasMore && (
+          {/* `showAll` alone is not enough: a filter applied after expanding can
+              leave fewer results than the cap, and "Show fewer" would collapse
+              to nothing. */}
+          {(hasMore || (showAll && results.length > (maxVisible ?? 0))) && (
             <div className="mt-8 text-center">
-              <Button asChild variant="outline" size="lg">
-                <Link href={moreHref}>See all {trips.length} trips</Link>
-              </Button>
+              {hasMore ? (
+                <Button variant="outline" size="lg" onClick={() => setShowAll(true)}>
+                  See all {results.length} trips
+                  <ChevronDown aria-hidden className="size-4" />
+                </Button>
+              ) : (
+                // 42 cards is a long way to scroll back, so expanding is
+                // reversible rather than one-way.
+                <Button variant="outline" size="lg" onClick={() => setShowAll(false)}>
+                  Show fewer
+                  <ChevronUp aria-hidden className="size-4" />
+                </Button>
+              )}
             </div>
           )}
         </>

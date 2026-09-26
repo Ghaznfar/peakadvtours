@@ -22,7 +22,7 @@ export function FindYourTrip({ trips }: FindYourTripProps) {
           description="Every tour, trek and expedition in one place. Filter by type, effort and season."
         />
         <div className="mt-8">
-          <TripFilter trips={trips} maxVisible={HOME_CARD_LIMIT} moreHref="/trips" />
+          <TripFilter trips={trips} maxVisible={HOME_CARD_LIMIT} />
         </div>
       </Container>
     </Section>
