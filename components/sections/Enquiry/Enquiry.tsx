@@ -52,7 +52,10 @@ export function Enquiry({
   const telHref = `tel:${contact.phone.replace(/[^\d+]/g, '')}`;
 
   return (
-    <Section id="enquiry" ariaLabel="Plan your trip" className="bg-[#2c3e50] text-slate-300">
+    // One step lighter than the footer's #2c3e50 directly below it, so the two
+    // dark bands read as separate without a rule between them. Text stays at
+    // 6.3:1 against this, still clear of WCAG AA.
+    <Section id="enquiry" ariaLabel="Plan your trip" className="bg-[#34495e] text-slate-300">
       <Container>
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
           {/* Left: pitch + contact details */}
@@ -142,8 +145,8 @@ export function Enquiry({
               </Button>
               <Button
                 asChild
-                variant="outline"
-                className="flex-1 border-white/30 text-[12.5px] tracking-[0.07em] text-white hover:bg-white/10"
+                variant="outlineOnDark"
+                className="flex-1 text-[12.5px] tracking-[0.07em]"
               >
                 <a href={telHref}>
                   <Phone aria-hidden className="size-4" />

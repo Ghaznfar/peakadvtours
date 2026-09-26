@@ -19,6 +19,13 @@ export const buttonVariants = cva(
           'bg-slate-900 text-white hover:bg-slate-800 focus-visible:ring-slate-900 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white dark:focus-visible:ring-slate-300',
         outline:
           'border border-slate-300 bg-white text-slate-800 hover:bg-slate-50 focus-visible:ring-brand-600 dark:border-slate-700 dark:bg-transparent dark:text-slate-100 dark:hover:bg-slate-800 dark:focus-visible:ring-brand-400',
+        // For bands that are dark in BOTH themes (the enquiry band, the
+        // footer). `outline` cannot be reused there: it sets `bg-white` in
+        // light mode, so white label text on it is invisible until hover
+        // repaints the background. This variant carries no `dark:` classes on
+        // purpose — the surface does not change with the theme.
+        outlineOnDark:
+          'border border-white/30 bg-transparent text-white hover:bg-white/10 focus-visible:ring-white',
         ghost:
           'text-slate-800 hover:bg-slate-100 focus-visible:ring-brand-600 dark:text-slate-100 dark:hover:bg-slate-800 dark:focus-visible:ring-brand-400',
         accent: 'bg-accent-500 text-slate-950 hover:bg-accent-600 focus-visible:ring-accent-500',

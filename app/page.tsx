@@ -14,6 +14,7 @@ import {
 import { siteConfig } from '@/site.config';
 import { CtaBanner } from '@/components/ui/CtaBanner';
 import { Hero } from '@/components/sections/Hero';
+import { BrandIntro } from '@/components/sections/BrandIntro';
 import { CategoryCards } from '@/components/sections/CategoryCards';
 import { FeaturedTrips } from '@/components/sections/FeaturedTrips';
 import { FindYourTrip } from '@/components/sections/FindYourTrip';
@@ -64,6 +65,8 @@ export default async function HomePage() {
       <Hero slides={heroSlides} />
 
       <CategoryCards trips={allTrips} currency={siteConfig.defaultCurrency} />
+
+      <BrandIntro trips={allTrips} />
 
       <FeaturedTrips trips={featuredTrips} />
 

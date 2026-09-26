@@ -1,6 +1,6 @@
 # PROJECT STATUS
 
-_Last updated: 2026-09-25_
+_Last updated: 2026-09-26_
 
 ## Current phase
 
@@ -43,6 +43,20 @@ Details worth keeping: steps validate on **Continue** (`trigger` over that step'
 The page's three "A planner reads it" cards **moved below the builder and lost their "Step 1/2/3" labels** — two separate numbered sequences on one page read as one broken sequence. They are now a "What Happens Next" section, and their headings dropped `h2`→`h3` since they sit under a section heading. `Credentials` closes the page. Verified in the built HTML: exactly one `<h1>`, step 1 renders its four fields and a Continue button (no submit), and the summary panel shows its empty state.
 
 The corporate "thumbnail strip" turned out to be the mega-menu panel open in the screenshot, not a page element, so nothing was needed there.
+
+**Homepage "Find your trip" capped at 6 cards (client instruction — "no need to rush on the home page").** It was rendering all 42 trips in one grid. `TripFilter` gains optional `maxVisible` + `moreHref`; the homepage passes 6 and `/trips`. **The cap trims the grid only, never the results** — filtering and sorting still run over the whole catalogue, so the count line stays honest ("Showing 6 of 42 trips", and "Showing 6 of 23 trips" once a filter narrows it) and a "See all 42 trips" button sits below the grid. `TripFilter` is used only here (`/trips` has its own URL-synced controls), but the cap is a prop rather than a hardcoded slice so the component stays context-agnostic. Verified in the built HTML: 6 cards, correct count line, CTA → `/trips`.
+
+**Homepage section order corrected (client follow-up):** the intro block sits **below** the four category tiles, not between them and the slider. Its first photo lost `priority` in the move — below two full sections it is off-screen at load, so preloading it would have competed with the hero for bandwidth.
+
+**Homepage intro block added between the slider and the four tiles (client screenshot).** New `components/sections/BrandIntro/` — a two-column section: the operator's statement on the left (eyebrow "Since 2010" from `siteConfig.foundedYear`, an uppercase h2 with "expeditions" in brand blue, four paragraphs with inline links to /about, /tours, /treks, /expeditions, then two rows of quick links) and three stacked photographs on the right, one each for tours / treks / expeditions.
+
+**The photos come from the trips themselves and rotate.** `PhotoStack` is the only client part; `BrandIntro` stays a server component. Selection is more than a filter per card, for two reasons found by inspecting the rendered output rather than by guessing: (1) several trips carry the **same uploaded image**, so photos are claimed across all three cards — without that the same photo appeared in two of three cards stacked next to each other; (2) claiming runs in **two passes, featured trips first**, because a plain tour-then-trek-then-expedition order let a non-featured tour take the featured trek's photo. Result verified in the built HTML: 15 photo slots, 15 distinct images, each card led by its featured trip (Gilgit Baltistan Tour / K2 Base Camp Trek / Broad Peak Expedition).
+
+All three cards advance on **one shared timer**, not three of their own — three fades out of phase read as flicker, and one index means one pause control. Reduced motion is handled with the same lazy-initialiser + subscribe-only-in-effect shape `HeroSlideshow` already uses, since setting state in an effect body is a lint error in this repo. **The cards are deliberately not links:** their captions name a trip, so linking looks obvious, but the target would change under the pointer every five seconds.
+
+**The client uploaded photography overnight — every trip now has one.** A check against the 25 Sep backup showed 0/43 trips with a `heroImage` asset; the live dataset showed **42/42**. The placeholder filter and the per-category stock fallbacks are still in the component for trips added later without a photo, but nothing is using them today. Trip count also moved 43 → 42, and `featured` moved 10 → 5, so `content/tours.csv` is now behind the CMS in both respects.
+
+**Copy adapted, not transcribed.** The reference block names its own company and claims "SINCE 2014"; both were replaced with `siteConfig` values, since writing a competitor's brand name onto this site would be wrong whatever the instruction about matching content. Every factual claim in the copy was checked against the catalogue before it was written: the shortest real tour is 7 days (not the reference's eight), K2 Base Camp / Gondogoro La / Snow Lake, Gasherbrum II / Broad Peak / Nanga Parbat / K2, and Everest / Annapurna / Manaslu in Nepal are all trips that exist. The reference's "Abruzzi Spur" was dropped — it is K2's standard route, but whether their K2 itinerary uses it is not recorded. "Licensed Pakistan tour operator" reuses the claim `topBarHighlights` already makes rather than inventing a new credential. "Bike tours" has no page, so it renders as plain text — the same rule the footer uses.
 
 **Social icons resized and unified (client follow-up).** Footer circles were 48px, which wrapped the seven onto two lines; they are now **36px** and the brand column widened from 1/5 to 2/6 of the grid so all seven sit on one row. The **top bar now uses the same coloured circles** at 28px instead of plain monochrome glyphs.
 

@@ -4,6 +4,9 @@ import { SectionHeading } from '@/components/ui/SectionHeading';
 import { TripFilter } from '@/components/TripFilter';
 import type { Trip } from '@/types/content';
 
+/** The homepage is a shop window, not the catalogue — six cards, then a link. */
+const HOME_CARD_LIMIT = 6;
+
 export interface FindYourTripProps {
   trips: Trip[];
 }
@@ -19,7 +22,7 @@ export function FindYourTrip({ trips }: FindYourTripProps) {
           description="Every tour, trek and expedition in one place. Filter by type, effort and season."
         />
         <div className="mt-8">
-          <TripFilter trips={trips} />
+          <TripFilter trips={trips} maxVisible={HOME_CARD_LIMIT} moreHref="/trips" />
         </div>
       </Container>
     </Section>

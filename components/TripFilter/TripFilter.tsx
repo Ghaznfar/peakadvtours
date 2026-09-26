@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { SlidersHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import type { Effort, Season, Trip, TripCategory } from '@/types/content';
@@ -47,6 +48,14 @@ const selectClasses =
 
 export interface TripFilterProps {
   trips: Trip[];
+  /**
+   * Cap how many cards the grid renders (the homepage shows 6). Filtering and
+   * sorting still run over every trip — only the grid is trimmed, and a link to
+   * `moreHref` appears when there is more to see. Unset renders every match.
+   */
+  maxVisible?: number;
+  /** Where "see all trips" points when the grid is capped. */
+  moreHref?: string;
   className?: string;
 }
 
@@ -55,7 +64,7 @@ export interface TripFilterProps {
  * over trips embedded at build time — no network. On the dedicated /trips page
  * (later phase) this state also syncs to the URL; here it is local.
  */
-export function TripFilter({ trips, className }: TripFilterProps) {
+export function TripFilter({ trips, maxVisible, moreHref = '/trips', className }: TripFilterProps) {
   const [type, setType] = useState<TypeFilter>('all');
   const [effort, setEffort] = useState<EffortFilter>('any');
   const [season, setSeason] = useState<SeasonFilter>('any');
@@ -90,6 +99,11 @@ export function TripFilter({ trips, className }: TripFilterProps) {
     }
     return sorted;
   }, [trips, type, effort, season, sort]);
+
+  // The grid is trimmed, never the results: the count below the controls and
+  // the "see all" link both need to know how many actually matched.
+  const visible = maxVisible ? results.slice(0, maxVisible) : results;
+  const hasMore = visible.length < results.length;
 
   const resetFilters = () => {
     setType('all');
@@ -181,20 +195,31 @@ export function TripFilter({ trips, className }: TripFilterProps) {
         <p className="mt-3 flex items-center gap-2 text-sm text-slate-500">
           <SlidersHorizontal aria-hidden className="size-4" />
           <span aria-live="polite">
-            Showing {results.length} of {trips.length} trips
+            {hasMore
+              ? `Showing ${visible.length} of ${results.length} trips`
+              : `Showing ${results.length} of ${trips.length} trips`}
           </span>
         </p>
       </div>
 
       {/* Results */}
       {results.length > 0 ? (
-        <ul className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {results.map((trip) => (
-            <li key={trip.slug}>
-              <TripCard trip={trip} />
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {visible.map((trip) => (
+              <li key={trip.slug}>
+                <TripCard trip={trip} />
+              </li>
+            ))}
+          </ul>
+          {hasMore && (
+            <div className="mt-8 text-center">
+              <Button asChild variant="outline" size="lg">
+                <Link href={moreHref}>See all {trips.length} trips</Link>
+              </Button>
+            </div>
+          )}
+        </>
       ) : (
         <div className="rounded-card mt-8 border border-dashed border-slate-300 p-10 text-center">
           <p className="text-slate-600">No trips match those filters yet.</p>
