@@ -13,7 +13,11 @@ export function TeamCard({ member, className }: TeamCardProps) {
   return (
     <article
       className={cn(
-        'rounded-card bg-card flex flex-col border border-slate-200 p-5 text-center shadow-sm dark:border-slate-800 dark:shadow-black/30',
+        // `h-full` matters: grid cells stretch to the tallest in the row, but
+        // the card only took its content height, so a short bio left a card
+        // ending well above its neighbours. Filling the cell makes every card
+        // in a row the same height.
+        'rounded-card bg-card flex h-full flex-col border border-slate-200 p-5 text-center shadow-sm dark:border-slate-800 dark:shadow-black/30',
         className,
       )}
     >
@@ -39,12 +43,20 @@ export function TeamCard({ member, className }: TeamCardProps) {
         {member.name}
       </h3>
       <p className="text-brand-700 dark:text-brand-400 text-sm font-medium">{member.role}</p>
-      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">{member.bio}</p>
+      {/* `grow` lets the bio absorb the height difference between a one-line
+          and a two-line bio, so everything below it stays on the same line
+          across the row. */}
+      <p className="mt-2 grow text-sm text-slate-600 dark:text-slate-400">{member.bio}</p>
 
-      {member.languages && member.languages.length > 0 && (
+      {/* The footer band is reserved either way so all four cards end on the
+          same line. A spacer rather than an empty <p>: there is no paragraph
+          here, so nothing should announce one. */}
+      {member.languages && member.languages.length > 0 ? (
         <p className="mt-3 text-xs text-slate-500 dark:text-slate-500">
           {member.languages.join(' · ')}
         </p>
+      ) : (
+        <span aria-hidden className="mt-3 block h-4" />
       )}
     </article>
   );
