@@ -1,0 +1,406 @@
+{
+  "slug": "k2-base-camp-trek",
+  "depositPercent": 30,
+  "groupSizeMin": 4,
+  "highlights": [
+    {
+      "icon": "mountain-snow",
+      "title": "Concordia",
+      "body": "The confluence of the Baltoro and the Godwin-Austen, with four eight-thousanders standing round it. There is nowhere else on earth like it."
+    },
+    {
+      "icon": "mountain",
+      "title": "The Trango Towers and the Cathedrals",
+      "body": "A thousand metres of vertical granite on both sides of the glacier for two full days of walking."
+    },
+    {
+      "icon": "pin",
+      "title": "K2 Base Camp and the Gilkey Memorial",
+      "body": "5,150 m on the Godwin-Austen, at the foot of the Abruzzi Spur, where the plates carry the names."
+    },
+    {
+      "icon": "bed",
+      "title": "A full camping expedition, not a lodge trek",
+      "body": "Cook, kitchen crew and porters for every camp. There is no infrastructure on the Baltoro at all."
+    }
+  ],
+  "itinerary": [
+    {
+      "day": 1,
+      "title": "Arrival in Islamabad",
+      "altitudeM": 540,
+      "accommodation": "Hotel",
+      "description": "Met at Islamabad International and transferred to the hotel. The afternoon is yours. In the evening your guide runs the kit check — this is the last point at which anything missing can be bought or hired in the city."
+    },
+    {
+      "day": 2,
+      "title": "Islamabad to Chilas",
+      "altitudeM": 1265,
+      "hours": 11,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Hotel",
+      "description": "North on the Karakoram Highway. A long day at the wheel, but the road climbs out of the Punjab plains and into the gorges, and by the afternoon you are travelling between walls of rock with the Indus below."
+    },
+    {
+      "day": 3,
+      "title": "Chilas to Skardu",
+      "altitudeM": 2230,
+      "hours": 8,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Hotel",
+      "description": "Past the confluence where the Karakoram, Himalaya and Hindu Kush meet, then up the gorge to Skardu at 2,230 m. Nanga Parbat is visible from the viewpoint on the way if the haze allows."
+    },
+    {
+      "day": 4,
+      "title": "Skardu to Askole",
+      "altitudeM": 3050,
+      "hours": 6,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "Jeeps up the Braldu gorge to Askole, the last village on the route and the end of the road in every sense. Porters are engaged here and loads are weighed and distributed this evening."
+    },
+    {
+      "day": 5,
+      "title": "Askole to Jhola",
+      "altitudeM": 3200,
+      "hours": 6,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "The walk begins. Six or seven hours down the Braldu valley on stony ground, crossing the Biafo glacier snout on the way. Little height is gained today; the distance is the work."
+    },
+    {
+      "day": 6,
+      "title": "Jhola to Paiyu",
+      "altitudeM": 3450,
+      "hours": 6,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "Five or six hours up the valley, hot and dusty, with the Trango group appearing ahead. Paiyu has trees and running water, which is why it is the staging camp for the glacier."
+    },
+    {
+      "day": 7,
+      "title": "Paiyu to Khoburtse",
+      "altitudeM": 3800,
+      "hours": 6,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "Onto the Baltoro proper. The glacier snout is a wall of grey ice and rubble, and the first hour is the steepest ground of the whole trek. After that the route runs along the ablation valley."
+    },
+    {
+      "day": 8,
+      "title": "Khoburtse to Urdukas",
+      "altitudeM": 4050,
+      "hours": 4,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "A short day, and deliberately so — it is the first camp above 4,000 m. Urdukas sits on grass terraces on the valley side with the Trango Towers directly opposite. The view is the reason the camp is here."
+    },
+    {
+      "day": 9,
+      "title": "Urdukas to Goro II",
+      "altitudeM": 4300,
+      "hours": 6,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "Out onto the middle of the glacier for six or seven hours of moraine walking, with Masherbrum ahead and Muztagh Tower behind. Camp at Goro II is on the ice, with tents pitched on gravel spread over it."
+    },
+    {
+      "day": 10,
+      "title": "Goro II to Concordia",
+      "altitudeM": 4600,
+      "hours": 4,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "Three to four hours, and the day the trek exists for. K2 stands at the head of the Godwin-Austen glacier as you come round the corner — 3,611 m of it, from base to summit, in one view. Broad Peak and the Gasherbrums are on the other side."
+    },
+    {
+      "day": 11,
+      "title": "Concordia to K2 Base Camp and return",
+      "altitudeM": 5150,
+      "hours": 8,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "The big day. Seven to nine hours out and back up the Godwin-Austen to base camp at 5,150 m, at the foot of the Abruzzi Spur. The Gilkey Memorial is on the rock spur above — plates and names carrying the names of more than eighty people who died on this mountain. A sobering hour, and a necessary part of the day."
+    },
+    {
+      "day": 12,
+      "title": "Concordia to Goro II",
+      "altitudeM": 4300,
+      "hours": 4,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "Turning round. Four to five hours back down the glacier, with the light going the other way across the same peaks and the walking noticeably easier now the height is coming off."
+    },
+    {
+      "day": 13,
+      "title": "Goro II to Urdukas",
+      "altitudeM": 4050,
+      "hours": 6,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "Six to seven hours back to the grass at Urdukas. After four nights on ice, a camp with soil under the tent pegs feels like a considerable luxury."
+    },
+    {
+      "day": 14,
+      "title": "Urdukas to Paiyu",
+      "altitudeM": 3450,
+      "hours": 8,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "A long day, seven to eight hours, back down the ablation valley and off the glacier snout to Paiyu — trees, running water and the first wash in ten days."
+    },
+    {
+      "day": 15,
+      "title": "Paiyu to Jhola",
+      "altitudeM": 3200,
+      "hours": 6,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "Five to six hours down the Braldu valley, warm and dusty, with the river running high with afternoon meltwater."
+    },
+    {
+      "day": 16,
+      "title": "Jhola to Askole",
+      "altitudeM": 3050,
+      "hours": 6,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Camp",
+      "description": "Six to seven hours back to Askole. The last walking day. Settle up with the porters in the evening, which is when the trek is properly celebrated — the crew have carried your loads for twelve days."
+    },
+    {
+      "day": 17,
+      "title": "Askole to Skardu",
+      "altitudeM": 2230,
+      "hours": 6,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Hotel",
+      "description": "Jeeps back down the Braldu gorge to Skardu. Hot shower, a bed and a meal at a table. The afternoon is free for Shangrila Fort above the Indus or the bazaar."
+    },
+    {
+      "day": 18,
+      "title": "Skardu to Chilas",
+      "altitudeM": 1265,
+      "hours": 8,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Hotel",
+      "description": "Back down the Indus gorge to the Karakoram Highway. A long driving day, broken wherever the tea is good."
+    },
+    {
+      "day": 19,
+      "title": "Chilas to Islamabad",
+      "altitudeM": 540,
+      "hours": 11,
+      "meals": [
+        "B",
+        "L",
+        "D"
+      ],
+      "accommodation": "Hotel",
+      "description": "The last leg on the highway, south into the plains. A dinner that has not been cooked on a glacier."
+    },
+    {
+      "day": 20,
+      "title": "Islamabad — contingency and a day in the capital",
+      "altitudeM": 540,
+      "meals": [
+        "B"
+      ],
+      "accommodation": "Hotel",
+      "description": "Held deliberately empty. The Karakoram Highway closes for landslides, the Braldu jeep road washes out, and glacier weather takes days when it wants them — all of it comes out of this day rather than out of your flight home. If it is free: the Faisal Mosque, the Margalla trails, Saidpur village, or Rawalpindi's bazaars with a guide."
+    },
+    {
+      "day": 21,
+      "title": "Departure",
+      "altitudeM": 540,
+      "meals": [
+        "B"
+      ],
+      "description": "Transfer to Islamabad International for your flight home."
+    }
+  ],
+  "included": [
+    "Trekking permit, Central Karakoram National Park entry and waste management fees",
+    "Licensed, professional trekking guide throughout",
+    "Hotel accommodation in Islamabad, Chilas and Skardu, twin sharing",
+    "All camping equipment — two-person dome tents, dining tent, toilet tent and mattresses",
+    "All meals from arrival in Islamabad to departure",
+    "Cook, kitchen crew and full trek support staff",
+    "Porters for all group equipment and one personal duffel per trekker up to 15 kg",
+    "All road transport, including the jeep sections up the Braldu gorge to Askole",
+    "Government liaison, registration and all trekking paperwork",
+    "Group first-aid kit, oxygen and a portable altitude chamber",
+    "Porter insurance, clothing and equipment to porter welfare standards"
+  ],
+  "excluded": [
+    "International and domestic airfares",
+    "Pakistan visa and personal travel, medical and evacuation insurance",
+    "Helicopter evacuation, which must be covered by your own policy",
+    "Personal trekking equipment — boots, sleeping bag, mat and clothing",
+    "Single tent or single room supplements",
+    "Lunches and dinners in Islamabad on the free days",
+    "Personal expenses — phone charges, bottled drinks, laundry and souvenirs",
+    "Tips for the guide, porters, drivers and kitchen crew"
+  ],
+  "goodToKnow": [
+    {
+      "title": "How hard is it, really",
+      "body": "There is no technical ground on this trek — no rope work, no crampons on the route as far as base camp. What it asks for is stamina. You are walking six to eight hours a day for twelve days, a good deal of it on moraine, which is loose rock on top of ice and harder work than a path. If you can walk a full day in hills at home, back to back, on consecutive weekends, you are fit enough."
+    },
+    {
+      "title": "Altitude and acclimatisation",
+      "body": "The route gains height gradually and the itinerary is built around that — the short day into Urdukas and the staged camps up the glacier are acclimatisation, not padding. The high point is 5,150 m at base camp, reached on a day walk from 4,600 m and slept low again the same night. Mild headaches and broken sleep above 4,000 m are normal. Your guide carries oxygen and a portable altitude chamber, and has the authority to send anyone down."
+    },
+    {
+      "title": "Porters, and what you carry",
+      "body": "Porters carry one duffel per trekker up to 15 kg, plus all group equipment. You carry a daypack — water, layers, camera, whatever you need between camps. Anything over the 15 kg allowance can be left in Skardu or paid for as an extra load. Porter welfare is not optional on our trips: crews are insured, equipped and paid to the rates set for the route."
+    },
+    {
+      "title": "The Karakoram Highway and the weather",
+      "body": "Both ends of this trip depend on roads that can close. Landslides on the Karakoram Highway and washouts on the Braldu jeep road are ordinary events, not disasters, and the contingency day on day 20 exists for exactly this. If the trek runs clean, that day is yours in Islamabad."
+    },
+    {
+      "title": "Season",
+      "body": "Late June to late August. Earlier and the Braldu river crossings run too high on snowmelt; later and the weather on the glacier turns. There is no shoulder season on the Baltoro worth selling you."
+    },
+    {
+      "title": "Permits and paperwork",
+      "body": "A trekking permit and Central Karakoram National Park entry are included and arranged by us. You need a Pakistan visa, which we support with an invitation letter and booking confirmation, and personal insurance that covers trekking to 5,500 m including helicopter evacuation. We ask to see the policy before departure."
+    }
+  ],
+  "routeWaypoints": [
+    {
+      "name": "Islamabad",
+      "lat": 33.6844,
+      "lng": 73.0479,
+      "note": "Arrival and departure"
+    },
+    {
+      "name": "Chilas",
+      "lat": 35.4206,
+      "lng": 74.0947,
+      "note": "Karakoram Highway overnight"
+    },
+    {
+      "name": "Skardu",
+      "lat": 35.2971,
+      "lng": 75.6333,
+      "note": "2,230 m — last town"
+    },
+    {
+      "name": "Askole",
+      "lat": 35.6814,
+      "lng": 75.8161,
+      "note": "3,050 m — road ends, walking begins"
+    },
+    {
+      "name": "Jhola",
+      "lat": 35.7167,
+      "lng": 75.9333,
+      "note": "3,200 m"
+    },
+    {
+      "name": "Paiyu",
+      "lat": 35.75,
+      "lng": 76.05,
+      "note": "3,450 m — last trees"
+    },
+    {
+      "name": "Khoburtse",
+      "lat": 35.7333,
+      "lng": 76.15,
+      "note": "3,800 m — onto the Baltoro"
+    },
+    {
+      "name": "Urdukas",
+      "lat": 35.7167,
+      "lng": 76.2833,
+      "note": "4,050 m — Trango Towers opposite"
+    },
+    {
+      "name": "Goro II",
+      "lat": 35.7333,
+      "lng": 76.4,
+      "note": "4,300 m — camp on the glacier"
+    },
+    {
+      "name": "Concordia",
+      "lat": 35.7422,
+      "lng": 76.5,
+      "note": "4,600 m — four 8,000ers"
+    },
+    {
+      "name": "K2 Base Camp",
+      "lat": 35.8,
+      "lng": 76.5147,
+      "note": "5,150 m — the high point"
+    }
+  ]
+}

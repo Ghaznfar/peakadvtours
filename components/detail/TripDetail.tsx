@@ -234,7 +234,11 @@ export function TripDetail({
                             <li>Altitude: {day.altitudeM.toLocaleString()} m</li>
                           )}
                           {typeof day.hours === 'number' && <li>Approx. {day.hours} hrs</li>}
-                          {day.meals && day.meals.length > 0 && (
+                          {/* `Array.isArray`, not a truthy `.length` check: a
+                              string also has a length, so a legacy or
+                              mis-imported value would pass the guard and then
+                              crash the whole page on `.map`. */}
+                          {Array.isArray(day.meals) && day.meals.length > 0 && (
                             <li>Meals: {day.meals.map((m) => MEAL_LABEL[m]).join(', ')}</li>
                           )}
                           {day.accommodation && <li>Stay: {day.accommodation}</li>}

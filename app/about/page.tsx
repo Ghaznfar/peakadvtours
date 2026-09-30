@@ -11,6 +11,7 @@ import { WhyChooseUs } from '@/components/sections/WhyChooseUs';
 import { Stats } from '@/components/sections/Stats';
 import { Team } from '@/components/sections/Team';
 import { Credentials } from '@/components/sections/Credentials';
+import { Legacy } from '@/components/sections/Legacy';
 
 export const metadata = buildMetadata({
   title: 'About Us',
@@ -73,6 +74,7 @@ export default async function AboutPage() {
       <Stats stats={stats} />
       <WhyChooseUs valueProps={valueProps} />
       <Team members={team} />
+      <Legacy id="archive" />
       <Credentials credentials={credentials} />
 
       <CtaBanner

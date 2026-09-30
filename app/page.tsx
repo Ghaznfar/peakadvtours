@@ -24,6 +24,7 @@ import { Stats } from '@/components/sections/Stats';
 import { Team } from '@/components/sections/Team';
 import { Testimonials } from '@/components/sections/Testimonials';
 import { Credentials } from '@/components/sections/Credentials';
+import { Legacy } from '@/components/sections/Legacy';
 import { Enquiry } from '@/components/sections/Enquiry';
 import { TripMap } from '@/components/sections/TripMap';
 
@@ -90,6 +91,8 @@ export default async function HomePage() {
       <Stats stats={stats} />
 
       <Team members={team} />
+
+      <Legacy limit={3} moreHref="/about#archive" />
 
       <Testimonials testimonials={testimonials} />
 

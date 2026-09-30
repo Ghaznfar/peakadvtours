@@ -82,7 +82,18 @@ export const siteConfig: SiteConfig = {
     { label: 'Corporate Retreats', href: '/corporate-retreats' },
     { label: 'Customize', href: '/custom-trips' },
     { label: 'Blog', href: '/blog' },
-    { label: 'About', href: '/about' },
+    {
+      label: 'About',
+      href: '/about',
+      children: [
+        { label: 'Our story', href: '/about', description: 'Who we are and how we work' },
+        {
+          label: 'The family archive',
+          href: '/about#archive',
+          description: 'Letters from the expeditions we served, 1986–1993',
+        },
+      ],
+    },
     { label: 'Contact', href: '/contact' },
   ],
 
