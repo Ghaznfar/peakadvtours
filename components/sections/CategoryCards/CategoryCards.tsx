@@ -31,7 +31,7 @@ const CARDS: CategoryCardDef[] = [
     href: '/tours',
     image: {
       src: '/images/stock/trip-valley-tour.jpg',
-      alt: 'PLACEHOLDER — replace with a client photograph of a guided tour',
+      alt: 'Green valley with trees between mountains',
     },
     fallback: 'Guided, fully inclusive',
     match: (t) => t.category === 'tour',
@@ -42,7 +42,7 @@ const CARDS: CategoryCardDef[] = [
     href: '/treks',
     image: {
       src: '/images/stock/trip-trek-hikers.jpg',
-      alt: 'PLACEHOLDER — replace with a client photograph of a trekking group',
+      alt: 'Two hikers with backpacks walking up a mountain trail',
     },
     fallback: 'Full camp support',
     match: (t) => t.category === 'trek',
@@ -53,7 +53,7 @@ const CARDS: CategoryCardDef[] = [
     href: '/expeditions',
     image: {
       src: '/images/stock/trip-expedition-climbers.jpg',
-      alt: 'PLACEHOLDER — replace with a client photograph of an expedition team',
+      alt: 'Mountaineers climbing with ropes on rock',
     },
     fallback: 'High-altitude peaks',
     match: (t) => t.category === 'expedition',
@@ -64,7 +64,7 @@ const CARDS: CategoryCardDef[] = [
     href: '/festivals',
     image: {
       src: '/images/stock/destination-golden-desert.jpg',
-      alt: 'PLACEHOLDER — replace with a client photograph of a festival departure',
+      alt: 'Sunlit orange sand dunes under a clear sky',
     },
     fallback: 'Dates fixed to the calendar',
     match: (t) => t.tags.includes('festival'),

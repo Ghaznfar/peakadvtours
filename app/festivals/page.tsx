@@ -26,7 +26,7 @@ export default async function FestivalsPage({
       title="Festival Tours"
       heroImage={{
         src: '/images/stock/destination-golden-desert.jpg',
-        alt: 'PLACEHOLDER — replace with a client photograph of a festival departure',
+        alt: 'Sunlit orange sand dunes under a clear sky',
       }}
       sectionEyebrow="Weeks you cannot move"
       sectionTitle="Festival Departures 2026-27"

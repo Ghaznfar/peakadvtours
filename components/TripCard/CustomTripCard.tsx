@@ -16,7 +16,7 @@ export function CustomTripCard() {
       <div className="relative h-[210px] overflow-hidden">
         <Image
           src="/images/stock/trip-valley-tour.jpg"
-          alt="PLACEHOLDER — replace with a client photograph of travellers on the road"
+          alt="Green valley with trees between mountains"
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
           className="object-cover"

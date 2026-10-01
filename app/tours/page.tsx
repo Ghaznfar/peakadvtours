@@ -24,7 +24,7 @@ export default async function ToursPage() {
       title="Pakistan Tour Packages 2026-27"
       heroImage={{
         src: '/images/stock/trip-valley-tour.jpg',
-        alt: 'PLACEHOLDER — replace with a client photograph of a guided tour group',
+        alt: 'Green valley with trees between mountains',
       }}
       breadcrumbLabel="Tours"
       groups={[

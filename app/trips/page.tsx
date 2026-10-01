@@ -22,7 +22,7 @@ export default async function TripsPage({ searchParams }: { searchParams: Promis
       title="Find your trip"
       heroImage={{
         src: '/images/stock/destination-highland-region.jpg',
-        alt: 'PLACEHOLDER — replace with a client photograph of a highland landscape',
+        alt: 'Snow-covered peaks above a broad highland valley',
       }}
       sectionEyebrow="Tours, treks and expeditions"
       sectionTitle="Every Trip in One Place"

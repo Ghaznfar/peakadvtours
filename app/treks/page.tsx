@@ -31,7 +31,7 @@ export default async function TreksPage({ searchParams }: { searchParams: Promis
       title="Trekking in Pakistan"
       heroImage={{
         src: '/images/stock/trip-trek-hikers.jpg',
-        alt: 'PLACEHOLDER — replace with a client photograph of a trekking group',
+        alt: 'Two hikers with backpacks walking up a mountain trail',
       }}
       sectionEyebrow="The Karakoram classics"
       sectionTitle="Best Treks in Pakistan 2026-27"

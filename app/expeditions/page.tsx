@@ -34,7 +34,7 @@ export default async function ExpeditionsPage({
       title="Karakoram Expeditions 2026-27"
       heroImage={{
         src: '/images/stock/trip-expedition-climbers.jpg',
-        alt: 'PLACEHOLDER — replace with a client photograph of an expedition base camp',
+        alt: 'Mountaineers climbing with ropes on rock',
       }}
       sectionEyebrow="Beginning to seriously high"
       sectionTitle="Expedition Pakistan 2026-27 — 6,000 to 7,000 m"

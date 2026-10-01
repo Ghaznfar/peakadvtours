@@ -26,7 +26,7 @@ export default async function CorporateRetreatsPage({
       title="Corporate Retreats 2026-27"
       heroImage={{
         src: '/images/stock/destination-lakes-district.jpg',
-        alt: 'PLACEHOLDER — replace with a client photograph of a company group trip',
+        alt: 'Turquoise glacial tarns on a high basin floor, ringed by cliffs and snowfields',
       }}
       sectionEyebrow="Offsites that stick"
       sectionTitle="Team Retreats & Incentive Trips"

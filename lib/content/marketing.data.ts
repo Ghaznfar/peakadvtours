@@ -51,17 +51,34 @@ export const valueProps: ValueProp[] = [
   },
 ];
 
+/**
+ * "4.9/5 — Average rating" was removed before launch. There are no reviews
+ * behind it: the CMS holds zero testimonials, so the number was invented.
+ * Fabricated ratings are forbidden by CLAUDE.md §2, are a consumer-protection
+ * problem, and are penalised by search engines when they appear as rich data.
+ *
+ * Of the three that remain, "40+ trips & routes" is true (42 are published) and
+ * "15+ years" follows `siteConfig.foundedYear` (2010). **"2,000+ travellers
+ * hosted" is unverified** and should be confirmed or changed by the client.
+ */
 export const stats: Stat[] = [
   { id: 's1', value: '15+', label: 'Years operating' },
   { id: 's2', value: '2,000+', label: 'Travellers hosted' },
   { id: 's3', value: '40+', label: 'Trips & routes' },
-  { id: 's4', value: '4.9/5', label: 'Average rating' },
 ];
 
-export const credentials: Credential[] = [
-  { id: 'c1', name: 'Tourism Board (placeholder)', type: 'accreditation', abbr: 'TB' },
-  { id: 'c2', name: 'Tour Operators Assoc. (placeholder)', type: 'accreditation', abbr: 'TOA' },
-  { id: 'c3', name: 'Adventure Guides Guild (placeholder)', type: 'partner', abbr: 'AGG' },
-  { id: 'c4', name: 'Chamber of Commerce (placeholder)', type: 'partner', abbr: 'CoC' },
-  { id: 'c5', name: 'Safe Travel Mark (placeholder)', type: 'award', abbr: 'STM' },
-];
+/**
+ * EMPTY ON PURPOSE — do not re-add invented bodies.
+ *
+ * This list held five made-up accreditations ("Tourism Board (placeholder)",
+ * "Safe Travel Mark (placeholder)" and so on). They were removed before launch
+ * for two reasons. CLAUDE.md §2 forbids presenting credentials the client has
+ * not actually earned, and since the family archive went live they would have
+ * sat directly beneath genuine signed letters from the 1993 Dutch K2 expedition
+ * and the Swiss Gasherbrum II team — real proof propping up invented proof.
+ *
+ * `Credentials` returns null on an empty list and the enquiry band skips its
+ * credentials row, so nothing renders and no layout breaks. Add entries back
+ * only for accreditations the client holds and can evidence.
+ */
+export const credentials: Credential[] = [];

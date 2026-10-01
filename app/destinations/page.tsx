@@ -25,7 +25,7 @@ export default async function DestinationsPage() {
         title="Explore our destinations"
         heroImage={{
           src: '/images/stock/destination-highland-region.jpg',
-          alt: 'PLACEHOLDER — replace with a client photograph of a signature region',
+          alt: 'A snow-capped peak rising above bare ochre ridges under a deep blue sky',
         }}
       />
 

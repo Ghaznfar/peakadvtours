@@ -14,7 +14,7 @@ export function CustomTripRow() {
       <div className="relative min-h-[180px]">
         <Image
           src="/images/stock/trip-valley-tour.jpg"
-          alt="PLACEHOLDER — replace with a client photograph of travellers on the road"
+          alt="Green valley with trees between mountains"
           fill
           sizes="(max-width: 768px) 100vw, 250px"
           className="object-cover"
