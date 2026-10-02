@@ -200,10 +200,8 @@ export function BrandIntro({ trips }: BrandIntroProps) {
                 permits, liaison officer and high-altitude porters handled end to end.
               </p>
               <p>
-                Outside Pakistan, Everest, Annapurna and Manaslu run with our partner crews in
-                Nepal, and trips elsewhere in Asia are planned to order — the same office, the same
-                planners, the same all-in pricing. Tell us where in Asia you want to go and we will
-                cost it.
+                Trips elsewhere in Asia are planned to order — the same office, the same planners,
+                the same all-in pricing. Tell us where you want to go and we will cost it.
               </p>
             </div>
 

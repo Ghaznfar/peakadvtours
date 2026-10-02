@@ -45,10 +45,7 @@ export const TRIP_LOCATIONS: Record<string, TripLocation> = {
   },
   'nanga-parbat-rupal-expedition': { lat: 35.2, lng: 74.6, place: 'Nanga Parbat, Rupal face' },
 
-  // ── Expeditions: Nepal ──────────────────────────────────────────────────
-  'mera-peak-expedition': { lat: 27.7075, lng: 86.8717, place: 'Mera Peak, Khumbu' },
-
-  // ── Treks: Karakoram & Himalaya (Pakistan) ──────────────────────────────
+  // ── Treks ───────────────────────────────────────────────────────────────
   'k2-base-camp-trek': { lat: 35.7422, lng: 76.5, place: 'Concordia and K2 Base Camp' },
   'k2-gondogoro-la-trek': { lat: 35.6667, lng: 76.3167, place: 'Gondogoro La' },
   'snow-lake-hispar-la-trek': { lat: 36.05, lng: 75.45, place: 'Snow Lake and Hispar La' },
@@ -65,16 +62,6 @@ export const TRIP_LOCATIONS: Record<string, TripLocation> = {
     lng: 74.5983,
     place: 'Fairy Meadows, Nanga Parbat',
   },
-
-  // ── Treks: Nepal ────────────────────────────────────────────────────────
-  'everest-base-camp-trek': { lat: 28.0026, lng: 86.8528, place: 'Everest Base Camp, Khumbu' },
-  'island-peak-with-everest-base-camp': {
-    lat: 27.9222,
-    lng: 86.9356,
-    place: 'Island Peak, Khumbu',
-  },
-  'annapurna-base-camp-trek': { lat: 28.5311, lng: 83.8781, place: 'Annapurna Sanctuary' },
-  'manaslu-trek': { lat: 28.55, lng: 84.5597, place: 'Manaslu circuit' },
 
   // ── Tours ───────────────────────────────────────────────────────────────
   'gilgit-baltistan-tour': { lat: 35.9208, lng: 74.3083, place: 'Gilgit-Baltistan' },

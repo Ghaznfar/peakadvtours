@@ -13,31 +13,36 @@ export interface TripMapCanvasProps {
 }
 
 /**
- * The frame. The trips span lat 27.7–36.6 and lng 71.7–86.9, so this leaves a
- * margin on every side without stranding them in empty space. Its 16°×30° shape
- * is also roughly the panel's aspect ratio — Leaflet fits bounds to whichever
- * axis is tighter, so a frame much taller than the panel would letterbox the
- * map and shrink every dot.
+ * The frame — Pakistan, with enough margin to read as a country rather than a
+ * cutout. It used to stretch east to lng 91 to reach the Khumbu; with the Nepal
+ * trips gone that half was empty, so it now ends at 80.
+ *
+ * The trips themselves occupy only lat 33.7–36.6 / lng 71.7–76.7, a small box in
+ * the north. Framing tightly to them would drop Karachi, Lahore and the shape of
+ * the country, which is what makes the clustering legible in the first place.
+ *
+ * 14.5°×21° is roughly the panel's aspect ratio: Leaflet fits bounds to whichever
+ * axis is tighter, so a frame much taller than the panel would letterbox the map
+ * and shrink every dot.
  *
  * Locked to it: with no tile layer there is nothing outside the region to pan
  * to, so dragging and zooming would only reveal blank background.
  */
-const BOUNDS = L.latLngBounds([23, 61], [40, 91]);
+const BOUNDS = L.latLngBounds([23, 59], [37.5, 80]);
 
-/** The two countries the operator actually runs trips in, picked out in blue. */
-const OPERATING = new Set(['Pakistan', 'Nepal']);
+/** The country the operator runs trips in, picked out in blue. */
+const OPERATING = new Set(['Pakistan']);
 
 /**
- * Country labels. Positioned by hand rather than by centroid: a centroid puts
- * "Nepal" on top of the Khumbu dots and "China" out in the Taklamakan.
+ * Country labels. Positioned by hand rather than by centroid, which would put
+ * "China" out in the Taklamakan and "India" in the middle of the Deccan.
  */
 const LABELS: Array<{ name: string; lat: number; lng: number; strong?: boolean }> = [
   { name: 'Pakistan', lat: 27.8, lng: 68.6, strong: true },
-  { name: 'Nepal', lat: 27.35, lng: 84.2, strong: true },
-  { name: 'Afghanistan', lat: 33.6, lng: 65.2 },
-  { name: 'Tajikistan', lat: 38.4, lng: 71.4 },
-  { name: 'China', lat: 37.6, lng: 85.5 },
-  { name: 'India', lat: 25.6, lng: 78.5 },
+  { name: 'Afghanistan', lat: 33.6, lng: 64.8 },
+  { name: 'Tajikistan', lat: 37.0, lng: 71.2 },
+  { name: 'China', lat: 36.2, lng: 78.6 },
+  { name: 'India', lat: 26.5, lng: 76.8 },
 ];
 
 /**
@@ -75,7 +80,7 @@ function countryStyle(feature?: Feature) {
   const isOperating = OPERATING.has(name);
   return {
     // Pale blue where the trips are, near-white everywhere else: the eye should
-    // land on Pakistan and Nepal before it reads the neighbours.
+    // land on Pakistan before it reads the neighbours.
     fillColor: isOperating ? '#dbe6f2' : '#eef0f4',
     fillOpacity: 1,
     color: isOperating ? '#b9cce0' : '#dfe3ea',

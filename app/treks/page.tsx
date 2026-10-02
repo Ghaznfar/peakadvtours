@@ -10,20 +10,12 @@ export const metadata = buildMetadata({
   path: '/treks',
 });
 
-/** Nepal treks run with partner crews and get their own section below. */
-const NEPAL_TAG = 'nepal';
-
 export default async function TreksPage({ searchParams }: { searchParams: Promise<ParamsInput> }) {
   const [allTreks, destinations, sp] = await Promise.all([
     getTripsByCategory('trek'),
     getDestinations(),
     searchParams,
   ]);
-
-  // Split rather than filter: a single list would mix Karakoram expeditions in
-  // with teahouse trails, which sell to different people.
-  const trips = allTreks.filter((t) => !t.tags.includes(NEPAL_TAG));
-  const nepalTreks = allTreks.filter((t) => t.tags.includes(NEPAL_TAG));
 
   return (
     <TripListingPage
@@ -38,17 +30,7 @@ export default async function TreksPage({ searchParams }: { searchParams: Promis
       description="Every trek runs with licensed guides, porters and a full camp crew. Group sizes stay small and acclimatisation days are built into every itinerary."
       breadcrumbLabel="Treks"
       basePath="/treks"
-      trips={trips}
-      extraGroups={[
-        {
-          id: 'nepal',
-          eyebrow: 'Teahouse trails',
-          title: 'Trekking in Nepal',
-          description:
-            'Everest, Annapurna and Manaslu with our partner crews in Kathmandu — lodges booked, permits arranged, guides throughout.',
-          trips: nepalTreks,
-        },
-      ]}
+      trips={allTreks}
       destinations={destinations}
       searchParams={sp}
     />

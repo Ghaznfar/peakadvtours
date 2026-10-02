@@ -23,10 +23,8 @@ export default async function ExpeditionsPage({
 
   // Split by altitude band: a first 6,000 m summit and K2 sell to different
   // climbers, and one list would bury the entry-level peaks under the giants.
-  const nepal = all.filter((t) => t.tags.includes('nepal'));
-  const pakistan = all.filter((t) => !t.tags.includes('nepal'));
-  const eightThousand = pakistan.filter((t) => (t.maxAltitudeM ?? 0) >= 8000);
-  const lower = pakistan.filter((t) => (t.maxAltitudeM ?? 0) < 8000);
+  const eightThousand = all.filter((t) => (t.maxAltitudeM ?? 0) >= 8000);
+  const lower = all.filter((t) => (t.maxAltitudeM ?? 0) < 8000);
 
   return (
     <TripListingPage
@@ -50,14 +48,6 @@ export default async function ExpeditionsPage({
           description:
             'Pakistan holds five of the world’s fourteen 8,000 m peaks. These run with full base-camp service, weather forecasting and experienced high-altitude porters — previous 7,000 m experience required.',
           trips: eightThousand,
-        },
-        {
-          id: 'nepal',
-          eyebrow: 'Beyond the Karakoram',
-          title: 'Expeditions in Nepal',
-          description:
-            'We run spring and autumn seasons in Nepal with the same crew standards, from Mera Peak’s big summit views upward.',
-          trips: nepal,
         },
       ]}
       destinations={destinations}

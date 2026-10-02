@@ -110,7 +110,6 @@ export const siteConfig: SiteConfig = {
           { label: 'Festival Tours', href: '/festivals' },
           { label: 'Bike Tours', href: '' },
           { label: 'Corporate Retreats', href: '/corporate-retreats' },
-          { label: 'Nepal Treks', href: '/treks#nepal' },
         ],
       },
       {

@@ -22,7 +22,7 @@ function summarise(points: TripPoint[]): string {
   }
   const low = Math.min(...altitudes).toLocaleString();
   const high = Math.max(...altitudes).toLocaleString();
-  return `All ${count} of them, plotted where they run — from the Kalash valleys in the Hindu Kush to the Khumbu in Nepal, and from ${low} m to ${high} m at the high point. The bigger the dot, the higher the trip goes.`;
+  return `All ${count} of them, plotted where they run — from the Kalash valleys in the Hindu Kush to the Baltoro glacier, and from ${low} m to ${high} m at the high point. The bigger the dot, the higher the trip goes.`;
 }
 
 /**

@@ -37,11 +37,11 @@ export interface TripListingPageProps {
   /**
    * Further separately-headed grids below the main one, in order. Used where a
    * page covers distinct groups a single list would blur together — Pakistan
-   * treks vs Nepal, or expeditions by altitude band. Empty groups are dropped,
+   * expeditions split by altitude band. Empty groups are dropped,
    * and alternate bands are tinted so the sections read apart.
    */
   extraGroups?: Array<{
-    /** Anchor id, so the section can be linked to (e.g. /treks#nepal). */
+    /** Anchor id, so the section can be linked to (e.g. /expeditions#eight-thousanders). */
     id?: string;
     eyebrow?: string;
     title: string;
