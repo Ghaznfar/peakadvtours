@@ -30,7 +30,7 @@ export const siteConfig: SiteConfig = {
     phoneSecondary: '+92 321 7499259',
     whatsapp: '923345290511',
     email: 'hello@peakadvtours.com',
-    emailSecondary: 'peakadventuretour@gmail.com',
+    emailSecondary: 'peakadventuretourpk@gmail.com',
     hours: '9am – 9pm, seven days a week',
     address: {
       line1: 'House No. 155, Street 12-A, Mohra Road, Simly Dam Road',
