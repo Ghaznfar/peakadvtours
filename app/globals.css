@@ -263,6 +263,20 @@
  * The map draws country shapes from GeoJSON with no tile layer, so the
  * canvas needs its own background rather than inheriting Leaflet's grey.
  * ------------------------------------------------------------------ */
+/* Leaflet sets z-index 800 on controls and 1000 on the control corners,
+   which is far above the sticky header's z-40 — so a map would render over
+   the nav as you scrolled past it. `isolation: isolate` gives each map its
+   own stacking context, so those numbers only compete with each other and
+   the map as a whole sits at its natural place in the page.
+
+   Applied to `.leaflet-container` rather than our own class so it covers
+   every Leaflet map on the site: the homepage overview and the route map on
+   trip detail pages, plus any added later. Raising the header instead would
+   only work until the next library with an opinion about z-index. */
+.leaflet-container {
+  isolation: isolate;
+}
+
 .trip-map,
 .trip-map .leaflet-container {
   background: #f7f8fa;

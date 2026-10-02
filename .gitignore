@@ -44,3 +44,6 @@ next-env.d.ts
 
 # Local Sanity dataset backups (large, contain client content)
 .backups/
+
+# Local Netlify folder
+.netlify

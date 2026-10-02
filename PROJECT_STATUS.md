@@ -1,6 +1,6 @@
 # PROJECT STATUS
 
-_Last updated: 2026-09-26_
+_Last updated: 2026-10-02_
 
 ## Current phase
 
@@ -43,6 +43,19 @@ Details worth keeping: steps validate on **Continue** (`trigger` over that step'
 The page's three "A planner reads it" cards **moved below the builder and lost their "Step 1/2/3" labels** — two separate numbered sequences on one page read as one broken sequence. They are now a "What Happens Next" section, and their headings dropped `h2`→`h3` since they sit under a section heading. `Credentials` closes the page. Verified in the built HTML: exactly one `<h1>`, step 1 renders its four fields and a Continue button (no submit), and the summary panel shows its empty state.
 
 The corporate "thumbnail strip" turned out to be the mega-menu panel open in the screenshot, not a page element, so nothing was needed there.
+
+**Deployed to Netlify — both the site and the Studio (2026-10-02).** Vercel's Hobby tier forbids commercial use, which a tour operator plainly is, so the project moved to Netlify's free tier, which permits it. Nothing in the code was Vercel-specific — no `@vercel/*` imports, no `vercel.json`, no edge runtime — so this was a deployment exercise, not a port.
+
+```
+peakadvtours.netlify.app          7051a08b-acf3-48ab-9f65-5f0231b46508
+peakadvtours-studio.netlify.app   721dcab8-4fe9-4ad3-b2c1-c93f9d502d8b
+```
+
+**Both built and verified live:** 12/12 routes 200 (including `/sitemap.xml` and `/robots.txt`), 510 Sanity CDN image references, the K2 trek rendering 4 highlights / 21 itinerary days / 15 FAQs / 11 map waypoints, zero Nepal and zero `PLACEHOLDER` strings, and `POST /api/enquiry` returning **422** on an empty body — which is the right answer, proving the function deployed and the shared Zod schema is rejecting it rather than the route 404ing or crashing.
+
+**Four things worth recording for the next deploy.** (1) The team's **account slug is `ghaznfar`**, not its display name `peakadvtours` — `sites:create --account-slug peakadvtours` 404s. (2) New sites inherit **`sso_login: true`** from the account, so both deployed behind a Netlify login wall returning 401; it is **not settable via the API** at site or account level and must be turned off in the dashboard. (3) `netlify api updateSite` **silently ignores `build_settings`** until a repo is connected — build config does not stick beforehand. (4) `sanity build` prompts about a local/runtime version mismatch interactively, but **degrades to a warning with no TTY**, so CI builds are unaffected; verified by running it with `CI=true` and stdin closed.
+
+**Still outstanding:** `RESEND_API_KEY` is not set on the website site, so enquiries would be accepted and then **silently lost**; GitHub auto-deploy needs connecting in the dashboard on both sites (OAuth, not scriptable); `NEXT_PUBLIC_SITE_URL` still points at `peakadvtours.netlify.app` and must change when the real domain is attached; and the Vercel projects are still live and should be retired a week after DNS moves.
 
 **Family archive section added to the homepage — the site's first real credentials (client supplied).** `components/sections/Legacy/` shows six original letters written to the founder's father between **1986 and 1993** by the expeditions he cooked and carried for: Club Alpin Français (Biafo–Hispar crossing, 1986), Exodus Expeditions Batura Trek (1990), a card signed by a whole trekking group (1990), the Swiss Gasherbrum II expedition signed by leader Nicole Niquille (1991), an Italian Baltoro group via Focus agency (1991), and the Dutch–International K2 Expedition, where he reached 7,000 m on the Abruzzi Spur (1993). Images live in `public/images/legacy/`, named by year and expedition.
 
