@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Check, MapPin, Route, X } from 'lucide-react';
 import type { Trip } from '@/types/content';
 import { CATEGORY_LABEL, categoryPath } from '@/lib/trips/href';
@@ -203,48 +204,75 @@ export function TripDetail({
 
               {/* Itinerary */}
               {trip.itinerary && trip.itinerary.length > 0 && (
-                <section aria-labelledby="itinerary-h">
-                  <h2 id="itinerary-h" className="text-h2">
-                    Day-by-day itinerary
-                  </h2>
-                  <div className="mt-4 border-t border-slate-200">
-                    {trip.itinerary.map((day, i) => (
-                      <Disclosure
-                        key={day.day}
-                        defaultOpen={i === 0}
-                        summary={
-                          <span className="flex flex-wrap items-baseline gap-x-2">
-                            <span className="text-brand-700">Day {day.day}</span>
-                            <span>{day.title}</span>
-                          </span>
-                        }
-                      >
-                        {day.image && (
-                          <OptimizedImage
-                            image={day.image}
-                            fill
-                            aspectRatio="16 / 10"
-                            sizes="(max-width: 1024px) 100vw, 60vw"
-                            wrapperClassName="rounded-card mb-4 max-w-2xl"
-                          />
-                        )}
-                        {day.description && <p>{day.description}</p>}
-                        <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-500">
-                          {typeof day.altitudeM === 'number' && (
-                            <li>Altitude: {day.altitudeM.toLocaleString()} m</li>
+                <section
+                  aria-labelledby="itinerary-h"
+                  className="relative overflow-hidden rounded-lg"
+                >
+                  {/* The trip's own hero photograph, dimmed hard enough that
+                      white text clears AA against it at any point in the image. */}
+                  <Image
+                    src={trip.heroImage.src}
+                    alt=""
+                    aria-hidden
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 60vw"
+                    className="object-cover"
+                  />
+                  <div aria-hidden className="absolute inset-0 bg-[#0b1f33]/88" />
+
+                  <div className="relative px-5 py-10 sm:px-8 sm:py-12">
+                    <h2
+                      id="itinerary-h"
+                      className="text-center text-[clamp(28px,4vw,44px)] font-extrabold tracking-[0.06em] text-white uppercase"
+                    >
+                      Itinerary
+                    </h2>
+
+                    <div className="mt-8">
+                      {trip.itinerary.map((day, i) => (
+                        <Disclosure
+                          key={day.day}
+                          defaultOpen={i === 0}
+                          variant="onDark"
+                          chevronPosition="left"
+                          summary={
+                            <>
+                              Day {day.day}: {day.title}
+                              {typeof day.altitudeM === 'number' && (
+                                <span className="font-normal text-white/70">
+                                  {' '}
+                                  ({day.altitudeM.toLocaleString()}m)
+                                </span>
+                              )}
+                            </>
+                          }
+                        >
+                          {day.image && (
+                            <OptimizedImage
+                              image={day.image}
+                              fill
+                              aspectRatio="16 / 10"
+                              sizes="(max-width: 1024px) 100vw, 60vw"
+                              wrapperClassName="rounded-card mb-4 max-w-2xl"
+                            />
                           )}
-                          {typeof day.hours === 'number' && <li>Approx. {day.hours} hrs</li>}
-                          {/* `Array.isArray`, not a truthy `.length` check: a
-                              string also has a length, so a legacy or
-                              mis-imported value would pass the guard and then
-                              crash the whole page on `.map`. */}
-                          {Array.isArray(day.meals) && day.meals.length > 0 && (
-                            <li>Meals: {day.meals.map((m) => MEAL_LABEL[m]).join(', ')}</li>
-                          )}
-                          {day.accommodation && <li>Stay: {day.accommodation}</li>}
-                        </ul>
-                      </Disclosure>
-                    ))}
+                          {day.description && <p>{day.description}</p>}
+                          {/* Altitude is already in the row title, so it is not
+                              repeated here — only what the title cannot carry. */}
+                          <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-white/60">
+                            {typeof day.hours === 'number' && <li>Approx. {day.hours} hrs</li>}
+                            {/* `Array.isArray`, not a truthy `.length` check: a
+                                string also has a length, so a legacy or
+                                mis-imported value would pass the guard and then
+                                crash the whole page on `.map`. */}
+                            {Array.isArray(day.meals) && day.meals.length > 0 && (
+                              <li>Meals: {day.meals.map((m) => MEAL_LABEL[m]).join(', ')}</li>
+                            )}
+                            {day.accommodation && <li>Stay: {day.accommodation}</li>}
+                          </ul>
+                        </Disclosure>
+                      ))}
+                    </div>
                   </div>
                 </section>
               )}
