@@ -19,7 +19,7 @@ export const siteConfig: SiteConfig = {
     'Small-group tours, treks and mountaineering expeditions with fully-inclusive pricing, local expert guides and custom itineraries built around your dates.',
   // Set NEXT_PUBLIC_SITE_URL in your host (e.g. Vercel env vars) to your real
   // domain so canonical/OG/sitemap URLs are correct. Falls back to a placeholder.
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://example.com',
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://peakadvtours.com',
   logo: { src: '/images/brand/logo.jpg', alt: 'Peak Adventure Tour logo' },
   defaultCurrency: 'USD',
   locale: 'en-US',
