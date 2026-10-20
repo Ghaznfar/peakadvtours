@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "peakadvtours-studio",
+  "compatibility_date": "2026-10-20",
+  // Assets-only Worker: no `main`, Cloudflare serves `dist/` directly.
+  // Sanity Studio is a client-routed SPA, so unknown paths must fall back to
+  // index.html rather than 404.
+  "assets": {
+    "directory": "dist",
+    "not_found_handling": "single-page-application"
+  }
+}

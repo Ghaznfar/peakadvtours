@@ -1,0 +1,8 @@
+# Cloudflare Workers Assets header rules (consumed as config, never served).
+#
+# Next's build output under /_next/static/ is content-hashed, so a given URL can
+# never change. Without this it is served `max-age=0, must-revalidate`, which
+# makes every browser re-validate every chunk on every page view. This restores
+# the immutable caching the Netlify config used to provide.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable

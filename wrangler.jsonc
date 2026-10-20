@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "peakadvtours",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-20",
+  // `nodejs_compat` is required by the OpenNext runtime; `global_fetch_strictly_public`
+  // makes the Worker's own fetches go out to the public internet (so Sanity reads
+  // behave the same as they do anywhere else).
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "kv_namespaces": [
+    {
+      // ISR / incremental cache. `id` is filled in by `wrangler kv namespace create`.
+      "binding": "NEXT_INC_CACHE_KV",
+      "id": "9c20a6ba908747279d4b60c7dc604aac"
+    }
+  ]
+}
