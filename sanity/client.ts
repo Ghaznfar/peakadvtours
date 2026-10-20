@@ -23,8 +23,17 @@ const BASE_DELAY_MS = 500;
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+/** Cache tag every Sanity read is filed under, so one call can purge them all. */
+export const CACHE_TAG = 'sanity';
+
 /**
  * Typed fetch helper with ISR revalidation and a bounded retry.
+ *
+ * The time-based window is deliberately long (1 hour). Short windows re-render
+ * pages on a timer whether or not anything changed, which on Netlify is billed
+ * per function invocation. Freshness instead comes from `/api/revalidate`,
+ * which a Sanity webhook calls on publish — so an edit is live in seconds and
+ * the hourly window is only a backstop for anything the webhook misses.
  *
  * The retry is not defensive padding — `next build` prerenders across 10
  * workers, which opens a burst of connections to `apicdn.sanity.io` at once,
@@ -40,13 +49,13 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export async function sanityFetch<T>(
   query: string,
   params: Record<string, unknown> = {},
-  revalidate = 60,
+  revalidate = 3600,
 ): Promise<T> {
   let lastError: unknown;
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     try {
-      return await client.fetch<T>(query, params, { next: { revalidate } });
+      return await client.fetch<T>(query, params, { next: { revalidate, tags: [CACHE_TAG] } });
     } catch (error) {
       lastError = error;
       if (attempt < MAX_ATTEMPTS) {
