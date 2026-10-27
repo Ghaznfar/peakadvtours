@@ -77,8 +77,16 @@ echo "sitemap sweep:"
 bad=0; n=0
 while read -r loc; do
   n=$((n+1))
-  code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$loc")
-  [ "$code" = "200" ] || { printf '  FAIL %-34s %s\n' "$loc" "$code"; bad=$((bad+1)); FAILED=1; }
+  # Re-base onto $BASE: the sitemap lists absolute production URLs, and this
+  # script has to be able to sweep whatever host it was pointed at (CI runs it
+  # against the Worker's workers.dev hostname).
+  rest=${loc#http*://}
+  case "$rest" in
+    */*) path=/${rest#*/} ;;   # host + path
+    *)   path=/ ;;             # bare host: the home page entry
+  esac
+  code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$BASE$path")
+  [ "$code" = "200" ] || { printf '  FAIL %-34s %s\n' "$path" "$code"; bad=$((bad+1)); FAILED=1; }
 done < <(curl -s --max-time 30 "$BASE/sitemap.xml" | grep -o '<loc>[^<]*</loc>' | sed 's/<[^>]*>//g')
 [ "$bad" = 0 ] && printf '  ok   %-34s %s urls\n' "all sitemap urls 200" "$n"
 

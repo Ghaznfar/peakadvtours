@@ -33,6 +33,11 @@ env:
   NEXT_PUBLIC_SANITY_API_VERSION: '2024-10-01'
   NEXT_PUBLIC_SITE_URL: https://peakadvtours.com
   CLOUDFLARE_ACCOUNT_ID: 1cdc5693f54a64683933f428940903b3
+  # CI talks to the Worker on its workers.dev hostname, not the custom domain:
+  # the zone's bot protection answers 403 to GitHub's datacenter IPs, which
+  # failed the first run's smoke test while the deploy itself was fine. Same
+  # Worker, same output, no zone WAF in front of it.
+  SMOKE_BASE_URL: https://peakadvtours.peakadvtours.workers.dev
 
 jobs:
   # Only the scheduled run needs to ask whether there is anything to do. Every
@@ -57,7 +62,7 @@ jobs:
             | jq -r '.result // empty')
           # A missing or unreadable stamp means "deploy" — better one redundant
           # build than content stuck indefinitely behind a failed probe.
-          live=$(curl -fsS "${NEXT_PUBLIC_SITE_URL}/content-stamp.json" \
+          live=$(curl -fsS "${SMOKE_BASE_URL}/content-stamp.json" \
             | jq -r '.contentUpdatedAt // empty' || echo '')
 
           echo "sanity=${newest:-none} live=${live:-none}"
@@ -102,4 +107,17 @@ jobs:
       # Gate the result: a green deploy that serves 503s is the failure this
       # whole static setup exists to prevent.
       - name: Smoke test production
-        run: bash scripts/smoke.sh
+        run: bash scripts/smoke.sh "$SMOKE_BASE_URL"
+
+      # The smoke test runs against workers.dev, so check the real hostname too.
+      # It can legitimately answer 403 here (bot protection, see above), so only
+      # a 5xx or no answer at all is a failure — that is the outage signature.
+      - name: Check the public hostname is not erroring
+        run: |
+          set -euo pipefail
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "$NEXT_PUBLIC_SITE_URL/")
+          echo "$NEXT_PUBLIC_SITE_URL/ -> $code"
+          case "$code" in
+            5*|000) echo "::error::public hostname is erroring ($code)"; exit 1 ;;
+            *) echo "reachable (403 here means bot protection, not an outage)" ;;
+          esac
