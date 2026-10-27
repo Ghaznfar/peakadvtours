@@ -19,6 +19,30 @@
       // ISR / incremental cache. `id` is filled in by `wrangler kv namespace create`.
       "binding": "NEXT_INC_CACHE_KV",
       "id": "9c20a6ba908747279d4b60c7dc604aac"
+    },
+    {
+      // Tag cache: records when each cache tag was last revalidated, so the
+      // Sanity publish webhook hitting `/api/revalidate` actually invalidates
+      // the pages. Binding name is fixed by the OpenNext override.
+      "binding": "NEXT_TAG_CACHE_KV",
+      "id": "49efa9bb92c74791af24308ac2be5e32"
+    }
+  ],
+  // Background re-render queue for stale ISR pages. `DOQueueHandler` is
+  // exported by the generated `.open-next/worker.js`; SQLite-backed so it runs
+  // on the free plan.
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "NEXT_CACHE_DO_QUEUE",
+        "class_name": "DOQueueHandler"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["DOQueueHandler"]
     }
   ]
 }

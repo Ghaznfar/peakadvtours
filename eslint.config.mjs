@@ -6,7 +6,19 @@ import nextTypescript from 'eslint-config-next/typescript';
  * arrays, so we spread them directly.
  */
 const eslintConfig = [
-  { ignores: ['.next/**', 'node_modules/**', 'next-env.d.ts'] },
+  // Build output only. `.open-next` (the Cloudflare Worker bundle) and
+  // `.netlify`/`dist` (the previous host's output, kept for rollback) are
+  // generated, and linting them buried real findings under ~29k reports.
+  {
+    ignores: [
+      '.next/**',
+      '.open-next/**',
+      '.netlify/**',
+      'dist/**',
+      'node_modules/**',
+      'next-env.d.ts',
+    ],
+  },
   ...nextCoreWebVitals,
   ...nextTypescript,
 ];

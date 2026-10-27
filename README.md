@@ -2,7 +2,7 @@
 
 A professional travel/tourism website (tours, treks, expeditions, festivals + custom
 trips) built with **Next.js 16 (App Router) + TypeScript + Tailwind CSS v4**, with
-content managed in **Sanity CMS** and hosted on **Netlify**.
+content managed in **Sanity CMS** and hosted on **Cloudflare Workers**.
 
 | | |
 |---|---|
@@ -40,6 +40,10 @@ not seed data.
 | `npm run sanity:check` | Connection smoke test — counts docs per type (no token needed) |
 | `npm run studio:dev` | Run Sanity Studio standalone → <http://localhost:3333> |
 | `npm run studio:deploy` | Deploy Studio to `*.sanity.studio` (unused — the Studio is hosted on Netlify) |
+| `npm run cf:build` | Build the Cloudflare Worker bundle into `.open-next/` |
+| `npm run cf:deploy` | Upload `.open-next/` to Cloudflare — **does not build**, see below |
+| `npm run cf:preview` | Run the built Worker locally → <http://127.0.0.1:8788> |
+| `scripts/smoke.sh` | Smoke-test the deployed site (pages, SEO, API, cache freshness) |
 
 ## Environment variables
 
@@ -55,42 +59,99 @@ Documented in `.env.example`. Never commit real values — `.env*.local` is giti
 | `RESEND_API_KEY` + `ENQUIRY_TO_EMAIL` | prod | Email enquiries (Resend) |
 | `ENQUIRY_FROM_EMAIL` | optional | From address for enquiry emails |
 | `ENQUIRY_WEBHOOK_URL` | optional | CRM / WhatsApp automation webhook |
+| `SANITY_REVALIDATE_SECRET` | **prod** | Shared secret for the Sanity publish webhook → `/api/revalidate` |
 
 `NEXT_PUBLIC_*` vars are **baked in at build time**, so `NEXT_PUBLIC_SITE_URL` must
 be correct *before* a deploy — it drives every canonical tag, OG URL, JSON-LD block
-and `sitemap.xml` entry. It is set on the Netlify site; `site.config.ts` falls back
+and `sitemap.xml` entry. It comes from `.env.local` at build time (the Worker is
+built locally, so there is no dashboard env var to set); `site.config.ts` falls back
 to the production domain if it is ever missing.
 
-## Deployment (Netlify)
+The runtime secrets — `SANITY_REVALIDATE_SECRET`, `RESEND_API_KEY`,
+`ENQUIRY_TO_EMAIL`, `ENQUIRY_FROM_EMAIL` — are set as **Worker secrets**
+(`npx wrangler secret put NAME`; list them with `npx wrangler secret list`).
+`SANITY_REVALIDATE_SECRET` must match the `x-revalidate-secret` header on the Sanity
+webhook, or every purge is rejected with a `401`.
 
-Two Netlify sites, both in the `ghaznfar` account:
+Note the overlap: Next also bakes whatever is in `.env` / `.env.local` into the build
+output (`.open-next/server-functions/default/.env`), so these values exist in **two**
+places. Rotating one means updating `.env.local`, rebuilding, *and*
+`wrangler secret put` — changing only one side leaves a stale copy in play.
+
+## Deployment (Cloudflare Workers)
+
+The site runs as a single Cloudflare Worker (`peakadvtours`) built by
+[OpenNext](https://opennext.js.org/cloudflare), in account
+`1cdc5693f54a64683933f428940903b3`. Custom domains: `peakadvtours.com`, `www`, and
+`cf.peakadvtours.com` as a staging hostname. Moved here from Netlify on 2026-10-20,
+because Netlify's free plan bills 15 credits per production deploy against a
+300-credit monthly allowance; Cloudflare's free plan has no per-deploy cost.
+
+**There is no Git connection — pushing to GitHub deploys nothing.** Deploying is two
+commands, and both are required:
+
+```bash
+export CLOUDFLARE_API_TOKEN=$(cat ~/.cf-token)
+npm run cf:build     # rebuild .open-next/ — easy to forget, see gotcha below
+npm run cf:deploy    # populate the KV cache + wrangler deploy
+SANITY_REVALIDATE_SECRET=... scripts/smoke.sh   # verify
+```
+
+### Deploy gotcha: `cf:deploy` does not build
+
+`opennextjs-cloudflare deploy` only uploads whatever is already in `.open-next/`.
+Running it alone ships a **stale bundle** — which is how the 2026-10-27 incident
+below survived its first attempted fix. Always `cf:build` first; the deploy output
+names the bindings it uploaded, so check them against the table below.
+
+### Worker bindings
+
+All three are load-bearing for content freshness; see `open-next.config.ts`.
+
+| Binding | Resource | Purpose |
+|---|---|---|
+| `NEXT_INC_CACHE_KV` | KV `9c20a6ba...` | ISR cache — the prerendered pages |
+| `NEXT_TAG_CACHE_KV` | KV `49efa9bb...` | Cache-tag revalidation times — makes `/api/revalidate` effective |
+| `NEXT_CACHE_DO_QUEUE` | Durable Object `DOQueueHandler` | Background re-render of stale pages |
+| `ASSETS` | Workers Assets | `.open-next/assets` (static files) |
+
+If any override is left out of `open-next.config.ts`, OpenNext silently substitutes a
+`"dummy"` no-op rather than failing — the trap described below. `public/_headers`
+restores immutable caching for `/_next/static/*`.
+
+### DNS
+
+Managed in **Cloudflare** (nameservers `addilyn`/`dylan.ns.cloudflare.com`; the
+domain came from GoDaddy). The apex and `www` are Worker custom domains, which
+Cloudflare wires up itself. `admin` is a CNAME to Netlify and must stay **DNS-only
+(grey cloud)** — while proxied, Cloudflare terminates TLS with its own certificate
+and Netlify cannot issue one.
+
+### Rollback to Netlify
+
+Netlify is kept as a one-click rollback. Two sites remain in the `ghaznfar` account:
 
 | Site | ID | Serves |
 |---|---|---|
-| `peakadvtours` | `7051a08b-acf3-48ab-9f65-5f0231b46508` | the website — `peakadvtours.com` + `www` alias |
-| `peakadvtours-studio` | `721dcab8-4fe9-4ad3-b2c1-c93f9d502d8b` | the Studio — `admin.peakadvtours.com` |
+| `peakadvtours` | `7051a08b-acf3-48ab-9f65-5f0231b46508` | the website — dormant, still builds |
+| `peakadvtours-studio` | `721dcab8-4fe9-4ad3-b2c1-c93f9d502d8b` | **the Studio** — `admin.peakadvtours.com` (live) |
 
-**There is no Git connection — pushing to GitHub deploys nothing.** Every deploy is
-a manual CLI upload (connecting the repo needs an OAuth step in the dashboard):
-
-```bash
-npx netlify-cli deploy --build --prod --site 7051a08b-acf3-48ab-9f65-5f0231b46508
-```
-
-DNS is managed in **Cloudflare** (nameservers `addilyn`/`dylan.ns.cloudflare.com`;
-the domain came from GoDaddy). The apex is an `A` record to Netlify's load balancer
-`75.2.60.5`; `www` and `admin` are CNAMEs. Records should be **DNS-only (grey
-cloud)** — while proxied, Cloudflare terminates TLS with its own certificate and
-Netlify cannot issue one.
+To fall back: remove the Worker custom domains, then recreate apex `A 75.2.60.5` and
+the `www` CNAME, and `npx netlify-cli deploy --build --prod --site 7051a08b-...`.
+The Studio is **not** part of this — it still runs on Netlify
+(`npx sanity build` + `netlify deploy --dir dist`) and is unaffected by Worker deploys.
 
 ### Deploy gotcha: new or renamed trips 404 until you redeploy
 
 Each detail route sets `export const dynamicParams = false` (e.g.
 `app/tours/[slug]/page.tsx`), so the set of valid URLs is **frozen at build time** by
 `generateStaticParams`. A trip added or re-slugged in the Studio therefore 404s —
-while the listing page, which is ISR with a 60s revalidate, happily links to it. If
-the client reports a dead tour link, **redeploy first**. Removing `dynamicParams`
-(plus a Sanity publish webhook) is the durable fix.
+while the listing page, which revalidates on publish, happily links to it. If the
+client reports a dead tour link, **redeploy first** (`cf:build` + `cf:deploy`).
+
+This is the one content change the publish webhook below **cannot** fix: edits to an
+existing trip go live in seconds, but a *new or re-slugged* trip needs a deploy.
+Removing `dynamicParams = false` from the four detail routes is the durable fix.
 
 ## Content management (Sanity)
 
@@ -132,11 +193,53 @@ the client reports a dead tour link, **redeploy first**. Removing `dynamicParams
 4. Click **Publish**. The website renders only **published** documents, so a draft
    never appears on the site — but note the dataset is public, so drafts are still
    readable via the API and are not a safe place for confidential content. Editing
-   and re-publishing updates the site (ISR revalidates within ~60s). A brand-new
-   or re-slugged trip needs a **redeploy** — see the deploy gotcha above.
+   and re-publishing updates the site **within seconds** — see the freshness chain
+   below. A brand-new or re-slugged trip needs a **redeploy** — see the deploy
+   gotcha above.
 5. **Unpublish** to hide; **Delete** to remove. Trips are **drag-to-reorder** in the
    desk (writes `orderRank`, which the `TOURS_*` queries sort on, then title);
    reorder team members via the `order` field.
+
+### How a publish reaches the live site (the freshness chain)
+
+Four links, each of which has broken at least once:
+
+1. **Sanity webhook** "Revalidate peakadvtours.com" (sanity.io → project → API →
+   Webhooks) — a *document*-type hook, `rule.on = create/update/delete`,
+   `includeDrafts: false`, POSTing to `https://peakadvtours.com/api/revalidate`
+   with the shared secret in an `x-revalidate-secret` header. Drafts are excluded
+   deliberately: the Studio autosaves constantly, and purging on every keystroke
+   would re-render the whole site for content no visitor can see.
+2. **`/api/revalidate`** checks the secret, ignores draft payloads as a second
+   defence, then calls `revalidateTag('sanity')` + `revalidatePath('/', 'layout')`.
+3. **The tag cache** (`NEXT_TAG_CACHE_KV`) records the purge, and the **DO queue**
+   re-renders stale pages. Without these bindings the purge is a silent no-op.
+4. **`sanityFetch`** (`sanity/client.ts`) tags every read `sanity` and keeps a 1-hour
+   time window as a *backstop only* — freshness comes from the webhook.
+
+Timing: typically a few seconds end to end. Workers KV is eventually consistent, so
+a distant region can serve the old page for up to ~60s; if the webhook is ever
+missed entirely, the 1-hour window catches it. Switching the tag cache to D1
+(`d1-next-tag-cache`) removes the 60s window, but needs a Cloudflare token with D1
+scope — the current one only has Workers KV.
+
+**Debugging it:** `npx wrangler tail` and publish something. A healthy publish logs
+`[revalidate] purged tag sanity and all paths`; a page then reports
+`x-nextjs-cache: MISS` on the next hit and `HIT` after. A page stuck at
+`x-nextjs-cache: STALE` means link 3 is broken.
+`SANITY_REVALIDATE_SECRET=... scripts/smoke.sh` checks the whole chain.
+
+### Incident: content frozen for 7 days (2026-10-27)
+
+The client's image edits of 2026-10-25 never appeared. The Cloudflare migration had
+configured only `incrementalCache` in `open-next.config.ts`, so `tagCache` and
+`queue` both fell back to OpenNext's `"dummy"` no-ops: `/api/revalidate` returned
+`200 ok` while purging nothing, and stale pages were served forever
+(`FatalError: Dummy queue is not implemented` in the Worker logs). Separately, the
+Sanity webhook did not exist at all — the project had zero hooks — so even a working
+purge would never have been triggered. The site was pinned to whatever the
+2026-10-20 build had prerendered. Both are fixed; the smoke script now fails if
+either regresses.
 
 ## Architecture
 
