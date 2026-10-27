@@ -1,7 +1,6 @@
 import { getDestinations, getTripsByCategory } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { TripListingPage } from '@/components/listing/TripListingPage';
-import type { ParamsInput } from '@/lib/trips/filters';
 
 export const metadata = buildMetadata({
   title: 'Karakoram Expeditions 2026-27',
@@ -10,15 +9,10 @@ export const metadata = buildMetadata({
   path: '/expeditions',
 });
 
-export default async function ExpeditionsPage({
-  searchParams,
-}: {
-  searchParams: Promise<ParamsInput>;
-}) {
-  const [all, destinations, sp] = await Promise.all([
+export default async function ExpeditionsPage() {
+  const [all, destinations] = await Promise.all([
     getTripsByCategory('expedition'),
     getDestinations(),
-    searchParams,
   ]);
 
   // Split by altitude band: a first 6,000 m summit and K2 sell to different
@@ -51,7 +45,6 @@ export default async function ExpeditionsPage({
         },
       ]}
       destinations={destinations}
-      searchParams={sp}
     />
   );
 }

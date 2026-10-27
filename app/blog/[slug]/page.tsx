@@ -12,6 +12,11 @@ import { CtaBanner } from '@/components/ui/CtaBanner';
 
 type Params = { slug: string };
 
+// Only slugs from generateStaticParams are valid. Without this a request for
+// an unknown slug would render at request time, which the Workers Free plan's
+// 10 ms CPU limit kills with a 503 instead of a 404 — see `sanity/client.ts`.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
   return posts.map((post) => ({ slug: post.slug }));

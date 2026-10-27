@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
+import { slugOptions, slugValidation } from './slug';
 
 /**
  * Editable marketing page (Corporate Retreats, About, etc.). Keyed by the
@@ -21,8 +22,8 @@ export const page = defineType({
       title: 'Route slug',
       type: 'slug',
       description: 'Must match the page route, e.g. "corporate-retreats".',
-      options: { source: 'title', maxLength: 96 },
-      validation: (r) => r.required(),
+      options: slugOptions('title'),
+      validation: slugValidation,
     }),
     defineField({
       name: 'eyebrow',

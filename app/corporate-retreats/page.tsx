@@ -1,7 +1,6 @@
 import { getDestinations, getTripsByCategory } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { TripListingPage } from '@/components/listing/TripListingPage';
-import type { ParamsInput } from '@/lib/trips/filters';
 
 export const metadata = buildMetadata({
   title: 'Corporate Retreats',
@@ -10,15 +9,10 @@ export const metadata = buildMetadata({
   path: '/corporate-retreats',
 });
 
-export default async function CorporateRetreatsPage({
-  searchParams,
-}: {
-  searchParams: Promise<ParamsInput>;
-}) {
-  const [trips, destinations, sp] = await Promise.all([
+export default async function CorporateRetreatsPage() {
+  const [trips, destinations] = await Promise.all([
     getTripsByCategory('corporate'),
     getDestinations(),
-    searchParams,
   ]);
   return (
     <TripListingPage
@@ -35,7 +29,6 @@ export default async function CorporateRetreatsPage({
       basePath="/corporate-retreats"
       trips={trips}
       destinations={destinations}
-      searchParams={sp}
     />
   );
 }

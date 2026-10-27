@@ -13,10 +13,12 @@
     "studio:dev": "sanity dev",
     "studio:deploy": "sanity deploy",
     "sanity:check": "node --env-file=.env.local scripts/sanity-check.mjs",
-    "cf:build": "opennextjs-cloudflare build",
+    "cf:build": "rm -rf .next/cache/fetch-cache && opennextjs-cloudflare build",
     "cf:preview": "opennextjs-cloudflare preview",
     "cf:deploy": "opennextjs-cloudflare deploy",
-    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "studio:build": "sanity build",
+    "studio:deploy:cf": "wrangler deploy -c wrangler.studio.jsonc"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

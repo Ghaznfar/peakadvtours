@@ -1,4 +1,5 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
+import { slugOptions, slugValidation } from './slug';
 
 export const blogPost = defineType({
   name: 'blogPost',
@@ -10,8 +11,8 @@ export const blogPost = defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: { source: 'title', maxLength: 96 },
-      validation: (r) => r.required(),
+      options: slugOptions('title'),
+      validation: slugValidation,
     }),
     defineField({
       name: 'excerpt',

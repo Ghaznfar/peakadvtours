@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity';
+import { slugOptions, slugValidation } from './slug';
 
 export const destination = defineType({
   name: 'destination',
@@ -10,8 +11,8 @@ export const destination = defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: { source: 'name' },
-      validation: (r) => r.required(),
+      options: slugOptions('name'),
+      validation: slugValidation,
     }),
     defineField({ name: 'region', title: 'Region', type: 'string' }),
     defineField({

@@ -122,10 +122,11 @@ restores immutable caching for `/_next/static/*`.
 ### DNS
 
 Managed in **Cloudflare** (nameservers `addilyn`/`dylan.ns.cloudflare.com`; the
-domain came from GoDaddy). The apex and `www` are Worker custom domains, which
-Cloudflare wires up itself. `admin` is a CNAME to Netlify and must stay **DNS-only
-(grey cloud)** — while proxied, Cloudflare terminates TLS with its own certificate
-and Netlify cannot issue one.
+domain came from GoDaddy). The apex, `www` and `admin` are all **Worker custom
+domains**, which Cloudflare wires up itself — `admin` resolves to an `AAAA 100::`
+proxy placeholder and is served by the `peakadvtours-studio` Worker, not by Netlify.
+(It was a DNS-only CNAME to Netlify at migration time; moving it onto a Worker is
+why a `netlify deploy` of the Studio now changes nothing visitors can see.)
 
 ### Rollback to Netlify
 
@@ -134,12 +135,15 @@ Netlify is kept as a one-click rollback. Two sites remain in the `ghaznfar` acco
 | Site | ID | Serves |
 |---|---|---|
 | `peakadvtours` | `7051a08b-acf3-48ab-9f65-5f0231b46508` | the website — dormant, still builds |
-| `peakadvtours-studio` | `721dcab8-4fe9-4ad3-b2c1-c93f9d502d8b` | **the Studio** — `admin.peakadvtours.com` (live) |
+| `peakadvtours-studio` | `721dcab8-4fe9-4ad3-b2c1-c93f9d502d8b` | the Studio — **dormant fallback only**, nothing points at it |
 
 To fall back: remove the Worker custom domains, then recreate apex `A 75.2.60.5` and
 the `www` CNAME, and `npx netlify-cli deploy --build --prod --site 7051a08b-...`.
-The Studio is **not** part of this — it still runs on Netlify
-(`npx sanity build` + `netlify deploy --dir dist`) and is unaffected by Worker deploys.
+
+**The Studio is on Cloudflare too** — an assets-only Worker (`wrangler.studio.jsonc`,
+no `main`, SPA fallback), deployed with `npm run studio:deploy:cf`. Deploying it to
+Netlify has no effect on `admin.peakadvtours.com`; the Netlify Studio site is only a
+fallback for a full retreat from Cloudflare.
 
 ### Deploy gotcha: new or renamed trips 404 until you redeploy
 
@@ -155,7 +159,8 @@ Removing `dynamicParams = false` from the four detail routes is the durable fix.
 
 ## Content management (Sanity)
 
-- **Editing UI:** Sanity Studio, deployed as a standalone app to Netlify:
+- **Editing UI:** Sanity Studio, deployed as a standalone assets-only Cloudflare
+  Worker (`npm run studio:build && npm run studio:deploy:cf`):
   - **Live:** <https://admin.peakadvtours.com> — the URL editors bookmark
   - **Local:** `npm run studio:dev` → <http://localhost:3333>
   Editors sign in with their sanity.io account — **auth and roles are managed in
@@ -188,46 +193,64 @@ Removing `dynamicParams = false` from the four detail routes is the durable fix.
 2. Fill in the fields (grouped: Main, Details, Itinerary & pricing, Media, SEO).
    Set the **category**, add **destinations** (references), a **hero image** (with
    alt text), price, itinerary, etc.
-3. Keep slugs **lowercase and hyphenated** — they are the public URL, and mixed
-   case produces links that are easy to mistype into a 404.
+3. Slugs must be **lowercase, hyphenated, no spaces** — they are the public URL.
+   This is now enforced by validation (`sanity/schemaTypes/slug.ts`) and cannot be
+   published otherwise: `hunza valley` and `northern- areas- trekking` both shipped
+   as permanent 404s, because the build writes a file with a literal space and the
+   browser asks for `%20`.
 4. Click **Publish**. The website renders only **published** documents, so a draft
    never appears on the site — but note the dataset is public, so drafts are still
-   readable via the API and are not a safe place for confidential content. Editing
-   and re-publishing updates the site **within seconds** — see the freshness chain
-   below. A brand-new or re-slugged trip needs a **redeploy** — see the deploy
-   gotcha above.
+   readable via the API and are not a safe place for confidential content.
+   **Publishing does not put the change live by itself.** The site is built static
+   (see below); every content change — edits, new trips, re-slugs — reaches
+   visitors on the next `npm run cf:build && npm run cf:deploy`.
 5. **Unpublish** to hide; **Delete** to remove. Trips are **drag-to-reorder** in the
    desk (writes `orderRank`, which the `TOURS_*` queries sort on, then title);
    reorder team members via the `order` field.
 
-### How a publish reaches the live site (the freshness chain)
+### How a publish reaches the live site
 
-Four links, each of which has broken at least once:
+**By being rebuilt.** The site is fully static: every page is prerendered at build
+time and served from Workers static assets, and nothing is rendered at request
+time. So the flow is:
 
-1. **Sanity webhook** "Revalidate peakadvtours.com" (sanity.io → project → API →
-   Webhooks) — a *document*-type hook, `rule.on = create/update/delete`,
-   `includeDrafts: false`, POSTing to `https://peakadvtours.com/api/revalidate`
-   with the shared secret in an `x-revalidate-secret` header. Drafts are excluded
-   deliberately: the Studio autosaves constantly, and purging on every keystroke
-   would re-render the whole site for content no visitor can see.
-2. **`/api/revalidate`** checks the secret, ignores draft payloads as a second
-   defence, then calls `revalidateTag('sanity')` + `revalidatePath('/', 'layout')`.
-3. **The tag cache** (`NEXT_TAG_CACHE_KV`) records the purge, and the **DO queue**
-   re-renders stale pages. Without these bindings the purge is a silent no-op.
-4. **`sanityFetch`** (`sanity/client.ts`) tags every read `sanity` and keeps a 1-hour
-   time window as a *backstop only* — freshness comes from the webhook.
+1. Editor publishes in the Studio.
+2. Somebody runs `npm run cf:build && npm run cf:deploy` (~1 min).
+3. The new content is live everywhere at once.
 
-Timing: typically a few seconds end to end. Workers KV is eventually consistent, so
-a distant region can serve the old page for up to ~60s; if the webhook is ever
-missed entirely, the 1-hour window catches it. Switching the tag cache to D1
-(`d1-next-tag-cache`) removes the 60s window, but needs a Cloudflare token with D1
-scope — the current one only has Workers KV.
+That is not a simplification of a richer setup — it is the only thing the hosting
+plan allows. **Workers Free gives a Worker 10 ms of CPU per request; rendering one
+page here costs ~25 ms.** Any page that renders at request time is killed with
+`error code: 1102` (503). Serving an already-rendered page is cheap; producing one
+is not possible. Hence:
 
-**Debugging it:** `npx wrangler tail` and publish something. A healthy publish logs
-`[revalidate] purged tag sanity and all paths`; a page then reports
-`x-nextjs-cache: MISS` on the next hit and `HIT` after. A page stuck at
-`x-nextjs-cache: STALE` means link 3 is broken.
-`SANITY_REVALIDATE_SECRET=... scripts/smoke.sh` checks the whole chain.
+- `sanityFetch` caches reads with `revalidate: false` — nothing ever goes stale, so
+  nothing ever needs re-rendering.
+- `open-next.config.ts` uses the **static-assets** incremental cache (read-only),
+  with `tagCache` and `queue` deliberately unset. Serving a page costs zero KV
+  operations.
+- `/api/revalidate` still exists and still answers 200 to the Sanity webhook, but
+  **purges nothing** — it reports `{"purged": false, "mode": "static"}`.
+- No route may read `searchParams` (that makes it dynamic). Listing pages take the
+  URL query in the browser instead, via `TripResultsFromUrl`.
+
+**Re-enabling on-demand publishing** needs the Workers **Paid** plan ($5/mo, raises
+the CPU limit to 30 s). Then restore all three together — `kv-incremental-cache`,
+`kvNextTagCache`, `doQueue` in `open-next.config.ts`, a finite `revalidate` in
+`sanity/client.ts`, and the two purge calls in `/api/revalidate`. **Never restore
+the purge alone:** a purge marks pages stale, and a stale page that cannot be
+re-rendered is a 503. That is exactly how the site went down.
+
+**Watch the build cache.** Because `revalidate: false` never expires, `next build`
+will happily reuse last week's Sanity responses and still report success. `npm run
+cf:build` deletes `.next/cache/fetch-cache` first for that reason — build with the
+npm script, never bare `opennextjs-cloudflare build`.
+
+**Debugging it:** `scripts/smoke.sh` is the gate — it checks every page is served
+`x-nextjs-cache: HIT`, that `/` never expires, that all 58 sitemap URLs resolve, and
+that the purge is still disabled. `npx wrangler tail --format json` shows `cpuTime`
+and `outcome` per request; `"outcome":"exceededCpu"` is the signature of this whole
+class of failure.
 
 ### Incident: content frozen for 7 days (2026-10-27)
 
@@ -238,8 +261,23 @@ configured only `incrementalCache` in `open-next.config.ts`, so `tagCache` and
 (`FatalError: Dummy queue is not implemented` in the Worker logs). Separately, the
 Sanity webhook did not exist at all — the project had zero hooks — so even a working
 purge would never have been triggered. The site was pinned to whatever the
-2026-10-20 build had prerendered. Both are fixed; the smoke script now fails if
-either regresses.
+2026-10-20 build had prerendered. Both were fixed on 2026-10-27 — which caused the
+next incident the same morning.
+
+### Incident: site down, 503 on every un-cached page (2026-10-27)
+
+Within an hour of the freshness chain being repaired, pages started returning
+`error code: 1102`. The chain was working: the cache entries from the 09:47 deploy
+reached their 1-hour expiry, each expired page tried to re-render, and
+`"outcome":"exceededCpu"` (25 ms against the free plan's 10 ms) killed every one.
+`/`, `/about`, `/contact`, `/blog`, `/treks`, `/destinations` and `/sitemap.xml`
+were down or hanging; only pages still inside their cache window answered. Nothing
+was misconfigured — the site had simply never rendered a page in production before,
+because for the previous week every page was a frozen cache HIT.
+
+Fixed by removing request-time rendering altogether: static everywhere, purge
+disabled, listing pages reading the URL query client-side. The smoke test now fails
+on `x-nextjs-cache: MISS`/`STALE`, which is the early warning for it.
 
 ## Architecture
 

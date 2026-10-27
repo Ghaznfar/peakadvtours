@@ -1,7 +1,6 @@
 import { getDestinations, getTripsByTag } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { TripListingPage } from '@/components/listing/TripListingPage';
-import type { ParamsInput } from '@/lib/trips/filters';
 
 export const metadata = buildMetadata({
   title: 'Festival Tours',
@@ -10,16 +9,8 @@ export const metadata = buildMetadata({
   path: '/festivals',
 });
 
-export default async function FestivalsPage({
-  searchParams,
-}: {
-  searchParams: Promise<ParamsInput>;
-}) {
-  const [trips, destinations, sp] = await Promise.all([
-    getTripsByTag('festival'),
-    getDestinations(),
-    searchParams,
-  ]);
+export default async function FestivalsPage() {
+  const [trips, destinations] = await Promise.all([getTripsByTag('festival'), getDestinations()]);
   return (
     <TripListingPage
       eyebrow="Dates fixed to the calendar"
@@ -35,7 +26,6 @@ export default async function FestivalsPage({
       basePath="/festivals"
       trips={trips}
       destinations={destinations}
-      searchParams={sp}
     />
   );
 }

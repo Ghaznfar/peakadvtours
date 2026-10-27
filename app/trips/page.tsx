@@ -1,7 +1,6 @@
 import { getAllTrips, getDestinations } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { TripListingPage } from '@/components/listing/TripListingPage';
-import type { ParamsInput } from '@/lib/trips/filters';
 
 export const metadata = buildMetadata({
   title: 'Find your trip',
@@ -10,12 +9,8 @@ export const metadata = buildMetadata({
   path: '/trips',
 });
 
-export default async function TripsPage({ searchParams }: { searchParams: Promise<ParamsInput> }) {
-  const [trips, destinations, sp] = await Promise.all([
-    getAllTrips(),
-    getDestinations(),
-    searchParams,
-  ]);
+export default async function TripsPage() {
+  const [trips, destinations] = await Promise.all([getAllTrips(), getDestinations()]);
   return (
     <TripListingPage
       eyebrow="Everything we run"
@@ -31,7 +26,6 @@ export default async function TripsPage({ searchParams }: { searchParams: Promis
       basePath="/trips"
       trips={trips}
       destinations={destinations}
-      searchParams={sp}
     />
   );
 }

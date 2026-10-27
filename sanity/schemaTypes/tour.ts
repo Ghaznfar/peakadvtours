@@ -1,5 +1,6 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
 import { orderRankField, orderRankOrdering } from '@sanity/orderable-document-list';
+import { slugOptions, slugValidation } from './slug';
 
 /**
  * Tour = the unified trip document (tours, treks, expeditions; festivals are
@@ -39,8 +40,8 @@ export const tour = defineType({
       title: 'Slug',
       type: 'slug',
       group: 'main',
-      options: { source: 'title', maxLength: 96 },
-      validation: (r) => r.required(),
+      options: slugOptions('title'),
+      validation: slugValidation,
     }),
     defineField({
       name: 'category',

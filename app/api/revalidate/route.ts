@@ -1,14 +1,23 @@
-import { revalidatePath, revalidateTag } from 'next/cache';
 import { NextResponse } from 'next/server';
-import { CACHE_TAG } from '@/sanity/client';
 
 /**
  * On-demand revalidation, called by the Sanity webhook "Revalidate
  * peakadvtours.com" whenever a document is published or deleted.
  *
- * This is what lets `sanityFetch` use a long (1h) time-based window without
- * editors waiting an hour to see their work: the timer is only a backstop, and
- * publishing purges the cache immediately. See README §Content management.
+ * DISABLED on 2026-10-27, and it must stay that way while the site is on the
+ * Workers Free plan. The purge worked exactly as intended — which is what broke
+ * the site: it marked pages stale, stale pages re-render at request time, and a
+ * render costs ~25 ms CPU against a 10 ms limit, so every purged page started
+ * answering `error code: 1102` (503). Nothing here was wrong; the plan cannot
+ * render pages at all.
+ *
+ * So the whole site is now static (`sanityFetch` caches indefinitely) and
+ * content ships by rebuilding: `npm run cf:build && npm run cf:deploy`.
+ *
+ * The endpoint is kept alive and still answers 200 so the Sanity webhook does
+ * not start failing and alerting; it simply purges nothing. Re-enable the two
+ * purge calls below only together with a plan that allows real CPU (Workers
+ * Paid), never on its own.
  *
  * Auth is a shared secret in the `x-revalidate-secret` header, matched against
  * `SANITY_REVALIDATE_SECRET`. If that env var is unset the route refuses every
@@ -56,16 +65,21 @@ export async function POST(request: Request) {
   const payload = await request.json().catch(() => null);
 
   if (isDraftsOnly(payload)) {
-    console.log('[revalidate] draft-only change; skipping purge');
+    console.log('[revalidate] draft-only change; skipping');
     return NextResponse.json({ ok: true, skipped: 'draft' });
   }
 
-  // Next 16 requires a cacheLife profile; `{ expire: 0 }` means "stale now".
-  // The tag covers every `sanityFetch`; the path sweep also catches route-level
-  // output that isn't a tagged fetch, such as `sitemap.xml`.
-  revalidateTag(CACHE_TAG, { expire: 0 });
-  revalidatePath('/', 'layout');
-  console.log('[revalidate] purged tag', CACHE_TAG, 'and all paths');
+  // Intentionally no `revalidateTag` / `revalidatePath` here — see the note at
+  // the top of this file. Purging marks pages stale, and a stale page cannot be
+  // re-rendered within the free plan's 10 ms CPU limit, so the purge would take
+  // the page down rather than refresh it.
+  console.log('[revalidate] static mode: acknowledged, nothing purged');
 
-  return NextResponse.json({ ok: true, revalidated: CACHE_TAG, at: Date.now() });
+  return NextResponse.json({
+    ok: true,
+    mode: 'static',
+    purged: false,
+    note: 'Site is statically built; publish goes live on the next cf:build + cf:deploy.',
+    at: Date.now(),
+  });
 }

@@ -1,7 +1,6 @@
 import { getDestinations, getTripsByCategory } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { TripListingPage } from '@/components/listing/TripListingPage';
-import type { ParamsInput } from '@/lib/trips/filters';
 
 export const metadata = buildMetadata({
   title: 'Treks',
@@ -10,11 +9,10 @@ export const metadata = buildMetadata({
   path: '/treks',
 });
 
-export default async function TreksPage({ searchParams }: { searchParams: Promise<ParamsInput> }) {
-  const [allTreks, destinations, sp] = await Promise.all([
+export default async function TreksPage() {
+  const [allTreks, destinations] = await Promise.all([
     getTripsByCategory('trek'),
     getDestinations(),
-    searchParams,
   ]);
 
   return (
@@ -32,7 +30,6 @@ export default async function TreksPage({ searchParams }: { searchParams: Promis
       basePath="/treks"
       trips={allTreks}
       destinations={destinations}
-      searchParams={sp}
     />
   );
 }

@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity';
+import { slugOptions, slugValidation } from './slug';
 
 export const category = defineType({
   name: 'category',
@@ -36,8 +37,8 @@ export const category = defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: { source: 'pluralLabel' },
-      validation: (r) => r.required(),
+      options: slugOptions('pluralLabel'),
+      validation: slugValidation,
     }),
     defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 2 }),
   ],

@@ -1,5 +1,6 @@
+import { Suspense } from 'react';
 import { CalendarClock, MessagesSquare, Route } from 'lucide-react';
-import { getCategories, getCredentials, getDestinations, getTripBySlug } from '@/lib/content';
+import { getAllTrips, getCategories, getCredentials, getDestinations } from '@/lib/content';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { Container } from '@/components/ui/Container';
 import { PageHero } from '@/components/ui/PageHero';
@@ -7,7 +8,7 @@ import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Section } from '@/components/ui/Section';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Credentials } from '@/components/sections/Credentials';
-import { TripBuilder } from '@/components/TripBuilder';
+import { CustomTripBuilder, CustomTripNotice, TripBuilder } from '@/components/TripBuilder';
 
 export const metadata = buildMetadata({
   title: 'Customize Your Tour',
@@ -35,23 +36,24 @@ const WHAT_HAPPENS_NEXT = [
   },
 ];
 
-interface CustomTripsPageProps {
-  searchParams: Promise<{ trip?: string }>;
-}
-
-export default async function CustomTripsPage({ searchParams }: CustomTripsPageProps) {
-  const { trip: tripSlug } = await searchParams;
-  const [categories, destinations, credentials, contextTrip] = await Promise.all([
+export default async function CustomTripsPage() {
+  const [categories, destinations, credentials, trips] = await Promise.all([
     getCategories(),
     getDestinations(),
     getCredentials(),
-    tripSlug ? getTripBySlug(tripSlug) : Promise.resolve(undefined),
+    getAllTrips(),
   ]);
 
   const destinationOptions = [
     ...categories.map((c) => ({ value: c.key, label: c.pluralLabel })),
     ...destinations.map((d) => ({ value: d.slug, label: d.name })),
   ];
+
+  // Resolved in the browser from `?trip=`, so this page needs no `searchParams`
+  // and stays static — see `components/TripBuilder/CustomTripContext.tsx`.
+  const tripIndex = Object.fromEntries(
+    trips.map((trip) => [trip.slug, { title: trip.title, destination: trip.destinationSlugs[0] }]),
+  );
 
   return (
     <>
@@ -91,12 +93,9 @@ export default async function CustomTripsPage({ searchParams }: CustomTripsPageP
             className="mt-6"
           />
           <div className="mt-4 max-w-2xl">
-            {contextTrip && (
-              <p className="bg-brand-50 text-brand-800 dark:text-brand-400 mt-4 inline-block rounded-lg px-4 py-2 text-sm">
-                Enquiring about <span className="font-semibold">{contextTrip.title}</span> — mention
-                any changes you&rsquo;d like below.
-              </p>
-            )}
+            <Suspense fallback={null}>
+              <CustomTripNotice tripIndex={tripIndex} />
+            </Suspense>
           </div>
         </Container>
       </Section>
@@ -115,14 +114,15 @@ export default async function CustomTripsPage({ searchParams }: CustomTripsPageP
             title="Build Your Trip"
             description="Answer what you know and skip what you don't — the summary beside the form fills in as you go, and a planner turns it into a costed day-by-day itinerary."
           />
-          <TripBuilder
-            className="mt-10"
-            destinationOptions={destinationOptions}
-            defaultDestination={contextTrip?.destinationSlugs[0]}
-            tripSlug={contextTrip?.slug}
-            tripTitle={contextTrip?.title}
-            source={contextTrip ? `custom-trips:${contextTrip.slug}` : 'custom-trips'}
-          />
+          <Suspense
+            fallback={<TripBuilder className="mt-10" destinationOptions={destinationOptions} />}
+          >
+            <CustomTripBuilder
+              className="mt-10"
+              destinationOptions={destinationOptions}
+              tripIndex={tripIndex}
+            />
+          </Suspense>
         </Container>
       </Section>
 

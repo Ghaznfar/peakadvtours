@@ -1,33 +1,39 @@
 import { defineCloudflareConfig } from '@opennextjs/cloudflare';
-import kvIncrementalCache from '@opennextjs/cloudflare/overrides/incremental-cache/kv-incremental-cache';
-import kvNextTagCache from '@opennextjs/cloudflare/overrides/tag-cache/kv-next-tag-cache';
-import doQueue from '@opennextjs/cloudflare/overrides/queue/do-queue';
+import staticAssetsIncrementalCache from '@opennextjs/cloudflare/overrides/incremental-cache/static-assets-incremental-cache';
 
 /**
  * OpenNext adapter config for Cloudflare Workers.
  *
- * All three overrides are load-bearing for content freshness. Leaving any of
- * them unset silently falls back to OpenNext's `"dummy"` implementation, which
- * is a no-op — the failure mode that froze the site on the 2026-10-20 build:
- * `/api/revalidate` answered 200 while purging nothing, and stale pages were
- * served as `x-nextjs-cache: STALE` forever. Do not remove one without
- * replacing it.
+ * The site is built fully static and serves only prerendered output — no page
+ * renders at request time. That is not a preference, it is what the Workers
+ * Free plan allows: 10 ms of CPU per request, against ~25 ms to render one page
+ * here. On 2026-10-27 the on-demand revalidation chain started working, pages
+ * began expiring, every expired page tried to re-render and Cloudflare killed
+ * them with `error code: 1102` (503) until the site was effectively down.
  *
- * - `incrementalCache` (KV `NEXT_INC_CACHE_KV`) stores the prerendered output.
- *   Without it every request re-renders.
- * - `tagCache` (KV `NEXT_TAG_CACHE_KV`) records tag revalidation times. This is
- *   what makes `revalidateTag(CACHE_TAG)` in `/api/revalidate` mean anything;
- *   the dummy version's `writeTags()` discards the write and `isStale()` always
- *   says "fresh". KV rather than D1 because the deploy credentials only carry
- *   Workers KV scope; KV is eventually consistent, so a publish lands in up to
- *   ~60s rather than instantly. Switch to `d1-next-tag-cache` for strong
- *   consistency if the token ever gains D1 scope.
- * - `queue` (Durable Object `NEXT_CACHE_DO_QUEUE`) runs the background
- *   re-render for a stale page. The dummy version throws, which is why even the
- *   1-hour time-based backstop in `sanityFetch` never fired.
+ * So the three overrides that chain needed are deliberately gone:
+ *
+ * - `incrementalCache` reads prerendered pages straight from Workers static
+ *   assets (`cdn-cgi/_next_cache/...`, written at build time). It is read-only
+ *   by design — the matching OpenNext doc line is "should only be used for
+ *   applications that do NOT want revalidation and ONLY want to serve
+ *   prerendered data". Static assets are unmetered, so serving a page now costs
+ *   no KV operation at all; the previous `kv-incremental-cache` spent ~61 KV
+ *   writes on every deploy and read KV on every request, against a 1,000
+ *   write/day free cap.
+ * - `tagCache` is intentionally unset (OpenNext's no-op). Nothing revalidates,
+ *   so there are no tags to track — and a working purge is precisely what took
+ *   the site down.
+ * - `queue` is intentionally unset for the same reason: its only job was the
+ *   background re-render of a stale page, and a re-render cannot complete
+ *   inside the CPU limit.
+ *
+ * Content therefore goes live on `npm run cf:build && npm run cf:deploy`, not
+ * on publish. The KV namespaces and the Durable Object stay declared in
+ * `wrangler.jsonc` but unused, so re-enabling the chain on a paid plan is a
+ * config change rather than a re-provision. Re-enable all three together, never
+ * one alone: a purge with no way to re-render is what broke the site.
  */
 export default defineCloudflareConfig({
-  incrementalCache: kvIncrementalCache,
-  tagCache: kvNextTagCache,
-  queue: doQueue,
+  incrementalCache: staticAssetsIncrementalCache,
 });

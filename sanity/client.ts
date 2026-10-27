@@ -27,13 +27,28 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export const CACHE_TAG = 'sanity';
 
 /**
- * Typed fetch helper with ISR revalidation and a bounded retry.
+ * Typed fetch helper with a bounded retry. Reads are cached indefinitely
+ * (`revalidate: false`), which makes every page that uses them fully static.
  *
- * The time-based window is deliberately long (1 hour). Short windows re-render
- * pages on a timer whether or not anything changed, which on Netlify is billed
- * per function invocation. Freshness instead comes from `/api/revalidate`,
- * which a Sanity webhook calls on publish — so an edit is live in seconds and
- * the hourly window is only a backstop for anything the webhook misses.
+ * This is deliberate and load-bearing, not a performance tweak: the Workers
+ * Free plan allows 10 ms of CPU per request, and rendering one page here costs
+ * ~25 ms. Any page that has to render at request time is killed mid-flight and
+ * Cloudflare returns `error code: 1102` (503) — which is exactly what took the
+ * site down on 2026-10-27 once on-demand revalidation started working and
+ * cached pages began expiring. With `revalidate: false` nothing ever expires,
+ * so every request is served from the cache populated at deploy time and no
+ * render ever happens in production.
+ *
+ * The consequence: publishing in Sanity no longer puts content live on its own.
+ * Content ships with `npm run cf:build && npm run cf:deploy`. See
+ * `app/api/revalidate/route.ts`, which is now a no-op for the same reason.
+ *
+ * `revalidate: false` also means `next build`'s own fetch cache never expires,
+ * so a rebuild would happily re-emit last week's content and look successful —
+ * it did exactly that once, re-prerendering two slugs that had just been fixed
+ * in Sanity. `npm run cf:build` therefore deletes `.next/cache/fetch-cache`
+ * first. Build from `npm run cf:build`, never bare `opennextjs-cloudflare
+ * build`, or the deploy can ship stale content.
  *
  * The retry is not defensive padding — `next build` prerenders across 10
  * workers, which opens a burst of connections to `apicdn.sanity.io` at once,
@@ -49,7 +64,7 @@ export const CACHE_TAG = 'sanity';
 export async function sanityFetch<T>(
   query: string,
   params: Record<string, unknown> = {},
-  revalidate = 3600,
+  revalidate: number | false = false,
 ): Promise<T> {
   let lastError: unknown;
 
