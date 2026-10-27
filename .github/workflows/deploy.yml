@@ -16,7 +16,11 @@ on:
   repository_dispatch:
     types: [sanity-publish]
   schedule:
-    - cron: '*/15 * * * *'
+    # Offset minutes on purpose. GitHub runs scheduled workflows on a
+    # best-effort queue and advises avoiding the start of the hour; `*/15` lands
+    # on :00/:15/:30/:45 with everyone else's crons, and the first 73 minutes of
+    # it produced no run at all. Same ~15-minute cadence, quieter slots.
+    - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
 
 # Never let two deploys of the same site overlap; let a queued one wait rather
