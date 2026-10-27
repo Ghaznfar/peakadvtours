@@ -53,3 +53,6 @@ next-env.d.ts
 .wrangler/
 cloudflare-env.d.ts
 .claude/
+
+# Written at build time by scripts/content-stamp.mjs (see .github/workflows/deploy.yml).
+public/content-stamp.json

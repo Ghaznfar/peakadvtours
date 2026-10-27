@@ -1,0 +1,105 @@
+name: Deploy site
+
+# The site is static: a Sanity publish changes nothing live until the site is
+# rebuilt (README §How a publish reaches the live site). This workflow is what
+# makes a publish reach visitors without anyone opening a terminal.
+#
+# Four ways in:
+#   push              — code changes on main
+#   repository_dispatch — the Sanity publish webhook, for a near-instant deploy
+#   schedule          — safety net: every 15 min, deploy only if Sanity has
+#                       changed since the last deploy (no webhook required)
+#   workflow_dispatch — the "Run workflow" button
+on:
+  push:
+    branches: [main]
+  repository_dispatch:
+    types: [sanity-publish]
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+# Never let two deploys of the same site overlap; let a queued one wait rather
+# than cancelling, so the newest content always ends up deployed last.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  # All public by design — the project id and dataset ship in the client bundle
+  # anyway (README §Content management). Only the Cloudflare token is a secret.
+  NEXT_PUBLIC_SANITY_PROJECT_ID: eigm30ey
+  NEXT_PUBLIC_SANITY_DATASET: production
+  NEXT_PUBLIC_SANITY_API_VERSION: '2024-10-01'
+  NEXT_PUBLIC_SITE_URL: https://peakadvtours.com
+  CLOUDFLARE_ACCOUNT_ID: 1cdc5693f54a64683933f428940903b3
+
+jobs:
+  # Only the scheduled run needs to ask whether there is anything to do. Every
+  # other trigger is an explicit request to deploy.
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      deploy: ${{ steps.decide.outputs.deploy }}
+    steps:
+      - id: decide
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+            echo "${{ github.event_name }}: deploying"
+            exit 0
+          fi
+
+          query='*[!(_id in path("drafts.**"))] | order(_updatedAt desc)[0]._updatedAt'
+          newest=$(curl -fsS --get --data-urlencode "query=$query" \
+            "https://${NEXT_PUBLIC_SANITY_PROJECT_ID}.apicdn.sanity.io/v${NEXT_PUBLIC_SANITY_API_VERSION}/data/query/${NEXT_PUBLIC_SANITY_DATASET}" \
+            | jq -r '.result // empty')
+          # A missing or unreadable stamp means "deploy" — better one redundant
+          # build than content stuck indefinitely behind a failed probe.
+          live=$(curl -fsS "${NEXT_PUBLIC_SITE_URL}/content-stamp.json" \
+            | jq -r '.contentUpdatedAt // empty' || echo '')
+
+          echo "sanity=${newest:-none} live=${live:-none}"
+          if [ -n "$newest" ] && [ "$newest" = "$live" ]; then
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            echo "nothing published since the last deploy"
+          else
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  deploy:
+    needs: check
+    if: needs.check.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Must run before the build: it lands in `public/`, so the build copies it
+      # into the deployed assets where the scheduled check can read it back.
+      - name: Stamp the content version
+        run: node scripts/content-stamp.mjs
+
+      # `cf:build` deletes `.next/cache/fetch-cache` first — with
+      # `revalidate: false` the build cache never expires, so a rebuild would
+      # otherwise re-ship old content and still look successful.
+      - name: Build
+        run: npm run cf:build
+
+      - name: Deploy to Cloudflare Workers
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npm run cf:deploy
+
+      # Gate the result: a green deploy that serves 503s is the failure this
+      # whole static setup exists to prevent.
+      - name: Smoke test production
+        run: bash scripts/smoke.sh
